@@ -12,10 +12,38 @@ const galleryPages = {
     { src: 'Image/2D ART/2D Professional/홈페이지 제작 외주.jpg', title: '2D Professional 03' }
   ],
   'dear-father': [
-    { src: 'Image/DEAR FATHER/Dear Father_01.jpg', title: 'Dear Father 01' },
-    { src: 'Image/DEAR FATHER/Dear Father_05.jpg', title: 'Dear Father 02' },
-    { src: 'Image/DEAR FATHER/Dear Father_10.jpg', title: 'Dear Father 03' },
-    { src: 'Image/DEAR FATHER/Dear Father_15.jpg', title: 'Dear Father 04' }
+    { src: 'Image/DEAR FATHER/Dear Father_01.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_02.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_03.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_04.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_05.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_06.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_07.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_08.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_09.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_10.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_11.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_12.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_13.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_14.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_15.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_16.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_17.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_18.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_19.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_20.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_21.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_22.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_23.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_24.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_25.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_26.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_27.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_28.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_29.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_30.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_31.webp', title: '' },
+    { src: 'Image/DEAR FATHER/Dear Father_32.webp', title: '' }
   ]
 };
 

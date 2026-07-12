@@ -389,6 +389,133 @@ h1 {
   background: linear-gradient(135deg, rgba(185, 139, 255, 0.06), rgba(91, 232, 232, 0.03));
 }
 
+/* ---------- Dear Father page ---------- */
+.df-video-section {
+  padding: 2.5rem 0 1.5rem;
+}
+
+.df-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+}
+
+.df-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.df-intro {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2.5rem;
+  padding: 1.5rem 0 2.5rem;
+  align-items: start;
+}
+
+.df-collab {
+  font-size: 1.15rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+  color: var(--text);
+}
+
+.df-collab .accent {
+  color: var(--purple);
+}
+
+.df-credit-item {
+  margin: 0 0 1.25rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.df-credit-item .label {
+  color: var(--purple);
+  font-weight: 500;
+}
+
+.df-credit-item strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.df-credit-item a {
+  color: var(--purple);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.df-story {
+  color: var(--muted);
+}
+
+.df-story p {
+  margin: 0 0 1.35rem;
+  line-height: 1.85;
+}
+
+.df-sign-date {
+  text-align: right;
+  margin: 2.5rem 0 0.25rem !important;
+  color: var(--muted);
+}
+
+.df-sign {
+  text-align: right;
+  font-family: "Caveat", cursive;
+  font-size: 2.1rem;
+  color: var(--purple);
+  margin: 0 !important;
+}
+
+/* 작품 이미지 시퀀스: 차분하게 전폭 단일 열, 크롭·캡션 없음 */
+.df-gallery-section {
+  padding-top: 0;
+}
+
+body[data-page="dear-father"] .gallery-grid {
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body[data-page="dear-father"] .gallery-item {
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 6px;
+}
+
+body[data-page="dear-father"] .gallery-item:hover {
+  transform: none;
+  border-color: var(--line);
+}
+
+body[data-page="dear-father"] .gallery-item img {
+  aspect-ratio: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+body[data-page="dear-father"] .gallery-meta {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .df-intro {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
 /* ---------- Resume page ---------- */
 .resume-profile {
   display: grid;
