@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" style="cursor: url('Image/Cursor/Cursor_Normal.png') 0 0, auto;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/jpeg" href="Image/Hero/favicon.jpg" />
+    <title>Michael Chun | Art Portfolio</title>
+    <meta
+      name="description"
+      content="천준영의 2D/3D 아트 포트폴리오 사이트입니다."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
+    <link rel="preload" href="Fonts/esamanru-Light.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="Fonts/esamanru-Medium.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="cursor-trail.css" />
+  </head>
+  <body data-page="home">
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="logo-row">
+          <a class="logo-link" href="index.html">
+            <img class="logo-img logo-normal" src="Image/Hero/Logo.png" alt="Michael Chun" />
+            <img class="logo-img logo-hover" src="Image/Hero/Logo1.png" alt="" aria-hidden="true" />
+          </a>
+          <button class="menu-toggle" aria-label="메뉴 열기" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+        <nav class="site-nav" aria-label="메인 메뉴">
+          <a href="index.html" class="active">HOME</a>
+          <a href="resume.html">RESUME</a>
+          <a href="dear-father.html">DEAR FATHER</a>
+          <a href="3d-art.html">3D ART</a>
+          <a href="2d-art.html">2D ART</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-frame">
+          <img class="hero-image" src="Image/Hero/TitleImage.png" alt="Michael Chun - Artist" />
+        </div>
+      </section>
+
+      <section class="featured-section">
+        <div class="container">
+          <div class="section-title">
+            <p class="eyebrow">PORTFOLIO CATEGORIES</p>
+            <h2>Explore the Work</h2>
+          </div>
+
+          <div class="card-grid">
+            <a class="category-card" href="resume.html">
+              <img src="Image/RESUME/team-chun.png" alt="RESUME" />
+              <div class="card-copy">
+                <h3>RESUME</h3>
+                <p>간단한 소개와 경력, 스킬, 연락처를 정리해 두었습니다.</p>
+              </div>
+            </a>
+            <a class="category-card" href="dear-father.html">
+              <img src="Image/DEAR FATHER/Dear Father_01.jpg" alt="DEAR FATHER" />
+              <div class="card-copy">
+                <h3>DEAR FATHER</h3>
+                <p>차분하고 정중한 분위기 속에 아버지를 기리는 섹션입니다.</p>
+              </div>
+            </a>
+            <a class="category-card" href="3d-art.html">
+              <img src="Image/3D ART/3D Personal/01.jpg" alt="3D ART" />
+              <div class="card-copy">
+                <h3>3D ART</h3>
+                <p>모델링, 렌더링, 환경 작업을 한눈에 살펴볼 수 있습니다.</p>
+              </div>
+            </a>
+            <a class="category-card" href="2d-art.html">
+              <img src="Image/2D ART/2D Personal/Guide03-1.jpg" alt="2D ART" />
+              <div class="card-copy">
+                <h3>2D ART</h3>
+                <p>로고, 포스터, 콘셉트 아트, UI 가이드 작업을 정리합니다.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <span class="hatch"></span>
+        <p>Copyright © 2026 Michael Chun. All Rights Reserved.</p>
+        <a href="mailto:chun4422@gmail.com">Contact : chun4422@gmail.com</a>
+        <span class="hatch"></span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="cursor-trail.js"></script>
+  </body>
+</html>

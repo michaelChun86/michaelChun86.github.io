@@ -1,0 +1,103 @@
+/* =========================================================================
+   마우스 커서 잔상(트레일) + 호버 커서 깜박임
+   — 달라게임즈 홈페이지 커서 시스템을 이식한 독립 모듈 —
+   ① 기본 커서: 페이지 전체에 녹색 커서(Cursor_Normal) 적용.
+   ② 잔상: 커서가 지나온 자리에 커서 이미지 잔상이 남아
+      잠깐 머물렀다가 점점 투명해지며 사라진다 (꼬리 느낌).
+   ③ 호버 깜박임: 클릭 가능한 요소 위에서 Cursor_Hover1 과
+      Cursor_Hover2 가 빠르게 번갈아 나온다.
+      (cursor-trail.js 가 html 에 .cur-alt 클래스를 빠르게 토글)
+   - 커서 이미지는 모두 35×35, 핫스팟은 좌상단(0 0).
+   ========================================================================= */
+
+/* ---------- 조절 변수 ---------- */
+:root {
+  --ct-life: 400ms;      /* 잔상이 사라지기까지 걸리는 시간(너무 길면 지저분해짐) */
+  --ct-opacity: 0.55;    /* 잔상 시작 불투명도(실제 커서보다 흐리게) */
+}
+
+/* ---------- ① 기본 커서(녹색) ----------
+   cursor 속성은 상속되므로 html 에 걸면 전체로 퍼진다. */
+html {
+  cursor: url("Image/Cursor/Cursor_Normal.png") 0 0, auto;
+}
+
+/* ---------- ② 호버 커서(Cursor_Hover1 기본 프레임) ----------
+   클릭 가능한 요소 위에서는 Hover1 로 바뀐다. */
+a,
+button,
+.menu-toggle,
+.social-link,
+.gallery-item,
+label,
+[role="button"],
+[onclick] {
+  cursor: url("Image/Cursor/Cursor_Hover1.png") 0 0, pointer;
+}
+
+/* ---------- 클릭(누르는 순간) 커서 고정 ----------
+   링크/버튼을 누르는 찰나에 브라우저 기본 흰색 커서가 잠깐 나오는 것을 막는다.
+   :active 동안에는 무조건 우리 커서(Normal)를 강제로 유지한다. */
+html:active,
+a:active,
+button:active,
+.menu-toggle:active,
+.social-link:active,
+.gallery-item:active,
+label:active,
+[role="button"]:active,
+[onclick]:active {
+  cursor: url("Image/Cursor/Cursor_Normal.png") 0 0, auto !important;
+}
+
+/* 잔상 전용 오버레이: 화면 전체를 덮지만 클릭은 통과 */
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2147483647;   /* 항상 최상단 — 어떤 오버레이 위에서도 잔상이 보이게 */
+  overflow: hidden;
+}
+
+/* 잔상 하나 = 녹색 커서 이미지(35×35) 그대로.
+   커서 핫스팟이 좌상단(0 0)이므로 좌표를 그대로 좌상단에 맞춘다. */
+.ct-ghost {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background-image: url("Image/Cursor/Cursor_Normal.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0;            /* 평소엔 안 보임 — .on 이 붙는 순간만 나타남 */
+}
+
+/* 발동: 만들어지는 순간이 가장 진하고, 시간이 지날수록(=본체에서 멀어질수록)
+   빠르게 연해진다. linear 로 두어 꼬리 위치에 따라 불투명도가 고르게 벌어지게 한다. */
+.ct-ghost.on {
+  animation: ct-fade var(--ct-life) linear forwards;
+}
+@keyframes ct-fade {
+  0%   { opacity: var(--ct-opacity); }                /* 본체 바로 뒤: 가장 진함 */
+  40%  { opacity: calc(var(--ct-opacity) * 0.35); }   /* 초반부터 빠르게 연해짐 */
+  100% { opacity: 0; }                                /* 꼬리 끝: 완전 소멸 */
+}
+
+/* ---------- ③ 호버 커서 깜박임(Cursor_Hover2 프레임) ----------
+   Hover1 규칙과 같은 대상 + .cur-alt 일 때 Hover2.
+   cursor-trail.js 가 .cur-alt 를 빠르게 켰다 껐다 하면 Hover1↔Hover2 깜박임이 된다. */
+html.cur-alt a,
+html.cur-alt button,
+html.cur-alt .menu-toggle,
+html.cur-alt .social-link,
+html.cur-alt .gallery-item,
+html.cur-alt label,
+html.cur-alt [role="button"],
+html.cur-alt [onclick] {
+  cursor: url("Image/Cursor/Cursor_Hover2.png") 0 0, pointer;
+}
+
+/* 접근성: 모션 최소화 선호 시 잔상을 끈다 (JS 도 잔상·깜박임을 만들지 않음 →
+   호버 커서는 Hover1 고정, 평상시는 녹색 고정으로 여전히 구분된다) */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-trail { display: none !important; }
+}
