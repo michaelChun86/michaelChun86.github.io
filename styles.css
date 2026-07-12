@@ -45,6 +45,28 @@ html {
   overflow-y: scroll;
 }
 
+/* ---------- 페이지 전환(View Transitions) ----------
+   메뉴 클릭 시 페이지가 통째로 새로 로드되며 그 찰나에 브라우저 기본(흰색)
+   커서가 잠깐 뜨는 현상을 없앤다. 두 페이지를 빈 프레임 없이 부드럽게
+   크로스페이드해, 전환 중에도 커서가 우리 커서로 유지된다.
+   (Chrome/Edge 지원. 미지원 브라우저는 기존처럼 즉시 전환 — 무해) */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.18s;
+}
+
+/* 모션 최소화 선호 시 전환 애니메이션 끔 */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 body {
   margin: 0;
   font-family: "Esamanru", "Noto Sans KR", "Segoe UI", Roboto, Arial, sans-serif;
@@ -544,14 +566,29 @@ h1 {
 
 .footer-wrap {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* 카피라이트: 보라색, 위쪽 줄 */
+.footer-copyright {
+  margin: 0;
+  color: var(--purple);
+}
+
+/* Contact + 양옆 빗금: 아래쪽 줄, 화이트 */
+.footer-contact {
+  display: flex;
+  align-items: center;
   justify-content: center;
   gap: 1rem;
-  align-items: center;
   flex-wrap: wrap;
 }
 
-.footer-wrap a {
-  color: var(--cyan);
+.footer-contact a {
+  color: var(--text);
 }
 
 /* ---------- Lightbox ---------- */
