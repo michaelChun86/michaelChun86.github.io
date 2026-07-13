@@ -448,9 +448,14 @@ h1 {
 }
 
 .df-credit-item a {
-  color: var(--purple);
-  text-decoration: underline;
+  color: var(--text);
+  text-decoration: none;
   word-break: break-all;
+  transition: color 0.2s ease;
+}
+
+.df-credit-item a:hover {
+  color: var(--purple);
 }
 
 .df-story {
@@ -482,31 +487,42 @@ h1 {
 }
 
 body[data-page="dear-father"] .gallery-grid {
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-  max-width: 960px;
-  margin: 0 auto;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
 body[data-page="dear-father"] .gallery-item {
   border: 1px solid var(--line);
-  background: transparent;
+  background: var(--panel);
   border-radius: 6px;
+  overflow: hidden;
 }
 
+/* 틀은 유지한 채 이미지만 살짝 확대 + 아웃라인만 조금 더 밝은 보라색 */
 body[data-page="dear-father"] .gallery-item:hover {
   transform: none;
-  border-color: var(--line);
+  border-color: rgba(185, 139, 255, 0.6);
 }
 
 body[data-page="dear-father"] .gallery-item img {
-  aspect-ratio: auto;
-  object-fit: contain;
-  border-radius: 6px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+body[data-page="dear-father"] .gallery-item:hover img {
+  transform: scale(1.08);
 }
 
 body[data-page="dear-father"] .gallery-meta {
   display: none;
+}
+
+@media (max-width: 760px) {
+  body[data-page="dear-father"] .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 760px) {
