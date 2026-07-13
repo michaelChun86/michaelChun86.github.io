@@ -569,20 +569,22 @@ body[data-page="2d-art"] .gallery-meta {
   padding: 0.15rem 0.5rem;
   font-size: 0.56rem;
   font-weight: 300;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border-radius: 4px;
   line-height: 1.6;
   pointer-events: none;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 .badge-professional {
-  background: #000;
+  background: rgba(0, 0, 0, 0.7);
   color: #ff8a1e;
 }
 
 .badge-personal {
-  background: #000;
+  background: rgba(0, 0, 0, 0.7);
   color: #39ff14;
 }
 
