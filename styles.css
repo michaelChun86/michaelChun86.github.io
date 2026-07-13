@@ -751,14 +751,19 @@ body[data-page="dear-father"] .gallery-meta {
 }
 
 .lightbox-content {
-  max-width: min(960px, 100%);
-  width: 100%;
+  max-width: 92vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .lightbox img {
+  max-width: 100%;
   max-height: 78vh;
   width: auto;
-  margin: 0 auto;
+  height: auto;
+  margin: 0;
   object-fit: contain;
 }
 
