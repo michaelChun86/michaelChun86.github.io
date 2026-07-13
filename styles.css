@@ -852,6 +852,9 @@ body[data-page="2d-art"] .gallery-meta {
 .lightbox-close,
 .lightbox-nav {
   position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   color: white;
   border: 0;
@@ -859,6 +862,12 @@ body[data-page="2d-art"] .gallery-meta {
   transition: color 0.2s ease;
   /* cursor 는 커서 시스템(cursor-trail.css)의 button 규칙에 맡긴다
      (여기서 pointer 를 지정하면 호버 커서가 손가락↔보라색으로 깜박임) */
+}
+
+.lightbox-close svg,
+.lightbox-nav svg {
+  width: 1em;
+  height: 1em;
 }
 
 .lightbox-close:hover,
