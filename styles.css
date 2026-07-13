@@ -349,14 +349,28 @@ h1 {
   text-align: center;
 }
 
-/* 3D/2D ART: 좌측 정렬 타이틀만 짧게 두고 바로 갤러리로 이어지도록 여백 최소화 */
+/* 3D/2D ART, RESUME, DEAR FATHER: 좌측 정렬 타이틀만 짧게 두고 바로 본문으로
+   이어지도록 여백 최소화 */
 .page-hero-compact {
   padding: 2rem 0 1rem;
   text-align: left;
 }
 
+/* 타이틀 바로 다음에 오는 섹션은 위쪽 여백을 줄여 붙여준다 */
+.page-hero-compact + .resume-hero {
+  padding-top: 0;
+}
+
+.page-hero-compact + .df-video-section {
+  padding-top: 0;
+}
+
+/* 페이지 상단 타이틀: 리줌 Experience 헤딩과 동일한 스타일(크기·대문자·보라색) */
 .page-title {
   color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 1.1rem;
   margin: 0;
 }
 
