@@ -486,12 +486,16 @@ h1 {
   padding-top: 0;
 }
 
-body[data-page="dear-father"] .gallery-grid {
+body[data-page="dear-father"] .gallery-grid,
+body[data-page="3d-art"] .gallery-grid,
+body[data-page="2d-art"] .gallery-grid {
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
-body[data-page="dear-father"] .gallery-item {
+body[data-page="dear-father"] .gallery-item,
+body[data-page="3d-art"] .gallery-item,
+body[data-page="2d-art"] .gallery-item {
   border: 1px solid var(--line);
   background: var(--panel);
   border-radius: 6px;
@@ -499,28 +503,64 @@ body[data-page="dear-father"] .gallery-item {
 }
 
 /* 틀은 유지한 채 이미지만 살짝 확대 + 아웃라인만 조금 더 밝은 보라색 */
-body[data-page="dear-father"] .gallery-item:hover {
+body[data-page="dear-father"] .gallery-item:hover,
+body[data-page="3d-art"] .gallery-item:hover,
+body[data-page="2d-art"] .gallery-item:hover {
   transform: none;
   border-color: rgba(185, 139, 255, 0.6);
 }
 
-body[data-page="dear-father"] .gallery-item img {
+body[data-page="dear-father"] .gallery-item img,
+body[data-page="3d-art"] .gallery-item img,
+body[data-page="2d-art"] .gallery-item img {
   aspect-ratio: 1 / 1;
   object-fit: cover;
   width: 100%;
   transition: transform 0.3s ease;
 }
 
-body[data-page="dear-father"] .gallery-item:hover img {
+body[data-page="dear-father"] .gallery-item:hover img,
+body[data-page="3d-art"] .gallery-item:hover img,
+body[data-page="2d-art"] .gallery-item:hover img {
   transform: scale(1.08);
 }
 
-body[data-page="dear-father"] .gallery-meta {
+body[data-page="dear-father"] .gallery-meta,
+body[data-page="3d-art"] .gallery-meta,
+body[data-page="2d-art"] .gallery-meta {
   display: none;
 }
 
+/* 썸네일 좌측 상단 분류 배지: Professional(오렌지) / Personal(네온 그린) */
+.gallery-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  line-height: 1.6;
+  pointer-events: none;
+}
+
+.badge-professional {
+  background: #ff8a1e;
+  color: #1a1206;
+}
+
+.badge-personal {
+  background: #39ff14;
+  color: #0a1406;
+}
+
 @media (max-width: 760px) {
-  body[data-page="dear-father"] .gallery-grid {
+  body[data-page="dear-father"] .gallery-grid,
+  body[data-page="3d-art"] .gallery-grid,
+  body[data-page="2d-art"] .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
