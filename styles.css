@@ -855,7 +855,7 @@ body[data-page="2d-art"] .gallery-meta {
   background: transparent;
   color: white;
   border: 0;
-  font-size: 2rem;
+  font-size: 3.4rem;
   transition: color 0.2s ease;
   /* cursor 는 커서 시스템(cursor-trail.css)의 button 규칙에 맡긴다
      (여기서 pointer 를 지정하면 호버 커서가 손가락↔보라색으로 깜박임) */
@@ -867,36 +867,41 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 .lightbox-close {
-  top: 2rem;
-  right: 2rem;
+  top: 3.25rem;
+  right: 3.25rem;
 }
 
 .lightbox-nav {
   top: 50%;
   transform: translateY(-50%);
-  font-size: 2.5rem;
+  font-size: 4.25rem;
 }
 
 .lightbox-nav.prev {
-  left: 2.5rem;
+  left: 3.75rem;
 }
 
 .lightbox-nav.next {
-  right: 2.5rem;
+  right: 3.75rem;
 }
 
 @media (max-width: 640px) {
+  .lightbox-close,
+  .lightbox-nav {
+    font-size: 2.4rem;
+  }
+
   .lightbox-close {
-    top: 1rem;
-    right: 1rem;
+    top: 2.25rem;
+    right: 2.25rem;
   }
 
   .lightbox-nav.prev {
-    left: 1rem;
+    left: 2.25rem;
   }
 
   .lightbox-nav.next {
-    right: 1rem;
+    right: 2.25rem;
   }
 }
 
