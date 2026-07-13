@@ -537,11 +537,7 @@ h1 {
   padding-top: 0;
 }
 
-body[data-page="dear-father"] .gallery-grid {
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-
+body[data-page="dear-father"] .gallery-grid,
 body[data-page="3d-art"] .gallery-grid,
 body[data-page="2d-art"] .gallery-grid {
   grid-template-columns: repeat(6, 1fr);
@@ -617,10 +613,7 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 @media (max-width: 760px) {
-  body[data-page="dear-father"] .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
+  body[data-page="dear-father"] .gallery-grid,
   body[data-page="3d-art"] .gallery-grid,
   body[data-page="2d-art"] .gallery-grid {
     grid-template-columns: repeat(3, 1fr);
