@@ -378,6 +378,32 @@ h1 {
   padding: 1rem 0 4rem;
 }
 
+/* 갤러리 분류 필터(All / Professional / Personal) */
+.gallery-filter {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.filter-btn:hover {
+  color: var(--purple);
+}
+
+.filter-btn.active {
+  color: var(--purple);
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -572,7 +598,7 @@ body[data-page="2d-art"] .gallery-meta {
   font-size: 0.74rem;
   font-weight: 300;
   letter-spacing: 0.35em;
-  text-transform: uppercase;
+  text-transform: capitalize;
   line-height: 1.6;
   pointer-events: none;
   -webkit-backdrop-filter: blur(6px);

@@ -699,11 +699,19 @@ const galleryPages = {
 const body = document.body;
 const pageKey = body.dataset.page;
 const galleryContainer = document.querySelector('[data-gallery]');
+const filterButtons = document.querySelectorAll('.gallery-filter .filter-btn');
+let activeFilter = 'all';
+
+function getFilteredItems() {
+  const items = galleryPages[pageKey] || [];
+  if (activeFilter === 'all') return items;
+  return items.filter((item) => item.type === activeFilter);
+}
 
 function buildGallery() {
   if (!galleryContainer) return;
 
-  const items = galleryPages[pageKey] || [];
+  const items = getFilteredItems();
   galleryContainer.innerHTML = '';
 
   items.forEach((item, index) => {
@@ -723,6 +731,14 @@ function buildGallery() {
   });
 }
 
+filterButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    filterButtons.forEach((b) => b.classList.toggle('active', b === btn));
+    buildGallery();
+  });
+});
+
 const lightbox = document.querySelector('.lightbox');
 const lightboxImg = lightbox?.querySelector('img');
 const lightboxCaption = lightbox?.querySelector('.lightbox-caption');
@@ -734,7 +750,7 @@ let currentItems = [];
 
 function openLightbox(index) {
   if (!lightbox || !lightboxImg) return;
-  currentItems = galleryPages[pageKey] || [];
+  currentItems = getFilteredItems();
   currentIndex = index;
   updateLightbox();
   lightbox.classList.add('open');
