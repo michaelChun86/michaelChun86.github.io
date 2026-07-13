@@ -600,15 +600,23 @@ body[data-page="2d-art"] .gallery-meta {
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   box-sizing: border-box;
+  color: var(--muted);
+  transition: color 0.2s ease;
 }
 
 .badge-professional {
   background: rgba(0, 0, 0, 0.4);
-  color: #ff8a1e;
 }
 
 .badge-personal {
   background: rgba(0, 0, 0, 0.4);
+}
+
+.gallery-item:hover .badge-professional {
+  color: #ff8a1e;
+}
+
+.gallery-item:hover .badge-personal {
   color: #39ff14;
 }
 
