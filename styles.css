@@ -780,7 +780,8 @@ body[data-page="dear-father"] .gallery-meta {
   color: white;
   border: 0;
   font-size: 2rem;
-  cursor: pointer;
+  /* cursor 는 커서 시스템(cursor-trail.css)의 button 규칙에 맡긴다
+     (여기서 pointer 를 지정하면 호버 커서가 손가락↔보라색으로 깜박임) */
 }
 
 .lightbox-close {
