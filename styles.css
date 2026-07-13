@@ -563,15 +563,15 @@ body[data-page="2d-art"] .gallery-meta {
 /* 썸네일 좌측 상단 분류 배지: Professional(오렌지) / Personal(네온 그린) */
 .gallery-badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 0;
+  left: 0;
   z-index: 2;
   padding: 0.15rem 0.5rem;
   font-size: 0.56rem;
   font-weight: 300;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border-radius: 4px;
+  border-radius: 0 0 4px 0;
   line-height: 1.6;
   pointer-events: none;
   -webkit-backdrop-filter: blur(6px);
