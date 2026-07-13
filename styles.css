@@ -567,8 +567,8 @@ body[data-page="2d-art"] .gallery-meta {
   left: 8px;
   z-index: 2;
   padding: 0.15rem 0.5rem;
-  font-size: 0.62rem;
-  font-weight: 500;
+  font-size: 0.56rem;
+  font-weight: 300;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   border-radius: 4px;
@@ -852,13 +852,19 @@ body[data-page="2d-art"] .gallery-meta {
   color: white;
   border: 0;
   font-size: 2rem;
+  transition: color 0.2s ease;
   /* cursor 는 커서 시스템(cursor-trail.css)의 button 규칙에 맡긴다
      (여기서 pointer 를 지정하면 호버 커서가 손가락↔보라색으로 깜박임) */
 }
 
+.lightbox-close:hover,
+.lightbox-nav:hover {
+  color: var(--purple);
+}
+
 .lightbox-close {
-  top: 1rem;
-  right: 1rem;
+  top: 2rem;
+  right: 2rem;
 }
 
 .lightbox-nav {
@@ -868,11 +874,26 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 .lightbox-nav.prev {
-  left: 1rem;
+  left: 2.5rem;
 }
 
 .lightbox-nav.next {
-  right: 1rem;
+  right: 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .lightbox-nav.prev {
+    left: 1rem;
+  }
+
+  .lightbox-nav.next {
+    right: 1rem;
+  }
 }
 
 @media (max-width: 860px) {
