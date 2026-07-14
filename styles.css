@@ -122,6 +122,27 @@ img {
   padding: 0.55rem 0;
 }
 
+/* 홈 히어로 인트로: 메뉴바가 위에서 아래로 내려오며 2초간 페이드인 된다
+   (타이틀 이미지와 동시에 시작). */
+body[data-page="home"] .site-header {
+  opacity: 0;
+  transform: translateY(-100%);
+  animation: header-slide-fade 2s ease forwards;
+}
+
+@keyframes header-slide-fade {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .site-header {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* PC 전용 헤더/로고 확대 규칙은 파일 하단(모바일 브레이크포인트 옆)에 있다
    (base .logo-img 등 뒤에 와야 소스 순서상 우선 적용된다). */
 
@@ -285,6 +306,7 @@ html.cur-alt .logo-link:hover .logo-hover {
   overflow: hidden;
   opacity: 0;
   animation: hero-intro-fade 2s ease forwards;
+  animation-delay: 2s;
 }
 
 @keyframes hero-intro-fade {
@@ -387,7 +409,7 @@ html.cur-alt .logo-link:hover .logo-hover {
 body[data-page="home"] .section-title {
   opacity: 0;
   animation: section-fade-up 2s ease forwards;
-  animation-delay: 2s;
+  animation-delay: 4s;
 }
 
 @keyframes section-fade-up {
@@ -442,6 +464,22 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;
+}
+
+/* 홈 히어로 인트로: 카테고리 카드 4개도 PORTFOLIO CATEGORIES 탭과
+   동시에(같은 타이밍으로) 살짝 위로 올라오며 페이드인 된다. */
+body[data-page="home"] .card-grid {
+  opacity: 0;
+  animation: section-fade-up 2s ease forwards;
+  animation-delay: 4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .card-grid {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .category-card {
@@ -943,6 +981,22 @@ body[data-page="2d-art"] .gallery-meta {
   padding: 1.75rem 0 2rem;
   color: var(--muted);
   text-align: center;
+}
+
+/* 홈 히어로 인트로: 푸터(Copyright 영역)도 PORTFOLIO CATEGORIES 탭과
+   동시에(같은 타이밍으로) 살짝 위로 올라오며 페이드인 된다. */
+body[data-page="home"] .site-footer {
+  opacity: 0;
+  animation: section-fade-up 2s ease forwards;
+  animation-delay: 4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .site-footer {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .footer-wrap {

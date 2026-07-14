@@ -613,7 +613,7 @@ const galleryPages = {
     { src: '/Image/2D ART/2D Gallery/2D_052.webp', type: 'personal' },
     { src: '/Image/2D ART/2D Gallery/2D_053.webp', type: 'personal' },
     { src: '/Image/2D ART/2D Gallery/2D_054.webp', type: 'personal' },
-    { src: '/Image/2D ART/2D Gallery/2D_055.webp', type: 'personal' },
+    { src: '/Image/2D ART/2D Gallery/2D_055.gif', type: 'personal' },
     { src: '/Image/2D ART/2D Gallery/2D_056.webp', type: 'personal' },
     { src: '/Image/2D ART/2D Gallery/2D_057.webp', type: 'personal' },
     { src: '/Image/2D ART/2D Gallery/2D_058.webp', type: 'personal' },
@@ -655,10 +655,7 @@ const galleryPages = {
     { src: '/Image/2D ART/2D Gallery/2D_094.webp', type: 'professional' },
     { src: '/Image/2D ART/2D Gallery/2D_095.webp', type: 'professional' },
     { src: '/Image/2D ART/2D Gallery/2D_096.webp', type: 'professional' },
-    { src: '/Image/2D ART/2D Gallery/2D_097.webp', type: 'professional' },
-    { src: '/Image/2D ART/2D Gallery/2D_098.webp', type: 'professional' },
-    { src: '/Image/2D ART/2D Gallery/2D_099.webp', type: 'professional' },
-    { src: '/Image/2D ART/2D Gallery/2D_100.webp', type: 'professional' }
+    { src: '/Image/2D ART/2D Gallery/2D_097.webp', type: 'professional' }
   ],
   'dear-father': [
     { src: '/Image/DEAR FATHER/Dear Father_01.webp', title: '' },
