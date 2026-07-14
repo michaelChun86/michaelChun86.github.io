@@ -122,6 +122,9 @@ img {
   padding: 0.55rem 0;
 }
 
+/* PC 전용 헤더/로고 확대 규칙은 파일 하단(모바일 브레이크포인트 옆)에 있다
+   (base .logo-img 등 뒤에 와야 소스 순서상 우선 적용된다). */
+
 .header-inner {
   display: flex;
   align-items: center;
@@ -148,7 +151,9 @@ img {
   transition: opacity 0.2s ease;
 }
 
-/* 호버 시 Logo → Logo1 로 부드럽게 교체 (두 이미지를 겹쳐 두고 불투명도 전환) */
+/* 호버 시 Logo ↔ Logo1 이 번갈아 깜박인다.
+   커서 시스템(cursor-trail.js)이 이미 html.cur-alt 를 130ms 간격으로
+   토글하고 있으므로 같은 리듬을 그대로 재사용한다. */
 .logo-hover {
   position: absolute;
   top: 0;
@@ -157,10 +162,18 @@ img {
 }
 
 .logo-link:hover .logo-normal {
-  opacity: 0;
+  opacity: 1;
 }
 
 .logo-link:hover .logo-hover {
+  opacity: 0;
+}
+
+html.cur-alt .logo-link:hover .logo-normal {
+  opacity: 0;
+}
+
+html.cur-alt .logo-link:hover .logo-hover {
   opacity: 1;
 }
 
@@ -255,17 +268,26 @@ img {
 
 .hero-image {
   width: 100%;
-  border-radius: 4px;
+  display: block;
 }
 
 /* ---------- 히어로 CRT 글리치 ----------
-   기본 이미지 위에 글리치 프레임들을 겹쳐두고(평소 투명),
-   script.js 가 무작위 버스트로 잠깐씩 켜서 방송 신호가 깨지는 느낌을 낸다. */
+   .hero-frame-box 는 아웃라인 + 클리핑만 담당하는 "고정 액자"다.
+   이 요소 자체는 절대 움직이거나 스케일되지 않는다(틀 고정).
+   .hero-logo-mark(코너 로고)도 이 안에 있지만 글리치 대상이 아니다.
+   .hero-glitch 만 지터/스케일 대상이며, 액자 안에서 클리핑되어
+   흔들려도 가장자리가 액자 밖으로 새어나오지 않는다. */
+.hero-frame-box {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
 .hero-glitch {
   position: relative;
   width: 100%;
-  border-radius: 4px;
-  overflow: hidden;
 }
 
 .hero-glitch-frame {
@@ -275,6 +297,18 @@ img {
   height: 100%;
   object-fit: cover;
   opacity: 0;              /* JS 가 버스트 순간에만 1로 켠다 */
+  pointer-events: none;
+}
+
+/* 타이틀 이미지에 그려진 우측 하단 로고와 같은 위치에 고정되는 별도 레이어.
+   hero-glitch 바깥(hero-frame-box 의 형제)에 있어 글리치 지터의 영향을 받지 않는다. */
+.hero-logo-mark {
+  position: absolute;
+  right: 2.4%;
+  bottom: 3.6%;
+  width: 9.3%;
+  height: auto;
+  z-index: 3;
   pointer-events: none;
 }
 
@@ -1004,6 +1038,24 @@ body[data-page="2d-art"] .gallery-meta {
 
   .lightbox-nav.next {
     right: 2.25rem;
+  }
+}
+
+/* PC 전용: 메뉴바를 25px 더 키우고 로고를 145% 확대.
+   모바일(max-width:860px)은 원본 그대로 유지한다.
+   header-inner 가 이미 align-items:center 라 높이가 늘어나도
+   버튼/로고는 자동으로 세로 가운데 재정렬된다. */
+@media (min-width: 861px) {
+  .site-header {
+    padding: calc(0.55rem + 12.5px) 0;
+  }
+
+  .logo-link {
+    width: 104px;
+  }
+
+  .logo-img {
+    width: 104px;
   }
 }
 
