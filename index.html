@@ -42,14 +42,21 @@
     <main>
       <section class="hero">
         <div class="container hero-frame">
-          <!-- CRT 글리치: 기본 이미지 위에 글리치 프레임 4장을 겹쳐두고
-               JS(script.js)가 무작위 간격으로 짧게 번갈아 노출시킨다 -->
+          <!-- CRT 글리치: 기본(멀쩡한) 이미지 위에 강도별 글리치 프레임을 겹쳐두고
+               JS(script.js)가 가중치 랜덤으로 약/중/강을 섞어 짧게 노출시킨다.
+               data-tier: low(미세) / medium(타이틀 왜곡) / strong(완전 깨짐) -->
           <div class="hero-glitch">
             <img class="hero-image" src="Image/Hero/TitleImage.webp" alt="Michael Chun - Artist" />
-            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch1.webp" alt="" aria-hidden="true" />
-            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch2.webp" alt="" aria-hidden="true" />
-            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch3.webp" alt="" aria-hidden="true" />
-            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch4.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="low" src="Image/Hero/TitleImage_Glitch_Low1.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="low" src="Image/Hero/TitleImage_Glitch_Low2.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="low" src="Image/Hero/TitleImage_Glitch_Low3.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="low" src="Image/Hero/TitleImage_Glitch_Low4.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="medium" src="Image/Hero/TitleImage_Glitch1.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="medium" src="Image/Hero/TitleImage_Glitch2.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="medium" src="Image/Hero/TitleImage_Glitch3.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="medium" src="Image/Hero/TitleImage_Glitch4.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="strong" src="Image/Hero/TitleImage_Glitch_Strong1.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" data-tier="strong" src="Image/Hero/TitleImage_Glitch_Strong2.webp" alt="" aria-hidden="true" />
           </div>
         </div>
       </section>

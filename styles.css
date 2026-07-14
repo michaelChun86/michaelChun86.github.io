@@ -278,22 +278,48 @@ img {
   pointer-events: none;
 }
 
-/* 버스트 동안 화면 전체가 미세하게 튀는 지터 + 밝기 명멸 */
-.hero-glitch.glitching {
-  animation: hero-jitter 0.09s steps(2, jump-none) infinite;
+/* 버스트 동안 강도별 지터 + 밝기/채도 명멸.
+   살짝 확대(overscan)를 항상 유지해 지터로 가장자리 틈이 보이지 않게 한다. */
+.hero-glitch.glitching.g-low {
+  animation: hero-jitter-low 0.09s steps(2, jump-none) infinite;
 }
 
-@keyframes hero-jitter {
-  0%   { transform: translate(0, 0); filter: brightness(1); }
-  25%  { transform: translate(-3px, 1px); filter: brightness(1.18) contrast(1.08); }
-  50%  { transform: translate(2px, -1px); filter: brightness(0.92); }
-  75%  { transform: translate(-1px, 2px); filter: brightness(1.1) saturate(1.25); }
-  100% { transform: translate(1px, -2px); filter: brightness(1); }
+.hero-glitch.glitching.g-medium {
+  animation: hero-jitter-medium 0.07s steps(2, jump-none) infinite;
+}
+
+.hero-glitch.glitching.g-strong {
+  animation: hero-jitter-strong 0.055s steps(2, jump-none) infinite;
+}
+
+@keyframes hero-jitter-low {
+  0%   { transform: scale(1.012) translate(0, 0); filter: brightness(1); }
+  50%  { transform: scale(1.012) translate(-1px, 1px); filter: brightness(1.06); }
+  100% { transform: scale(1.012) translate(1px, 0); filter: brightness(1); }
+}
+
+@keyframes hero-jitter-medium {
+  0%   { transform: scale(1.016) translate(0, 0); filter: brightness(1); }
+  25%  { transform: scale(1.016) translate(-3px, 1px); filter: brightness(1.15) contrast(1.06); }
+  50%  { transform: scale(1.016) translate(2px, -1px); filter: brightness(0.95); }
+  75%  { transform: scale(1.016) translate(-1px, 2px); filter: brightness(1.1) saturate(1.22); }
+  100% { transform: scale(1.016) translate(1px, -1px); filter: brightness(1); }
+}
+
+@keyframes hero-jitter-strong {
+  0%   { transform: scale(1.022) translate(0, 0); filter: brightness(1); }
+  20%  { transform: scale(1.022) translate(-5px, 2px); filter: brightness(1.25) contrast(1.1); }
+  40%  { transform: scale(1.022) translate(4px, -2px); filter: brightness(0.88) hue-rotate(4deg); }
+  60%  { transform: scale(1.022) translate(-3px, 3px); filter: brightness(1.2) saturate(1.35); }
+  80%  { transform: scale(1.022) translate(3px, -1px); filter: brightness(0.95); }
+  100% { transform: scale(1.022) translate(-1px, 1px); filter: brightness(1); }
 }
 
 /* 접근성: 모션 최소화 선호 시 글리치를 끈다 (JS 도 동작하지 않음) */
 @media (prefers-reduced-motion: reduce) {
-  .hero-glitch.glitching {
+  .hero-glitch.glitching.g-low,
+  .hero-glitch.glitching.g-medium,
+  .hero-glitch.glitching.g-strong {
     animation: none;
   }
 }

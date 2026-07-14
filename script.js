@@ -813,10 +813,13 @@ buildGallery();
 
 /* =========================================================================
    히어로 CRT 글리치 (홈 전용)
-   - 평소엔 기본 타이틀 이미지만 보이다가, 무작위 간격(2.5~7초)마다
-     글리치 프레임 4장 중 하나를 아주 짧게(40~140ms) 몇 차례 번갈아 켠다.
-   - 버스트 동안 .glitching 클래스로 화면 지터/명멸(CSS)이 함께 걸려서
-     실제 CRT 신호가 깨지는 듯한 느낌을 만든다.
+   - 평소엔 멀쩡한 기본 이미지만 보인다.
+   - 무작위 간격(2.5~7초)마다 버스트 발생. 버스트마다 강도(tier)를 가중치
+     랜덤으로 고른다: low(미세) 대부분, medium(타이틀 왜곡) 가끔,
+     strong(완전 깨짐) 드물게.
+   - 한 버스트 안에서 해당 강도 프레임들을 짧게 번갈아 켜되, 사이사이
+     원본(멀쩡한 화면)을 섞어 신호가 붙었다 끊겼다 하는 느낌을 낸다.
+   - tier 별로 지터/명멸 세기(CSS g-low/g-medium/g-strong)가 달라진다.
    - 모션 최소화 선호 환경에서는 아예 동작하지 않는다.
    ========================================================================= */
 (function () {
@@ -827,46 +830,78 @@ buildGallery();
   const frames = [...wrap.querySelectorAll('.hero-glitch-frame')];
   if (!frames.length) return;
 
+  // 강도별로 프레임을 분류
+  const byTier = { low: [], medium: [], strong: [] };
+  frames.forEach((f) => { (byTier[f.dataset.tier] || byTier.low).push(f); });
+
+  // 버스트 강도 가중치(대부분 약하게, 강한 건 가끔)
+  const TIER_WEIGHTS = [
+    { tier: 'low', w: 55 },
+    { tier: 'medium', w: 30 },
+    { tier: 'strong', w: 15 },
+  ];
+  const totalW = TIER_WEIGHTS.reduce((s, t) => s + t.w, 0);
+
+  // 강도별 버스트 파라미터: 깜박임 횟수 / 노출시간(ms) / 원본 끼워넣기 확률
+  const SPEC = {
+    low:    { flick: [1, 3], on: [30, 90],  cleanGap: 0.55 },
+    medium: { flick: [2, 5], on: [45, 130], cleanGap: 0.45 },
+    strong: { flick: [3, 6], on: [55, 150], cleanGap: 0.4 },
+  };
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const randInt = (a, b) => Math.floor(rand(a, b + 1));
   const hideAll = () => frames.forEach((f) => { f.style.opacity = '0'; });
+  const clearGlitch = () => wrap.classList.remove('glitching', 'g-low', 'g-medium', 'g-strong');
+
+  function pickTier() {
+    let r = Math.random() * totalW;
+    for (const t of TIER_WEIGHTS) { if ((r -= t.w) < 0) return t.tier; }
+    return 'low';
+  }
 
   function burst() {
-    // 한 번의 버스트에서 3~7번 깜박인다
-    let flickersLeft = 3 + Math.floor(Math.random() * 5);
-    let lastFrame = -1;
+    const tier = pickTier();
+    const pool = byTier[tier].length ? byTier[tier] : frames;
+    const spec = SPEC[tier];
+    let left = randInt(spec.flick[0], spec.flick[1]);
+    let last = null;
 
-    function flicker() {
+    function flick() {
       hideAll();
-      if (flickersLeft <= 0) {
-        wrap.classList.remove('glitching');
+      if (left <= 0) {
+        clearGlitch();
         schedule();
         return;
       }
-      flickersLeft--;
+      left--;
 
-      // 직전과 다른 프레임을 골라 연속 노출 시 변화가 보이게 한다
-      let idx;
-      do { idx = Math.floor(Math.random() * frames.length); } while (idx === lastFrame && frames.length > 1);
-      lastFrame = idx;
-      frames[idx].style.opacity = '1';
-      wrap.classList.add('glitching');
+      // 직전과 다른 프레임 선택
+      let f;
+      do { f = pool[Math.floor(Math.random() * pool.length)]; } while (f === last && pool.length > 1);
+      last = f;
 
-      const onTime = 40 + Math.random() * 100;            // 글리치 노출 40~140ms
+      f.style.opacity = '1';
+      clearGlitch();
+      wrap.classList.add('glitching', 'g-' + tier);
+
       setTimeout(() => {
-        frames[idx].style.opacity = '0';
-        // 40% 확률로 잠깐 원본을 보여주는 틈을 넣어 더 불규칙하게
-        const gap = Math.random() < 0.4 ? 30 + Math.random() * 80 : 0;
-        setTimeout(flicker, gap);
-      }, onTime);
+        f.style.opacity = '0';
+        // 확률적으로 원본(멀쩡한 화면)을 잠깐 보여주는 틈을 준다
+        const cleanGap = Math.random() < spec.cleanGap;
+        if (cleanGap) clearGlitch();          // 지터도 멈춰 진짜 멀쩡하게
+        setTimeout(flick, cleanGap ? rand(40, 150) : 0);
+      }, rand(spec.on[0], spec.on[1]));
     }
 
-    flicker();
+    flick();
   }
 
   function schedule() {
-    setTimeout(burst, 2500 + Math.random() * 4500);       // 다음 버스트까지 2.5~7초
+    setTimeout(burst, rand(2200, 6000));       // 다음 버스트까지 2.2~6초
   }
 
-  // 글리치 프레임이 모두 로드된 뒤 시작 (첫 버스트에서 빈 화면 방지)
+  // 프레임이 모두 로드된 뒤 시작 (첫 버스트에서 빈 화면 방지)
   Promise.all(
     frames.map((f) => (f.complete ? Promise.resolve() : new Promise((res) => { f.onload = res; f.onerror = res; })))
   ).then(schedule);
