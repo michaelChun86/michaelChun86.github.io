@@ -943,7 +943,14 @@ body[data-page="2d-art"] .gallery-meta {
   font-family: "Caveat", cursive;
   font-size: 2rem;
   color: var(--purple);
-  margin-bottom: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+/* PC: 필기체 서명 + 소개글 전체를 살짝 위로 올려준다(모바일은 별도 간격 규칙 적용) */
+@media (min-width: 861px) {
+  .resume-intro {
+    margin-top: -15px;
+  }
 }
 
 .resume-intro p {
@@ -1322,8 +1329,24 @@ body[data-page="home"] .site-footer {
     grid-template-columns: 1fr;
   }
 
+  /* 모바일: 프로필 사진 행과 소개글 행 사이 간격을 10px로 좁힌다 */
+  .resume-profile {
+    row-gap: 10px;
+  }
+
   .resume-photo {
     width: 140px;
+  }
+
+  /* 모바일: 링크드인/페이스북 아이콘을 프로필 사진 우측 옆에 배치 */
+  .resume-photo-col {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .social-links {
+    margin-top: 0;
   }
 
   .site-nav {
