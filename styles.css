@@ -605,11 +605,11 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 .badge-professional {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .badge-personal {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .gallery-item:hover .badge-professional {
