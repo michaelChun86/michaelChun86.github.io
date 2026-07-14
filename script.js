@@ -716,7 +716,7 @@ function buildGallery() {
     const card = document.createElement('article');
     card.className = 'gallery-item';
     const title = item.title || '';
-    const badge = item.type
+    const badge = (item.type && activeFilter === 'all')
       ? `<span class="gallery-badge badge-${item.type}">${item.type === 'professional' ? 'Professional' : 'Personal'}</span>`
       : '';
     card.innerHTML = `
