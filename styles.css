@@ -365,17 +365,14 @@ html.cur-alt .logo-link:hover .logo-hover {
   z-index: 3;
   margin: 0;
   max-width: 60%;
-  padding: 0.3em 0.6em;
-  border-radius: 6px;
   font-family: "Esamanru", "Noto Sans KR", sans-serif;
   font-weight: 500;
   font-size: clamp(0.6rem, 1.3vw, 1.02rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
-  /* 텍스트 자체는 60% 투명도, 텍스트 영역 뒤의 이미지는 블러 처리 */
+  /* 배경 없이 텍스트 자체에 60% 투명도 + 블러 */
   color: rgba(245, 245, 247, 0.6);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  filter: blur(0.7px);
   text-shadow:
     0 1px 0 rgba(245, 245, 247, 0.25),
     0 6px 14px rgba(185, 139, 255, 0.3),
