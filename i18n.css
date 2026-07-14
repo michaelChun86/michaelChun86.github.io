@@ -63,6 +63,7 @@
   background: rgba(6, 6, 8, 0.75);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
+  position: relative;
   z-index: 1;
 }
 

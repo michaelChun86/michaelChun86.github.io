@@ -365,16 +365,21 @@ html.cur-alt .logo-link:hover .logo-hover {
   z-index: 3;
   margin: 0;
   max-width: 60%;
+  padding: 0.3em 0.6em;
+  border-radius: 6px;
   font-family: "Esamanru", "Noto Sans KR", sans-serif;
   font-weight: 500;
-  font-size: clamp(0.55rem, 1.2vw, 0.95rem);
+  font-size: clamp(0.6rem, 1.3vw, 1.02rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
-  color: var(--text);
+  /* 텍스트 자체는 60% 투명도, 텍스트 영역 뒤의 이미지는 블러 처리 */
+  color: rgba(245, 245, 247, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   text-shadow:
-    0 1px 0 rgba(245, 245, 247, 0.4),
-    0 6px 14px rgba(185, 139, 255, 0.35),
-    0 10px 22px rgba(91, 232, 232, 0.2);
+    0 1px 0 rgba(245, 245, 247, 0.25),
+    0 6px 14px rgba(185, 139, 255, 0.3),
+    0 10px 22px rgba(91, 232, 232, 0.18);
   pointer-events: none;
 }
 
@@ -1193,6 +1198,31 @@ body[data-page="home"] .site-footer {
 }
 
 @media (max-width: 860px) {
+  /* 메뉴 드롭다운(.site-nav, 헤더의 자식)이 로컬라이징 배지보다 항상 위에
+     그려지도록, 형제 요소인 헤더/배지에 명시적 쌓임 순서를 준다.
+     (둘 다 backdrop-filter 로 스태킹 컨텍스트가 생겨 DOM 순서대로
+     그려지던 것이 원인 — z-index 는 positioned 요소에만 적용된다.) */
+  .site-header {
+    position: relative;
+    z-index: 2;
+    /* 헤더 자체의 backdrop-filter 를 없애고 ::before 로 옮긴다.
+       조상에 backdrop-filter 가 있으면 자식(.site-nav 드롭다운)의
+       backdrop-filter 가 무시되어 블러가 렌더링되지 않기 때문. */
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(6, 6, 8, 0.65);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
   /* 모바일: 모든 페이지의 시작 위치를 메뉴바에 더 가깝게 올려준다 */
   .hero {
     padding-top: 0.65rem;
@@ -1225,8 +1255,8 @@ body[data-page="home"] .site-footer {
 
   /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 width 설정 */
   .hero-quote {
-    font-size: clamp(0.48rem, 0.95vw, 0.65rem);
-    max-width: 75%;
+    font-size: clamp(0.52rem, 1vw, 0.68rem);
+    max-width: 80%;
   }
 
   .category-card img {
