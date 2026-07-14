@@ -42,7 +42,15 @@
     <main>
       <section class="hero">
         <div class="container hero-frame">
-          <img class="hero-image" src="Image/Hero/TitleImage.png" alt="Michael Chun - Artist" />
+          <!-- CRT 글리치: 기본 이미지 위에 글리치 프레임 4장을 겹쳐두고
+               JS(script.js)가 무작위 간격으로 짧게 번갈아 노출시킨다 -->
+          <div class="hero-glitch">
+            <img class="hero-image" src="Image/Hero/TitleImage.webp" alt="Michael Chun - Artist" />
+            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch1.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch2.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch3.webp" alt="" aria-hidden="true" />
+            <img class="hero-glitch-frame" src="Image/Hero/TitleImage_Glitch4.webp" alt="" aria-hidden="true" />
+          </div>
         </div>
       </section>
 

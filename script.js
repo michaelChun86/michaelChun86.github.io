@@ -810,3 +810,64 @@ toggle?.addEventListener('click', () => {
 });
 
 buildGallery();
+
+/* =========================================================================
+   히어로 CRT 글리치 (홈 전용)
+   - 평소엔 기본 타이틀 이미지만 보이다가, 무작위 간격(2.5~7초)마다
+     글리치 프레임 4장 중 하나를 아주 짧게(40~140ms) 몇 차례 번갈아 켠다.
+   - 버스트 동안 .glitching 클래스로 화면 지터/명멸(CSS)이 함께 걸려서
+     실제 CRT 신호가 깨지는 듯한 느낌을 만든다.
+   - 모션 최소화 선호 환경에서는 아예 동작하지 않는다.
+   ========================================================================= */
+(function () {
+  const wrap = document.querySelector('.hero-glitch');
+  if (!wrap) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const frames = [...wrap.querySelectorAll('.hero-glitch-frame')];
+  if (!frames.length) return;
+
+  const hideAll = () => frames.forEach((f) => { f.style.opacity = '0'; });
+
+  function burst() {
+    // 한 번의 버스트에서 3~7번 깜박인다
+    let flickersLeft = 3 + Math.floor(Math.random() * 5);
+    let lastFrame = -1;
+
+    function flicker() {
+      hideAll();
+      if (flickersLeft <= 0) {
+        wrap.classList.remove('glitching');
+        schedule();
+        return;
+      }
+      flickersLeft--;
+
+      // 직전과 다른 프레임을 골라 연속 노출 시 변화가 보이게 한다
+      let idx;
+      do { idx = Math.floor(Math.random() * frames.length); } while (idx === lastFrame && frames.length > 1);
+      lastFrame = idx;
+      frames[idx].style.opacity = '1';
+      wrap.classList.add('glitching');
+
+      const onTime = 40 + Math.random() * 100;            // 글리치 노출 40~140ms
+      setTimeout(() => {
+        frames[idx].style.opacity = '0';
+        // 40% 확률로 잠깐 원본을 보여주는 틈을 넣어 더 불규칙하게
+        const gap = Math.random() < 0.4 ? 30 + Math.random() * 80 : 0;
+        setTimeout(flicker, gap);
+      }, onTime);
+    }
+
+    flicker();
+  }
+
+  function schedule() {
+    setTimeout(burst, 2500 + Math.random() * 4500);       // 다음 버스트까지 2.5~7초
+  }
+
+  // 글리치 프레임이 모두 로드된 뒤 시작 (첫 버스트에서 빈 화면 방지)
+  Promise.all(
+    frames.map((f) => (f.complete ? Promise.resolve() : new Promise((res) => { f.onload = res; f.onerror = res; })))
+  ).then(schedule);
+})();
