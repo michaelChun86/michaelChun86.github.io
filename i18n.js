@@ -21,7 +21,92 @@
     "card.resume.desc": { en: "Bio, career, skills, and contact information" },
     "card.father.desc": { en: "A tribute page dedicated to my beloved father" },
     "card.3d.desc": { en: "Modeling, rendering, and other 3D work" },
-    "card.2d.desc": { en: "Logos, concept art, and other 2D work" }
+    "card.2d.desc": { en: "Logos, concept art, and other 2D work" },
+
+    /* ---- 내비게이션 "RESUME" 표기 (원문은 영문, 한국어일 때만 "프로필") ---- */
+    "nav.resume": { ko: "프로필" },
+
+    /* ---- Resume 페이지: 원문이 영문이라 ko 번역만 정의한다 ---- */
+    "resume.intro.p1": { ko: "안녕하세요, 저의 웹사이트를 방문해 주셔서 감사합니다." },
+    "resume.intro.p2": { ko: '저는 대한민국 서울을 기반으로 활동하고 있는 <strong>Michael Chun</strong>(본명 천준영)입니다.' },
+    "resume.intro.p3": {
+      ko: '게임 업계에서 약 <strong>15년</strong> 동안 다양한 실무 경력을 쌓아왔으며, 현재는 로그라이크 디펜스 게임인 <strong>The Aeon Fall</strong>(이온폴)을 개발 중인 <strong>달라게임즈의 대표(CEO)</strong>를 맡고 있습니다.'
+    },
+    "resume.intro.p4": { ko: "개발자로서, 아티스트로서, 그리고 이제는 사업가로서 끊임없이 성장하기 위해 노력하고 있습니다. 저에 대해 더 궁금한 점이 있으시다면 언제든 편하게 연락해 주세요." },
+    "resume.intro.p5": { ko: "방문해 주셔서 다시 한번 감사드립니다 :)" },
+
+    "resume.experience.title": { ko: "경력사항" },
+
+    "resume.exp1.category": { ko: "스팀 PC" },
+    "resume.exp1.title": { ko: '로그라이크 디펜스 <span>&lt;이온폴&gt;</span> – CEO' },
+    "resume.exp1.company": { ko: "달라게임즈" },
+    "resume.exp1.period": { ko: "2026년 2월 – 현재" },
+
+    "resume.exp2.category": { ko: "메타버스 게임" },
+    "resume.exp2.title": { ko: '메타버스 <span>&lt;쏘사이어티&gt;</span> – Art Director / Technical Artist' },
+    "resume.exp2.company": { ko: "앤더스 인터렉티브" },
+    "resume.exp2.period": { ko: "2022년 1월 – 2026년 1월" },
+
+    "resume.exp3.category": { ko: "모바일 게임" },
+    "resume.exp3.title": { ko: 'RPG <span>&lt;별이 되어라 3&gt;</span> – Technical Artist' },
+    "resume.exp3.company": { ko: "플린트" },
+    "resume.exp3.period": { ko: "2021년 8월 – 2021년 12월" },
+
+    "resume.exp4.category": { ko: "모바일 게임" },
+    "resume.exp4.title": { ko: 'RPG <span>&lt;서머너즈워 2&gt;</span> – Art Director' },
+    "resume.exp4.company": { ko: "컴투스" },
+    "resume.exp4.period": { ko: "2020년 8월 – 2021년 8월" },
+
+    "resume.exp5.category": { ko: "스팀 PC & 모바일 게임" },
+    "resume.exp5.title": { ko: '오토 배틀 <span>&lt;히어로즈 쇼다운&gt;</span> – Art Director' },
+    "resume.exp5.company": { ko: "패스파인더8" },
+    "resume.exp5.period": { ko: "2019년 8월 – 2020년 7월" },
+
+    "resume.exp6.category": { ko: "콘솔 게임" },
+    "resume.exp6.title": { ko: 'RPG <span>&lt;프로젝트 P4&gt;</span> – Technical Artist' },
+    "resume.exp6.company": { ko: "엑스엘 게임즈" },
+    "resume.exp6.period": { ko: "2019년 1월 – 2019년 7월" },
+
+    "resume.exp7.category": { ko: "콘솔 게임" },
+    "resume.exp7.title": { ko: '어드벤처 <span>&lt;리틀 데빌 인사이드&gt;</span> – Technical Artist' },
+    "resume.exp7.company": { ko: "니오스트림 인터렉티브" },
+    "resume.exp7.period": { ko: "2016년 7월 – 2018년 12월" },
+
+    "resume.exp8.category": { ko: "모바일 게임" },
+    "resume.exp8.title": { ko: 'MMO RPG <span>&lt;액시드&gt;</span> – Art Director / RTS <span>&lt;엘리멘탈 블레이드&gt;</span> – Art Director' },
+    "resume.exp8.company": { ko: "디피게임즈 (=옐로에그)" },
+    "resume.exp8.period": { ko: "2015년 8월 – 2016년 6월" },
+
+    "resume.exp9.category": { ko: "모바일 게임" },
+    "resume.exp9.title": { ko: 'RTS <span>&lt;유크레프트&gt;</span> – Art Director / 레이싱 <span>&lt;토글스&gt;</span> – Art Director' },
+    "resume.exp9.company": { ko: "옐로에그 (=디피게임즈)" },
+    "resume.exp9.period": { ko: "2014년 2월 – 2015년 8월" },
+
+    "resume.exp10.category": { ko: "PC 게임" },
+    "resume.exp10.title": { ko: 'FPS <span>&lt;아바&gt;</span> – 3D 환경 아티스트' },
+    "resume.exp10.company": { ko: "레드덕" },
+    "resume.exp10.period": { ko: "2011년 3월 – 2014년 1월" },
+
+    "resume.exp11.category": { ko: "게임 엔진" },
+    "resume.exp11.title": { ko: "CRY ENGINE3 서비스 지원 - 인턴" },
+    "resume.exp11.company": { ko: "크라이텍 코리아" },
+    "resume.exp11.period": { ko: "2010년 6월 – 2010년 12월" },
+
+    "resume.location.title": { ko: "위치" },
+    "resume.location.value": { ko: "대한민국 서울" },
+    "resume.university.title": { ko: "학력" },
+    "resume.university.value": { ko: "홍익대학교<br />게임 그래픽디자인 학과" },
+    "resume.specialties.title": { ko: "전문 분야" },
+    "resume.specialties.s1": { ko: "Art Directing" },
+    "resume.specialties.s2": { ko: "라이팅" },
+    "resume.specialties.s3": { ko: "렌더링" },
+    "resume.specialties.s4": { ko: "셰이더 세팅" },
+    "resume.specialties.s5": { ko: "하이폴리 하드서페이스 모델링" },
+    "resume.specialties.s6": { ko: "텍스처링" },
+    "resume.award.title": { ko: "수상 경력" },
+    "resume.award.value": { ko: '2013 Unearthly Challenge III - <strong>7th Place Champion</strong><br />(3D vehicle 부문) USA' },
+    "resume.contact.title": { ko: "연락처" },
+    "resume.contact.value": { ko: '이메일: <a href="mailto:chun4422@gmail.com">chun4422@gmail.com</a>' }
   };
 
   var ORIG_TEXT = new WeakMap();

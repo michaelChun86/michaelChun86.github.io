@@ -356,6 +356,28 @@ html.cur-alt .logo-link:hover .logo-hover {
   pointer-events: none;
 }
 
+/* 타이틀 이미지 좌측 하단 문구. hero-logo-mark 와 같은 고정 레이어(글리치 영향 없음).
+   글로우는 텍스트 "아래쪽"으로 떨어지는 느낌을 주기 위해 세로 오프셋을 준 그림자를 겹친다. */
+.hero-quote {
+  position: absolute;
+  left: 3%;
+  bottom: 4%;
+  z-index: 3;
+  margin: 0;
+  max-width: 60%;
+  font-family: "Esamanru", "Noto Sans KR", sans-serif;
+  font-weight: 500;
+  font-size: clamp(0.68rem, 1.5vw, 1rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  text-shadow:
+    0 1px 0 rgba(245, 245, 247, 0.4),
+    0 6px 14px rgba(185, 139, 255, 0.35),
+    0 10px 22px rgba(91, 232, 232, 0.2);
+  pointer-events: none;
+}
+
 /* 버스트 동안 강도별 지터 + 밝기/채도 명멸.
    살짝 확대(overscan)를 항상 유지해 지터로 가장자리 틈이 보이지 않게 한다. */
 .hero-glitch.glitching.g-low {
