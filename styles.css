@@ -283,6 +283,20 @@ html.cur-alt .logo-link:hover .logo-hover {
   border: 1px solid var(--line);
   border-radius: 4px;
   overflow: hidden;
+  opacity: 0;
+  animation: hero-intro-fade 2s ease forwards;
+}
+
+@keyframes hero-intro-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-frame-box {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 .hero-glitch {
@@ -327,9 +341,9 @@ html.cur-alt .logo-link:hover .logo-hover {
 }
 
 @keyframes hero-jitter-low {
-  0%   { transform: scale(1.012) translate(0, 0); filter: brightness(1); }
-  50%  { transform: scale(1.012) translate(-1px, 1px); filter: brightness(1.06); }
-  100% { transform: scale(1.012) translate(1px, 0); filter: brightness(1); }
+  0%   { transform: scale(1.005) translate(0, 0); filter: brightness(1); }
+  50%  { transform: scale(1.005) translate(-1px, 1px); filter: brightness(1.06); }
+  100% { transform: scale(1.005) translate(1px, 0); filter: brightness(1); }
 }
 
 @keyframes hero-jitter-medium {
@@ -366,6 +380,27 @@ html.cur-alt .logo-link:hover .logo-hover {
 .section-title {
   margin-bottom: 1.5rem;
   text-align: center;
+}
+
+/* 홈 히어로 인트로: 타이틀 이미지가 2초간 페이드인 된 직후,
+   PORTFOLIO CATEGORIES 탭이 살짝 위로 올라오며 2초간 페이드인 된다. */
+body[data-page="home"] .section-title {
+  opacity: 0;
+  animation: section-fade-up 2s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes section-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .section-title {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .eyebrow {
@@ -486,7 +521,7 @@ h1 {
 }
 
 .filter-btn {
-  background: rgba(157, 157, 168, 0.15);
+  background: rgba(10, 10, 13, 0.55);
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 0.4rem 1rem;
