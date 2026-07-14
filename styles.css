@@ -367,7 +367,7 @@ html.cur-alt .logo-link:hover .logo-hover {
   max-width: 60%;
   font-family: "Esamanru", "Noto Sans KR", sans-serif;
   font-weight: 500;
-  font-size: clamp(0.55rem, 1.2vw, 0.8rem);
+  font-size: clamp(0.55rem, 1.2vw, 0.95rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
   color: var(--text);
@@ -1221,6 +1221,12 @@ body[data-page="home"] .site-footer {
      좁은 폭에 맞춰 이미지/여백/글자 크기를 줄인다. */
   .card-grid {
     gap: 0.35rem;
+  }
+
+  /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 width 제한 */
+  .hero-quote {
+    font-size: clamp(0.48rem, 0.95vw, 0.65rem);
+    max-width: 50%;
   }
 
   .category-card img {
