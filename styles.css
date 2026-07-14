@@ -564,30 +564,21 @@ body[data-page="home"] .card-grid {
   padding: 1rem 1.1rem 1.25rem;
 }
 
-/* 설명란 그레이 배경 질감: 옅은 글리치 세로라인.
-   주기가 다른 두 겹(보라/시안)을 겹쳐 라인 간격이 불규칙하게 보이도록 —
-   CRT/글리치 무드와 맞춘 아주 낮은 대비의 텍스처(총 10~20줄 노출). */
+/* 설명란 그레이 배경 질감: 깔끔한 가로 스캔라인.
+   단일 주기로 균일하게 반복되는 선명한 1px 라인(하드 스톱이라 흐림 없음). */
 .card-copy::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 19px,
-      rgba(185, 139, 255, 0.05) 19px,
-      rgba(185, 139, 255, 0.05) 20px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 32px,
-      rgba(91, 232, 232, 0.04) 32px,
-      rgba(91, 232, 232, 0.04) 33px
-    );
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 5px,
+    rgba(185, 139, 255, 0.09) 5px,
+    rgba(185, 139, 255, 0.09) 6px
+  );
 }
 
 /* 텍스트는 텍스처 위로 */
