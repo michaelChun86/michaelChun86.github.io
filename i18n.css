@@ -47,15 +47,20 @@
   box-shadow: 0 0 0 2px var(--purple), 0 0 8px rgba(185, 139, 255, 0.55);
 }
 
-/* ---- 모바일 전용 바: 헤더 바로 아래, .sticky-head 안에서 함께 고정된다 ---- */
+/* ---- 모바일 전용 배지: 헤더 바로 아래, .sticky-head 안에서 함께 고정된다.
+   좌측 정렬된 라운드 박스로, 배경은 메뉴바와 동일한 블러 처리를 쓴다
+   (옆면을 꽉 채우는 막대가 아니라 국기 버튼 크기에 맞춘 둥근 배지). */
 .lang-switch-mobile {
   display: none;
-  justify-content: center;
-  gap: 16px;
-  padding: 0.5rem 0;
+  justify-content: flex-start;
+  width: fit-content;
+  gap: 12px;
+  margin: 0.6rem 0 0.6rem 1rem;
+  padding: 0.4rem 0.75rem;
   border-left: none;
-  border-bottom: 1px solid var(--line);
-  background: rgba(6, 6, 8, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(6, 6, 8, 0.75);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
