@@ -18,6 +18,8 @@
   var STORE_KEY = "chun-lang";
 
   var T = {
+    "home.eyebrow": { ko: "작업 컬렉션" },
+    "home.section.subtitle": { ko: "갤러리 둘러보기" },
     "card.resume.desc": { en: "Bio, career, skills, and contact information" },
     "card.father.desc": { en: "A tribute page dedicated to my beloved father" },
     "card.3d.desc": { en: "Modeling, rendering, and other 3D work" },
