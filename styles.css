@@ -110,11 +110,17 @@ img {
   );
 }
 
-/* ---------- Header ---------- */
-.site-header {
+/* ---------- Header ----------
+   .sticky-head 가 스크롤 고정을 담당하는 바깥 껍데기다. 그 안에 .site-header
+   (로고+메뉴)와, 모바일 전용 언어 전환 바(.lang-switch-mobile)가 세로로
+   쌓여 있어, 두 요소가 "하나의 고정 헤더"처럼 함께 스크롤에 고정된다. */
+.sticky-head {
   position: sticky;
   top: 0;
   z-index: 20;
+}
+
+.site-header {
   background: rgba(6, 6, 8, 0.65);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
@@ -124,7 +130,8 @@ img {
 
 /* 홈 히어로 인트로: 메뉴바가 위에서 아래로 내려오며 2초간 페이드인 된다
    (타이틀 이미지와 동시에 시작). */
-body[data-page="home"] .site-header {
+body[data-page="home"] .site-header,
+body[data-page="home"] .lang-switch-mobile {
   opacity: 0;
   transform: translateY(-100%);
   animation: header-slide-fade 2s ease forwards;
@@ -136,7 +143,8 @@ body[data-page="home"] .site-header {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page="home"] .site-header {
+  body[data-page="home"] .site-header,
+  body[data-page="home"] .lang-switch-mobile {
     animation: none;
     opacity: 1;
     transform: none;
@@ -510,6 +518,7 @@ body[data-page="home"] .card-grid {
   letter-spacing: 0.08em;
   color: var(--muted);
   transition: color 0.2s ease;
+  margin-bottom: calc(0.75rem - 5px);
 }
 
 .category-card:hover .card-copy h3 {

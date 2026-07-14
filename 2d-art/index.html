@@ -23,28 +23,39 @@
     <link rel="preload" href="/Fonts/esamanru-Medium.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/cursor-trail.css" />
+    <link rel="stylesheet" href="/i18n.css" />
   </head>
   <body data-page="2d-art">
-    <header class="site-header">
-      <div class="container header-inner">
-        <div class="logo-row">
-          <a class="logo-link" href="/">
-            <img class="logo-img logo-normal" src="/Image/Hero/Logo.webp" alt="Michael Chun" />
-            <img class="logo-img logo-hover" src="/Image/Hero/Logo1.webp" alt="" aria-hidden="true" />
-          </a>
-          <button class="menu-toggle" aria-label="메뉴 열기" aria-expanded="false">
-            <span></span><span></span><span></span>
-          </button>
+    <div class="sticky-head">
+      <header class="site-header">
+        <div class="container header-inner">
+          <div class="logo-row">
+            <a class="logo-link" href="/">
+              <img class="logo-img logo-normal" src="/Image/Hero/Logo.webp" alt="Michael Chun" />
+              <img class="logo-img logo-hover" src="/Image/Hero/Logo1.webp" alt="" aria-hidden="true" />
+            </a>
+            <button class="menu-toggle" aria-label="메뉴 열기" aria-expanded="false">
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+          <nav class="site-nav" aria-label="메인 메뉴">
+            <a href="/">HOME</a>
+            <a href="/resume/">RESUME</a>
+            <a href="/dear-father/">DEAR FATHER</a>
+            <a href="/3d-art/">3D WORK</a>
+            <a href="/2d-art/" class="active">2D WORK</a>
+            <div class="lang-switch" role="group" aria-label="Language / 언어">
+              <button type="button" class="lang-btn" data-lang="ko" aria-label="한국어"><img src="/Image/Flag/flag-kr.svg" alt="한국어" /></button>
+              <button type="button" class="lang-btn" data-lang="en" aria-label="English"><img src="/Image/Flag/flag-en.svg" alt="English" /></button>
+            </div>
+          </nav>
         </div>
-        <nav class="site-nav" aria-label="메인 메뉴">
-          <a href="/">HOME</a>
-          <a href="/resume/">RESUME</a>
-          <a href="/dear-father/">DEAR FATHER</a>
-          <a href="/3d-art/">3D WORK</a>
-          <a href="/2d-art/" class="active">2D WORK</a>
-        </nav>
+      </header>
+      <div class="lang-switch lang-switch-mobile" role="group" aria-label="Language / 언어">
+        <button type="button" class="lang-btn" data-lang="ko" aria-label="한국어"><img src="/Image/Flag/flag-kr.svg" alt="한국어" /></button>
+        <button type="button" class="lang-btn" data-lang="en" aria-label="English"><img src="/Image/Flag/flag-en.svg" alt="English" /></button>
       </div>
-    </header>
+    </div>
 
     <main>
       <section class="page-hero page-hero-compact">
@@ -94,5 +105,6 @@
 
     <script src="/script.js"></script>
     <script src="/cursor-trail.js"></script>
+    <script src="/i18n.js"></script>
   </body>
 </html>

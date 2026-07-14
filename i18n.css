@@ -1,0 +1,75 @@
+/* =========================================================================
+   언어 전환 국기 버튼 (한국어 / English)
+   - PC: 메인 메뉴(.site-nav) 맨 끝에 붙어 메뉴와 한 줄에 나란히 표시된다.
+   - 모바일(<=860px): 메뉴 옆 버튼은 숨기고, 헤더 바로 아래 고정된
+     별도의 바(.lang-switch-mobile)에 표시한다(햄버거 드롭다운 안이 아님).
+   ========================================================================= */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+
+.lang-btn {
+  display: inline-flex;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.lang-btn img {
+  width: 22px;
+  height: auto;
+  display: block;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(245, 245, 247, 0.18);
+}
+
+.lang-btn:hover,
+.lang-btn:focus-visible {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* 현재 선택된 언어 국기: 또렷 + 보라 링(사이트 accent 컬러) */
+.lang-btn.active {
+  opacity: 1;
+}
+
+.lang-btn.active img {
+  box-shadow: 0 0 0 2px var(--purple), 0 0 8px rgba(185, 139, 255, 0.55);
+}
+
+/* ---- 모바일 전용 바: 헤더 바로 아래, .sticky-head 안에서 함께 고정된다 ---- */
+.lang-switch-mobile {
+  display: none;
+  justify-content: center;
+  gap: 16px;
+  padding: 0.5rem 0;
+  border-left: none;
+  border-bottom: 1px solid var(--line);
+  background: rgba(6, 6, 8, 0.85);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.lang-switch-mobile .lang-btn img {
+  width: 24px;
+}
+
+@media (max-width: 860px) {
+  .site-nav .lang-switch {
+    display: none;
+  }
+
+  .lang-switch-mobile {
+    display: flex;
+  }
+}
