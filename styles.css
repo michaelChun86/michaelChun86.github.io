@@ -1193,6 +1193,19 @@ body[data-page="home"] .site-footer {
 }
 
 @media (max-width: 860px) {
+  /* 모바일: 히어로 페이지 여러 섹션을 위로 올려 공간 절약 */
+  .hero {
+    padding-top: 2.05rem;
+  }
+
+  .featured-section {
+    margin-top: -40px;
+  }
+
+  body[data-page="home"] .site-footer {
+    margin-top: -20px;
+  }
+
   /* 4개 카테고리 카드는 모바일에서도 한 줄에 나오도록 유지하고,
      좁은 폭에 맞춰 이미지/여백/글자 크기를 줄인다. */
   .card-grid {
