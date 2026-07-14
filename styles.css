@@ -1193,9 +1193,20 @@ body[data-page="home"] .site-footer {
 }
 
 @media (max-width: 860px) {
-  /* 모바일: 히어로 페이지 여러 섹션을 위로 올려 공간 절약 */
+  /* 모바일: 모든 페이지의 시작 위치를 메뉴바에 더 가깝게 올려준다 */
   .hero {
-    padding-top: 1.15rem;
+    padding-top: 0.65rem;
+    margin-top: -20px;
+  }
+
+  .page-hero {
+    padding-top: 1.5rem;
+    margin-top: -20px;
+  }
+
+  .page-hero-compact {
+    padding-top: 1rem;
+    margin-top: -20px;
   }
 
   .featured-section {
