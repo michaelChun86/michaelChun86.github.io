@@ -484,6 +484,19 @@ h1 {
   margin-top: -10px;
 }
 
+/* 한글은 Esamanru 글리프가 없어 두 줄 모두 "Noto Sans KR" 굵게(700)로만
+   렌더링되어, 영문에서 보이는 eyebrow(굵고 큼)↔부제(가늘고 작음)의
+   크기·굵기 대비가 사라진다. 한글일 때는 eyebrow를 더 키우고 자간을
+   넓히고, 부제는 더 작게 줄여서 그 대비를 대신 만들어준다. */
+html[lang="ko"] .eyebrow {
+  font-size: 1.3rem;
+  letter-spacing: 0.35em;
+}
+
+html[lang="ko"] .section-title h2 {
+  font-size: 0.65rem;
+}
+
 .page-hero p,
 .resume-card p,
 .card-copy p {
