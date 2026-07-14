@@ -357,26 +357,34 @@ html.cur-alt .logo-link:hover .logo-hover {
 }
 
 /* 타이틀 이미지 좌측 하단 문구. hero-logo-mark 와 같은 고정 레이어(글리치 영향 없음).
-   글로우는 텍스트 "아래쪽"으로 떨어지는 느낌을 주기 위해 세로 오프셋을 준 그림자를 겹친다. */
+   "프로스트 글라스 텍스트": 글자 모양(마스크)은 선명하게 유지하고,
+   글자 안쪽에는 뒤 타이틀 이미지의 블러 버전이 비쳐 보이게 한다.
+   - 요소가 프레임 전체(inset:0)를 덮고, 블러 이미지를 100%x100% 로 깔면
+     아래 원본 이미지와 정확히 정렬된다.
+   - background-clip:text 로 그 블러 이미지를 글자 모양으로만 클리핑.
+   - color 의 흰색 알파는 블러 질감 위에 살짝 얹히는 밝기 틴트. */
 .hero-quote {
   position: absolute;
-  left: 3%;
-  bottom: 4%;
+  inset: 0;
   z-index: 3;
   margin: 0;
-  max-width: 60%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  /* bottom 4%(높이 기준) ≈ 2.25%(폭 기준, 이미지 비율 2400x1340),
+     우측 패딩으로 기존 max-width 60% 와 같은 줄폭을 유지 */
+  padding: 0 37% 2.25% 3%;
   font-family: "Esamanru", "Noto Sans KR", sans-serif;
   font-weight: 500;
   font-size: clamp(0.6rem, 1.3vw, 1.02rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
-  /* 배경 없이 텍스트 자체에 60% 투명도 + 블러 */
-  color: rgba(245, 245, 247, 0.6);
-  filter: blur(0.7px);
-  text-shadow:
-    0 1px 0 rgba(245, 245, 247, 0.25),
-    0 6px 14px rgba(185, 139, 255, 0.3),
-    0 10px 22px rgba(91, 232, 232, 0.18);
+  color: rgba(245, 245, 247, 0.35);
+  background-image: url("/Image/Hero/TitleImage_QuoteBlur.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
   pointer-events: none;
 }
 
@@ -1250,10 +1258,11 @@ body[data-page="home"] .site-footer {
     gap: 0.35rem;
   }
 
-  /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 width 설정 */
+  /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 줄폭 확보
+     (inset 오버레이라 우측 패딩으로 줄폭을 조절한다) */
   .hero-quote {
     font-size: clamp(0.52rem, 1vw, 0.68rem);
-    max-width: 80%;
+    padding-right: 17%;
   }
 
   .category-card img {
