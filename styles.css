@@ -494,7 +494,7 @@ html[lang="ko"] .eyebrow {
 }
 
 html[lang="ko"] .section-title h2 {
-  font-size: 0.65rem;
+  font-size: 1.05rem;
 }
 
 .page-hero p,
@@ -1292,8 +1292,8 @@ body[data-page="home"] .site-footer {
     flex-direction: column;
   }
 
-  /* 카드 이미지/문구가 4칸을 채우기엔 여전히 넓어, 좁은 화면에서 한 번 더 줄이고
-     설명 문구는 카드 폭에 비해 너무 작아지므로 제목만 남긴다. */
+  /* 카드 이미지/문구가 4칸을 채우기엔 여전히 넓어, 좁은 화면에서 한 번 더 줄인다.
+     설명 문구는 그대로 두되 아주 작게 줄여 카드 폭 안에서 줄바꿈되게 한다. */
   .category-card img {
     height: 68px;
   }
@@ -1308,7 +1308,8 @@ body[data-page="home"] .site-footer {
   }
 
   .card-copy p {
-    display: none;
+    font-size: 0.48rem;
+    line-height: 1.25;
   }
 
   /* 카피라이트/컨택트 문구를 60% 크기로 줄여 각각 한 줄에 들어오게 한다 */
