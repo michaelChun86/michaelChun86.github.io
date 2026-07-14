@@ -1223,10 +1223,10 @@ body[data-page="home"] .site-footer {
     gap: 0.35rem;
   }
 
-  /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 width 제한 */
+  /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 width 설정 */
   .hero-quote {
     font-size: clamp(0.48rem, 0.95vw, 0.65rem);
-    max-width: 50%;
+    max-width: 75%;
   }
 
   .category-card img {

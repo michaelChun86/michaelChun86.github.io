@@ -20,7 +20,7 @@
   var T = {
     "home.eyebrow": { ko: "작업 컬렉션" },
     "home.section.subtitle": { ko: "갤러리 둘러보기" },
-    "hero.quote": { ko: "퀄리티는 결코 우연히 만들어지지 않는다.<br />언제나 성실한 고민과 노력 끝에 얻어지는 결과물이다." },
+    "hero.quote": { ko: "퀄리티는 결코 우연히 만들어지지 않는다.<br />성실한 고민과 노력 끝에 얻어지는 결과물이다." },
     "card.resume.desc": { en: "Bio and career information" },
     "card.father.desc": { en: "A page dedicated to my beloved father" },
     "card.3d.desc": { en: "Modeling, rendering, and other 3D work" },
