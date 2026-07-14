@@ -591,9 +591,14 @@ body[data-page="home"] .card-grid {
 .card-copy h3 {
   font-size: 1rem;
   letter-spacing: 0.08em;
-  color: var(--muted);
+  color: var(--text);
   transition: color 0.2s ease;
   margin-bottom: calc(0.75rem - 5px);
+}
+
+/* 설명 문구도 스캔라인 텍스처 위에서 더 잘 읽히도록 기본(--muted)보다 밝게 */
+.card-copy p {
+  color: #c7c7d2;
 }
 
 .category-card:hover .card-copy h3 {
