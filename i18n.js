@@ -140,6 +140,13 @@
       el.innerHTML = val;
     });
 
+    /* data-i18n-only="ko|en": 번역이 아니라 언어별로 완전히 다른 문단을
+       통째로 보여주고/숨길 때 쓴다(Dear Father 작가의 글처럼 원문이
+       언어마다 아예 다른 경우). */
+    document.querySelectorAll("[data-i18n-only]").forEach(function (el) {
+      el.style.display = (el.getAttribute("data-i18n-only") === lang) ? "" : "none";
+    });
+
     document.documentElement.setAttribute("lang", lang);
 
     document.querySelectorAll(".lang-btn").forEach(function (b) {
