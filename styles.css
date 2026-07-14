@@ -1343,10 +1343,10 @@ body[data-page="home"] .site-footer {
     width: 140px;
   }
 
-  /* 모바일: 링크드인/페이스북 아이콘을 프로필 사진 우측 옆에 배치 */
+  /* 모바일: 링크드인/페이스북 아이콘을 프로필 사진 우측 옆, 사진 하단에 맞춰 배치 */
   .resume-photo-col {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 1rem;
   }
 
