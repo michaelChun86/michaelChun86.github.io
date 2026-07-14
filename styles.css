@@ -1261,6 +1261,7 @@ body[data-page="home"] .site-footer {
     transform: translateY(-8px);
     pointer-events: none;
     transition: max-height 0.3s ease, opacity 0.25s ease, transform 0.25s ease;
+    z-index: 30;
   }
 
   .site-nav.open {
