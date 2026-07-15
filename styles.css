@@ -45,27 +45,14 @@ html {
   overflow-y: scroll;
 }
 
-/* ---------- 페이지 전환(View Transitions) ----------
-   메뉴 클릭 시 페이지가 통째로 새로 로드되며 그 찰나에 브라우저 기본(흰색)
-   커서가 잠깐 뜨는 현상을 없앤다. 두 페이지를 빈 프레임 없이 부드럽게
-   크로스페이드해, 전환 중에도 커서가 우리 커서로 유지된다.
-   (Chrome/Edge 지원. 미지원 브라우저는 기존처럼 즉시 전환 — 무해) */
-@view-transition {
-  navigation: auto;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.18s;
-}
-
-/* 모션 최소화 선호 시 전환 애니메이션 끔 */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-}
+/* ---------- 페이지 전환(View Transitions) — 제거됨 ----------
+   과거에 @view-transition { navigation: auto } 로 페이지 이동 시 크로스페이드를
+   넣어 커스텀 커서가 잠깐 기본 커서로 깜빡이는 현상을 가렸었다. 하지만
+   카카오톡 등 인앱 브라우저(구형 WebView)에서는 크로스도큐먼트 View Transition
+   의 "새 페이지로 전환" 단계가 끝나지 않아 이전 페이지 스냅샷에 멈춘 채
+   먹통이 되는 문제가 있었다(크롬은 정상). 실사용자 차단이 커서 깜빡임보다
+   훨씬 치명적이라 이 기능을 완전히 제거한다. 이동은 모든 브라우저에서
+   평범한 즉시 로드로 동작한다. */
 
 body {
   margin: 0;
