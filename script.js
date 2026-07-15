@@ -828,6 +828,68 @@ toggle?.addEventListener('click', () => {
 buildGallery();
 
 /* =========================================================================
+   PROFILE 경력: 프로젝트 박스 호버 시 커서 우하단을 따라다니는 썸네일 (PC 전용)
+   - li.experience-item[data-thumb] 에 마우스를 올리면 표시.
+   - data-thumb="confidential" 이면 이미지 대신 스캔라인 + CONFIDENTIAL 표시.
+   - 모바일(<=860px)에서는 동작하지 않는다(matchMedia).
+   ========================================================================= */
+(function () {
+  const items = document.querySelectorAll('.experience-item[data-thumb]');
+  if (!items.length) return;
+
+  const desktop = window.matchMedia('(min-width: 861px)');
+  const OFFSET = 18;
+
+  const thumb = document.createElement('div');
+  thumb.className = 'exp-thumb';
+  thumb.setAttribute('aria-hidden', 'true');
+  thumb.innerHTML =
+    '<img alt="" /><div class="exp-thumb-confidential"><span>CONFIDENTIAL</span></div>';
+  document.body.appendChild(thumb);
+  const thumbImg = thumb.querySelector('img');
+
+  let activeItem = null;
+
+  function place(e) {
+    const w = thumb.offsetWidth;
+    const h = thumb.offsetHeight;
+    // 기본은 커서 우하단. 화면 밖으로 넘치면 반대쪽으로 접는다.
+    let x = e.clientX + OFFSET;
+    let y = e.clientY + OFFSET;
+    if (x + w > window.innerWidth - 8) x = e.clientX - OFFSET - w;
+    if (y + h > window.innerHeight - 8) y = e.clientY - OFFSET - h;
+    thumb.style.left = x + 'px';
+    thumb.style.top = y + 'px';
+  }
+
+  items.forEach(function (item) {
+    item.addEventListener('mouseenter', function (e) {
+      if (!desktop.matches) return;
+      activeItem = item;
+      const src = item.getAttribute('data-thumb');
+      if (src === 'confidential') {
+        thumb.classList.add('confidential');
+        thumbImg.removeAttribute('src');
+      } else {
+        thumb.classList.remove('confidential');
+        thumbImg.src = src;
+      }
+      place(e);
+      thumb.classList.add('show');
+    });
+    item.addEventListener('mousemove', function (e) {
+      if (activeItem === item && desktop.matches) place(e);
+    });
+    item.addEventListener('mouseleave', function () {
+      if (activeItem === item) {
+        activeItem = null;
+        thumb.classList.remove('show');
+      }
+    });
+  });
+})();
+
+/* =========================================================================
    히어로 CRT 글리치 (홈 전용)
    - 평소엔 멀쩡한 기본 이미지만 보인다.
    - 무작위 간격(2.5~7초)마다 버스트 발생. 버스트마다 강도(tier)를 가중치

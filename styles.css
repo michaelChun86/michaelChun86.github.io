@@ -1065,6 +1065,84 @@ body[data-page="2d-art"] .gallery-meta {
   margin: 0.15rem 0 0;
 }
 
+/* ---------- 경력 프로젝트 호버 썸네일 (PC 전용) ----------
+   프로젝트 박스에 마우스를 올리면 커서 우하단을 따라다니는 작은 썸네일이
+   뜬다. JS(script.js)가 body 에 .exp-thumb 하나를 만들어 위치/내용만 갱신한다.
+   Summoners War 2 처럼 비공개 프로젝트는 이미지 대신 스캔라인 패턴 위에
+   CONFIDENTIAL 문구를 보여준다. */
+.exp-thumb {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  width: 210px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.exp-thumb.show {
+  opacity: 1;
+  transform: none;
+}
+
+.exp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 비공개 프로젝트: 스캔라인 패턴 + CONFIDENTIAL */
+.exp-thumb-confidential {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--panel);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 5px,
+    rgba(185, 139, 255, 0.09) 5px,
+    rgba(185, 139, 255, 0.09) 6px
+  );
+}
+
+.exp-thumb-confidential span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  color: #c7c7d2;
+  padding: 0.28rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(6, 6, 8, 0.6);
+}
+
+.exp-thumb.confidential img {
+  display: none;
+}
+
+.exp-thumb.confidential .exp-thumb-confidential {
+  display: flex;
+}
+
+/* 모바일에서는 호버 썸네일 자체를 쓰지 않는다 */
+@media (max-width: 860px) {
+  .exp-thumb {
+    display: none !important;
+  }
+}
+
 .resume-side {
   display: flex;
   flex-direction: column;
