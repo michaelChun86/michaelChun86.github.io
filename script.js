@@ -1,7 +1,7 @@
 const galleryPages = {
   '3d-art': [
-    { src: '/Image/3D ART/3D Gallery/3D_559.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_560.webp', type: 'professional' },
+    { src: '/Image/3D ART/3D Gallery/3D__New_001.webp', type: 'professional' },
+    { src: '/Image/3D ART/3D Gallery/3D__New_002.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_001.webp', type: 'personal' },
     { src: '/Image/3D ART/3D Gallery/3D_002.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_003.webp', type: 'professional' },
