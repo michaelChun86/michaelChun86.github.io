@@ -26,6 +26,11 @@
     "card.3d.desc": { en: "Modeling, rendering, and other 3D work" },
     "card.2d.desc": { en: "Logos, concept art, and other 2D work" },
 
+    /* ---- 3D/2D 갤러리 분류 필터 버튼 ---- */
+    "gallery.filter.all": { ko: "전체" },
+    "gallery.filter.professional": { ko: "실무 작업" },
+    "gallery.filter.personal": { ko: "개인 작업" },
+
     /* ---- 내비게이션/페이지명은 한국어 모드에서도 항상 영문 그대로 둔다(번역 키 없음) ---- */
 
     /* ---- Resume(=Profile) 페이지: 원문이 영문이라 ko 번역만 정의한다 ---- */
