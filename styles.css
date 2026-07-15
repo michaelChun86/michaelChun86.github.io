@@ -886,13 +886,13 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 /* 배지 배경: 각 타입의 포인트 컬러(hover 폰트 컬러)와 같은 색상(Hue)의
-   더 어두운 톤으로, 좌측에서 진하게 시작해 우측으로 갈수록 옅어지는 그라데이션.
+   더 어두운 톤으로 좌측에서 시작해, 우측으로 갈수록 블랙으로 이어지는 그라데이션.
    #ff8a1e(오렌지) 와 같은 Hue, 더 어두운 톤 */
 .badge-professional {
   background: linear-gradient(
     to right,
     rgba(112, 54, 0, 0.88) 0%,
-    rgba(112, 54, 0, 0) 100%
+    rgba(0, 0, 0, 0.88) 100%
   );
 }
 
@@ -901,7 +901,7 @@ body[data-page="2d-art"] .gallery-meta {
   background: linear-gradient(
     to right,
     rgba(18, 112, 0, 0.88) 0%,
-    rgba(18, 112, 0, 0) 100%
+    rgba(0, 0, 0, 0.88) 100%
   );
 }
 
