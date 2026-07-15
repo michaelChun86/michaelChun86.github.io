@@ -15,7 +15,10 @@
   "use strict";
 
   var LANGS = ["ko", "en"];
-  var STORE_KEY = "chun-lang";
+  // 기본 언어를 영어로 전환하면서 저장 키 버전을 올린다. 이전에 "chun-lang"
+  // 에 "ko" 를 저장해 둔 기존 방문자도 새 키(v2)에는 값이 없으므로 이번엔
+  // 영어로 시작하고, 이후 국기로 고른 언어는 계속 유지된다.
+  var STORE_KEY = "chun-lang-v2";
 
   var T = {
     "home.eyebrow": { ko: "작업 컬렉션" },
@@ -133,7 +136,7 @@
   }
 
   function apply(lang) {
-    if (LANGS.indexOf(lang) === -1) lang = "ko";
+    if (LANGS.indexOf(lang) === -1) lang = "en";
 
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var k = el.getAttribute("data-i18n");
@@ -164,13 +167,13 @@
     try { localStorage.setItem(STORE_KEY, lang); } catch (e) {}
   }
 
-  // 기본 언어는 한국어(사이트 원문). 사용자가 국기로 고른 언어가 있으면
+  // 기본 언어는 영어. 사용자가 국기로 고른 언어가 있으면
   // 다음 방문/페이지 이동에도 그 언어를 유지한다.
   function initialLang() {
     var saved = null;
     try { saved = localStorage.getItem(STORE_KEY); } catch (e) {}
     if (saved && LANGS.indexOf(saved) !== -1) return saved;
-    return "ko";
+    return "en";
   }
 
   function init() {
