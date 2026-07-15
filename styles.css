@@ -880,7 +880,8 @@ body[data-page="2d-art"] .gallery-meta {
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   box-sizing: border-box;
-  color: var(--muted);
+  /* 비호버 상태: --muted 보다 더 어두운 그레이 */
+  color: #5c5c66;
   transition: color 0.2s ease;
 }
 

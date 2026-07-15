@@ -706,9 +706,15 @@ function getFilteredItems() {
   return items.filter((item) => item.type === activeFilter);
 }
 
+const BADGE_LABEL = {
+  professional: { ko: '실무 작업', en: 'Professional' },
+  personal: { ko: '개인 작업', en: 'Personal' }
+};
+
 function buildGallery() {
   if (!galleryContainer) return;
 
+  const lang = document.documentElement.lang === 'ko' ? 'ko' : 'en';
   const items = getFilteredItems();
   galleryContainer.innerHTML = '';
 
@@ -717,7 +723,7 @@ function buildGallery() {
     card.className = 'gallery-item';
     const title = item.title || '';
     const badge = (item.type && activeFilter === 'all')
-      ? `<span class="gallery-badge badge-${item.type}">${item.type === 'professional' ? 'Professional' : 'Personal'}</span>`
+      ? `<span class="gallery-badge badge-${item.type}">${BADGE_LABEL[item.type][lang]}</span>`
       : '';
     card.innerHTML = `
       ${badge}
@@ -736,6 +742,16 @@ filterButtons.forEach((btn) => {
     buildGallery();
   });
 });
+
+/* 언어 전환(html[lang] 변경) 시 배지 라벨도 다시 그린다 —
+   i18n.js 는 data-i18n 요소만 갱신하고, 배지는 JS로 매번 새로 생성되는
+   요소라 그 대상에 포함되지 않기 때문. */
+if (galleryContainer) {
+  new MutationObserver(buildGallery).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['lang']
+  });
+}
 
 const lightbox = document.querySelector('.lightbox');
 const lightboxImg = lightbox?.querySelector('img');
