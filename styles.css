@@ -544,6 +544,8 @@ body[data-page="home"] .card-grid {
 }
 
 .category-card {
+  display: flex;
+  flex-direction: column;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -564,6 +566,10 @@ body[data-page="home"] .card-grid {
 
 .card-copy {
   position: relative;
+  /* 그리드가 카드를 같은 높이로 늘릴 때, 설명이 짧은 카드(PROFILE 등)도
+     card-copy 가 남은 높이를 채우도록 해서 스캔라인(::before)이 패널
+     하단까지 빈틈없이 덮이게 한다. */
+  flex: 1 1 auto;
   padding: 1rem 1.1rem 1.25rem;
   transition: background 0.2s ease;
 }
