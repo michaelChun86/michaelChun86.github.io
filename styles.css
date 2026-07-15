@@ -345,7 +345,9 @@ html.cur-alt .logo-link:hover .logo-hover {
 }
 
 /* 타이틀 이미지에 그려진 우측 하단 로고와 같은 위치에 고정되는 별도 레이어.
-   hero-glitch 바깥(hero-frame-box 의 형제)에 있어 글리치 지터의 영향을 받지 않는다. */
+   hero-glitch 바깥(hero-frame-box 의 형제)에 있어 글리치 지터의 영향을 받지 않는다.
+   타이틀 이미지(부모 hero-frame-box) 페이드인이 끝난 뒤(2s 지연 + 2s 재생 = 4s 시점)
+   살짝 늦게 자체적으로 한 번 더 페이드인 된다. */
 .hero-logo-mark {
   position: absolute;
   right: 2.4%;
@@ -354,6 +356,16 @@ html.cur-alt .logo-link:hover .logo-hover {
   height: auto;
   z-index: 3;
   pointer-events: none;
+  opacity: 0;
+  animation: hero-intro-fade 1s ease forwards;
+  animation-delay: 4.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo-mark {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 /* 타이틀 이미지 좌측 하단 문구. hero-logo-mark 와 같은 고정 레이어(글리치 영향 없음).
@@ -379,7 +391,7 @@ html.cur-alt .logo-link:hover .logo-hover {
   font-size: clamp(0.6rem, 1.3vw, 1.02rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
-  color: rgba(245, 245, 247, 0.35);
+  color: rgba(245, 245, 247, 0.55);
   background-image: url("/Image/Hero/TitleImage_QuoteBlur.jpg");
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -562,6 +574,12 @@ body[data-page="home"] .card-grid {
 .card-copy {
   position: relative;
   padding: 1rem 1.1rem 1.25rem;
+  transition: background 0.2s ease;
+}
+
+/* 호버 시 설명란 배경에 아주 연한 보라 틴트 */
+.category-card:hover .card-copy {
+  background: rgba(185, 139, 255, 0.06);
 }
 
 /* 설명란 그레이 배경 질감: 깔끔한 가로 스캔라인.
@@ -1071,6 +1089,10 @@ body[data-page="2d-art"] .gallery-meta {
   padding-bottom: 4rem;
 }
 
+.resume-contact a {
+  transition: color 0.2s ease;
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
   border-top: 1px solid var(--line);
@@ -1120,6 +1142,12 @@ body[data-page="home"] .site-footer {
 
 .footer-contact a {
   color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.footer-contact a:hover,
+.resume-contact a:hover {
+  color: var(--purple);
 }
 
 /* ---------- Lightbox ---------- */
@@ -1303,8 +1331,13 @@ body[data-page="home"] .site-footer {
   /* 모바일에서 hero quote를 2줄로 유지하기 위해 폰트 축소 및 줄폭 확보
      (inset 오버레이라 우측 패딩으로 줄폭을 조절한다) */
   .hero-quote {
-    font-size: clamp(0.52rem, 1vw, 0.68rem);
+    font-size: clamp(0.36rem, 0.72vw, 0.48rem);
     padding-right: 17%;
+  }
+
+  /* 모바일에서만 우측 하단 로고를 살짝 키운다(PC는 9.3% 그대로) */
+  .hero-logo-mark {
+    width: 11%;
   }
 
   .category-card img {
@@ -1313,6 +1346,18 @@ body[data-page="home"] .site-footer {
 
   .card-copy {
     padding: 0.5rem 0.5rem 0.65rem;
+  }
+
+  /* 모바일은 카드가 훨씬 작아 6px 주기 그대로면 상대적으로 라인이 듬성듬성해
+     보인다. PC와 비슷한 밀도로 보이도록 주기를 절반(3px)으로 좁힌다. */
+  .card-copy::before {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(185, 139, 255, 0.09) 2px,
+      rgba(185, 139, 255, 0.09) 3px
+    );
   }
 
   .card-copy h3 {
