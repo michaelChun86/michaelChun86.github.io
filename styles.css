@@ -129,12 +129,16 @@ img {
 }
 
 /* 홈 히어로 인트로: 메뉴바가 위에서 아래로 내려오며 2초간 페이드인 된다
-   (타이틀 이미지와 동시에 시작). */
+   (타이틀 이미지와 동시에 시작).
+   fill 은 backwards 로 둔다: forwards 로 두면 애니메이션 종료 후에도
+   최종 키프레임의 transform(=translateY(0), 즉 항등 행렬)이 남아 .site-header 가
+   stacking context/backdrop-root 가 되고, 그 자식인 모바일 메뉴 드롭다운
+   (.site-nav)의 backdrop-filter 블러가 깨진다. backwards 로 두면 시작 전에는
+   from 상태(숨김)를 적용하되, 종료 후에는 요소 본래 스타일(transform 없음)로
+   정착해 블러가 정상 동작한다. */
 body[data-page="home"] .site-header,
 body[data-page="home"] .lang-switch-mobile {
-  opacity: 0;
-  transform: translateY(-100%);
-  animation: header-slide-fade 2s ease forwards;
+  animation: header-slide-fade 2s ease backwards;
 }
 
 @keyframes header-slide-fade {
