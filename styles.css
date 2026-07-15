@@ -666,10 +666,18 @@ body[data-page="home"] .card-grid {
 }
 
 .filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  /* 한글은 Noto Sans KR Bold 글꼴 지표 때문에 같은 font-size 에서도
+     줄 높이가 더 커 보인다. height 를 고정해 언어 전환에도
+     버튼 크기가(높이가) 그대로 유지되게 한다. */
+  height: 30px;
   background: rgba(10, 10, 13, 0.55);
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 0.4rem 1rem;
+  padding: 0 1rem;
   font-size: 0.85rem;
   font-weight: 500;
   letter-spacing: 0.06em;
