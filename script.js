@@ -228,7 +228,6 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_224.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_225.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_226.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_227.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_228.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_229.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_230.webp', type: 'professional' },
@@ -451,7 +450,6 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_447.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_448.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_449.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_450.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_451.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_452.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_453.webp', type: 'professional' },
@@ -559,7 +557,9 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_555.webp', type: 'personal' },
     { src: '/Image/3D ART/3D Gallery/3D_556.webp', type: 'personal' },
     { src: '/Image/3D ART/3D Gallery/3D_557.webp', type: 'personal' },
-    { src: '/Image/3D ART/3D Gallery/3D_558.webp', type: 'personal' }
+    { src: '/Image/3D ART/3D Gallery/3D_558.webp', type: 'personal' },
+    { src: '/Image/3D ART/3D Gallery/3D_559.webp', type: 'professional' },
+    { src: '/Image/3D ART/3D Gallery/3D_560.webp', type: 'professional' }
   ],
   '2d-art': [
     { src: '/Image/2D ART/2D Gallery/2D_001.webp', type: 'professional' },
