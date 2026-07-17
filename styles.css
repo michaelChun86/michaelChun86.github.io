@@ -1075,7 +1075,7 @@ body[data-page="2d-art"] .gallery-meta {
   left: 0;
   top: 0;
   z-index: 60;
-  width: 210px;
+  width: 420px;
   aspect-ratio: 16 / 9;
   border: 1px solid var(--line);
   border-radius: 6px;
