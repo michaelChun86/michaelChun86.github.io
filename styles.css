@@ -32,6 +32,14 @@
   --purple: #b98bff;
   --cyan: #5be8e8;
   --pink: #ff6fd8;
+  /* 액센트 위계:
+     purple = 구조(페이지·섹션 제목, 링크) — 주 액센트
+     pink   = 콘텐츠의 핵심(프로젝트명) — 시선이 가장 먼저 닿아야 할 곳
+     cyan   = 보조 메타데이터(분류 라벨). 목록에서 매 행마다 반복되므로
+              풀채도로 쓰면 핑크와 경쟁해 초점이 흩어진다. 톤 다운한
+              --cyan-dim 을 쓰고, 풀채도 --cyan 은 호버 등 순간적인
+              강조에만 남겨둔다. */
+  --cyan-dim: #4f9a9d;
 }
 
 * {
@@ -473,12 +481,14 @@ body[data-page="home"] .section-title {
   }
 }
 
+/* eyebrow 는 제목 위에 붙는 작은 라벨이다. 이전에는 0.95rem 으로 아래 h2(1rem)
+   와 크기가 거의 같아 둘 중 무엇이 제목인지 알 수 없었다. 라벨답게 줄인다. */
 .eyebrow {
   color: var(--purple);
   letter-spacing: 0.3em;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
 }
 
 h1,
@@ -494,25 +504,28 @@ h1 {
   font-size: clamp(2rem, 3vw, 3rem);
 }
 
+/* 섹션 제목(예: Browse the Gallery). eyebrow 라벨 아래 오는 진짜 헤딩이라
+   본문보다 확실히 크게 둔다. Esamanru Light(300)의 얇은 획이 큰 크기에서
+   살아나 장식 없이도 우아하게 읽힌다. */
 .section-title h2 {
-  font-size: 1rem;
+  font-size: 1.6rem;
   font-weight: 300;
-  letter-spacing: normal;
-  /* Explore the Work + 아래 카테고리 박스들을 10px 위로 (eyebrow는 유지) */
-  margin-top: -10px;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  margin-top: -6px;
 }
 
-/* 한글은 Esamanru 글리프가 없어 두 줄 모두 "Noto Sans KR" 굵게(700)로만
-   렌더링되어, 영문에서 보이는 eyebrow(굵고 큼)↔부제(가늘고 작음)의
-   크기·굵기 대비가 사라진다. 한글일 때는 eyebrow를 더 키우고 자간을
-   넓히고, 부제는 더 작게 줄여서 그 대비를 대신 만들어준다. */
+/* 한글은 Esamanru 글리프가 없어 eyebrow·부제 모두 "Noto Sans KR" 굵게(700)로
+   렌더링되므로 굵기 대비가 사라진다. 이제는 크기 차이(0.8rem ↔ 1.6rem)가
+   위계를 충분히 만들어 주므로, 굵은 한글이 과해 보이지 않도록 값만 살짝
+   조정한다(라벨은 작은 크기에서 읽히게 조금 키우고, 헤딩은 조금 줄인다). */
 html[lang="ko"] .eyebrow {
-  font-size: 1.3rem;
-  letter-spacing: 0.35em;
+  font-size: 0.9rem;
+  letter-spacing: 0.32em;
 }
 
 html[lang="ko"] .section-title h2 {
-  font-size: 1.05rem;
+  font-size: 1.4rem;
 }
 
 .page-hero p,
@@ -604,16 +617,21 @@ body[data-page="home"] .card-grid {
 }
 
 .card-copy h3 {
-  font-size: 1rem;
+  font-size: 1.05rem;
   letter-spacing: 0.08em;
   color: var(--text);
   transition: color 0.2s ease;
-  margin-bottom: calc(0.75rem - 5px);
+  margin-bottom: calc(0.75rem - 7px);
 }
 
-/* 설명 문구도 스캔라인 텍스처 위에서 더 잘 읽히도록 기본(--muted)보다 밝게 */
+/* 설명은 제목의 보조 정보다. 이전에는 제목과 같은 1rem 이라 카드 안에서
+   위계가 없었다. 한 단계 낮춰 제목이 먼저 읽히게 한다.
+   (스캔라인 텍스처 위라 색은 --muted 보다 밝게 유지) */
 .card-copy p {
+  font-size: 0.875rem;
+  line-height: 1.5;
   color: #c7c7d2;
+  margin: 0;
 }
 
 .category-card:hover .card-copy h3 {
@@ -642,12 +660,15 @@ body[data-page="home"] .card-grid {
   padding-top: 0;
 }
 
-/* 페이지 상단 타이틀: 리줌 Experience 헤딩과 동일한 스타일(크기·대문자·보라색) */
+/* 페이지 상단 타이틀: 각 페이지에서 가장 큰 활자.
+   이전에는 1.1rem 이라 본문(1rem)과 거의 같아 "제목"으로 읽히지 않았다.
+   타입 스케일의 최상단(디스플레이)으로 올려 페이지의 시작점을 분명히 한다. */
 .page-title {
   color: var(--purple);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.15;
   margin: 0;
 }
 
@@ -1009,12 +1030,13 @@ body[data-page="2d-art"] .gallery-meta {
   align-items: start;
 }
 
+/* 섹션 헤딩: 페이지 타이틀(디스플레이)과 본문 사이 단계 */
 .resume-main h2,
 .resume-side h3 {
   color: var(--purple);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.75rem;
   margin-bottom: 1.25rem;
@@ -1035,18 +1057,29 @@ body[data-page="2d-art"] .gallery-meta {
   padding-top: 0;
 }
 
+/* 분류 라벨: 매 행 반복되는 메타데이터라 톤 다운한 시안을 쓴다.
+   호버 시에만 풀채도로 살아나 "지금 보고 있는 항목"을 표시한다. */
 .exp-category {
-  color: var(--cyan);
-  font-size: 0.78rem;
+  color: var(--cyan-dim);
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   margin: 0 0 0.3rem;
+  transition: color 0.2s ease;
 }
 
+.experience-item:hover .exp-category {
+  color: var(--cyan);
+}
+
+/* 각 행의 앵커. 본문보다 한 단계 크게 두어 목록을 훑을 때
+   프로젝트명이 먼저 잡히게 한다. */
 .exp-title {
+  font-size: 1.1rem;
   font-weight: 500;
   letter-spacing: 0.04em;
-  margin: 0 0 0.25rem;
+  line-height: 1.45;
+  margin: 0 0 0.3rem;
 }
 
 .exp-title span {
@@ -1054,6 +1087,7 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 .exp-company {
+  font-size: 0.95rem;
   font-weight: 300;
   color: var(--muted);
   margin: 0;
@@ -1191,11 +1225,14 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 /* ---------- Footer ---------- */
+/* 푸터는 타입 스케일의 최하단(캡션). 이전에는 본문과 같은 1rem 이라
+   페이지 마지막에서 시선을 불필요하게 붙잡았다. */
 .site-footer {
   border-top: 1px solid var(--line);
   padding: 1.75rem 0 2rem;
   color: var(--muted);
   text-align: center;
+  font-size: 0.85rem;
 }
 
 /* 홈 히어로 인트로: 푸터(Copyright 영역)도 PORTFOLIO CATEGORIES 탭과
