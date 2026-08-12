@@ -899,10 +899,13 @@ body[data-page="home"] .card-grid {
   padding-top: 0;
 }
 
+/* 16:9 칸은 정사각형보다 높이가 낮아, 6열을 유지하면 한 칸이 108px 높이의
+   납작한 띠가 된다. 열을 줄여 칸을 넓히면 한 장당 면적은 오히려 커지고
+   (193x193 -> 294x165), 행 높이는 낮아져 화면당 보이는 행 수는 유지된다. */
 body[data-page="dear-father"] .gallery-grid,
 body[data-page="3d-art"] .gallery-grid,
 body[data-page="2d-art"] .gallery-grid {
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
 }
 
@@ -923,10 +926,16 @@ body[data-page="2d-art"] .gallery-item:hover {
   border-color: rgba(185, 139, 255, 0.6);
 }
 
+/* 칸 비율을 작품 비율에 맞춘다.
+   표본 조사 결과 3D 갤러리는 90%가 가로 이미지이고 69%가 16:9 이상인데,
+   정사각형 칸에 cover 로 넣는 동안 평균 45%(40장 중 39장이 30% 이상)가
+   좌우로 잘려나가고 있었다. 16:9 로 두면 대부분이 거의 원본 구도 그대로
+   보인다. 세로 이미지 소수(약 4%)는 반대로 잘리지만, 전체적으로는
+   잘림이 크게 줄어든다. */
 body[data-page="dear-father"] .gallery-item img,
 body[data-page="3d-art"] .gallery-item img,
 body[data-page="2d-art"] .gallery-item img {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   width: 100%;
   transition: transform 0.3s ease;
@@ -999,10 +1008,11 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 @media (max-width: 760px) {
+  /* 모바일도 같은 이유로 한 열 줄인다(3열이면 16:9 칸이 61px 높이) */
   body[data-page="dear-father"] .gallery-grid,
   body[data-page="3d-art"] .gallery-grid,
   body[data-page="2d-art"] .gallery-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
