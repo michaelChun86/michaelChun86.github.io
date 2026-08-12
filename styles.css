@@ -372,12 +372,9 @@ html.cur-alt .logo-link:hover .logo-hover {
 }
 
 /* 타이틀 이미지 좌측 하단 문구. hero-logo-mark 와 같은 고정 레이어(글리치 영향 없음).
-   "프로스트 글라스 텍스트": 글자 모양(마스크)은 선명하게 유지하고,
-   글자 안쪽에는 뒤 타이틀 이미지의 블러 버전이 비쳐 보이게 한다.
-   - 요소가 프레임 전체(inset:0)를 덮고, 블러 이미지를 100%x100% 로 깔면
-     아래 원본 이미지와 정확히 정렬된다.
-   - background-clip:text 로 그 블러 이미지를 글자 모양으로만 클리핑.
-   - color 의 흰색 알파는 블러 질감 위에 살짝 얹히는 밝기 틴트. */
+   요소가 프레임 전체(inset:0)를 덮고, flex 로 좌측 하단에 문구를 앉힌다.
+   가독성이 최우선이라 글자 본체는 불투명한 화이트로 채우고, 페이지 제목과
+   같은 색수차 프린지는 글자 가장자리(text-shadow)로만 남긴다. */
 .hero-quote {
   position: absolute;
   inset: 0;
@@ -390,18 +387,19 @@ html.cur-alt .logo-link:hover .logo-hover {
      우측 패딩으로 기존 max-width 60% 와 같은 줄폭을 유지 */
   padding: 0 37% 2.25% 3%;
   font-family: "Esamanru", "Noto Sans KR", sans-serif;
-  font-weight: 500;
-  font-size: clamp(0.6rem, 1.3vw, 1.02rem);
+  font-weight: 300;
+  font-size: clamp(0.68rem, 1.45vw, 1.15rem);
   line-height: 1.5;
   letter-spacing: 0.01em;
-  color: rgba(245, 245, 247, 0.55);
-  background-image: url("/Image/Hero/TitleImage_QuoteBlur.jpg");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  -webkit-background-clip: text;
-  background-clip: text;
-  /* text-shadow 두 역할을 한 선언에 겹친다(background-clip:text 여도
-     text-shadow 는 별도 레이어라 정상 적용된다).
+  /* 글자 본체는 불투명한 화이트.
+     이전에는 background-clip:text 로 흐린 타이틀 이미지를 글자 안에
+     비치게 하고 흰색을 55% 만 얹었는데, 글자 절반이 어둡고 흐린 배경이라
+     시인성이 나빴다. 색수차(아래 text-shadow)는 글자 "가장자리"에서
+     생기는 효과라 본체를 불투명하게 채워도 그대로 남는다.
+     background-image 도 함께 제거해야 한다. clip 만 풀면 그 이미지가
+     inset:0 인 이 요소 전체(히어로 프레임)를 덮어버린다. */
+  color: var(--text);
+  /* text-shadow 가 두 역할을 겸한다.
      1) 색수차: 페이지 제목과 같은 마젠타(좌)/시안(우) 분리.
         본문이 제목보다 훨씬 작으므로 단계를 3→2 로 줄이고 em 오프셋은
         조금 크게 잡아야 프린지가 뭉치지 않고 눈에 보인다.
@@ -1527,8 +1525,8 @@ body[data-page="home"] .site-footer {
      inset 오버레이라 줄폭은 우측 패딩으로 조절하며, 키운 만큼 패딩을
      줄여 두 줄을 유지한다. */
   .hero-quote {
-    font-size: clamp(0.52rem, 0.9vw, 0.68rem);
-    padding-right: 13%;
+    font-size: clamp(0.6rem, 1vw, 0.78rem);
+    padding-right: 9%;
   }
 
   /* 모바일에서만 우측 하단 로고를 살짝 키운다(PC는 9.3% 그대로) */
