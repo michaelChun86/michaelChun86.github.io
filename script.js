@@ -235,14 +235,10 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_232.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_233.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_234.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_235.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_236.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_237.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_238.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_239.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_240.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_241.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_242.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_243.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_244.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_245.webp', type: 'professional' },
@@ -250,7 +246,6 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_247.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_248.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_249.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_250.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_251.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_252.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_253.webp', type: 'professional' },
@@ -262,7 +257,6 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_259.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_260.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_261.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_262.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_263.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_264.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_265.webp', type: 'professional' },
@@ -312,10 +306,8 @@ const galleryPages = {
     { src: '/Image/3D ART/3D Gallery/3D_309.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_310.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_311.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_312.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_313.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_314.webp', type: 'professional' },
-    { src: '/Image/3D ART/3D Gallery/3D_315.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_316.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_317.webp', type: 'professional' },
     { src: '/Image/3D ART/3D Gallery/3D_318.webp', type: 'professional' },
@@ -708,9 +700,11 @@ function getFilteredItems() {
   return items.filter((item) => item.type === activeFilter);
 }
 
+/* 썸네일 위 배지는 필터 버튼("실무 작업")보다 짧게 쓴다. 썸네일이 작아
+   긴 라벨은 칩이 카드 폭을 거의 다 차지해 답답해 보이기 때문. */
 const BADGE_LABEL = {
-  professional: { ko: '실무 작업', en: 'Professional' },
-  personal: { ko: '개인 작업', en: 'Personal' }
+  professional: { ko: '실무', en: 'Pro' },
+  personal: { ko: '개인', en: 'Personal' }
 };
 
 /* ---------- 갤러리 점진 렌더링 ----------
