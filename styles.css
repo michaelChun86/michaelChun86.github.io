@@ -971,20 +971,31 @@ body[data-page="2d-art"] .gallery-meta {
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-/* 배지 배경: 각 타입의 포인트 컬러(hover 폰트 컬러)와 같은 색상(Hue)의
-   더 어둡고 채도 낮춘(톤 다운) 톤으로 좌측에서 시작해,
-   우측으로 갈수록 블랙으로 이어지는 그라데이션.
-   #1e8aff(블루) 와 같은 Hue, 톤 다운 */
-/* 배경은 두 종류 모두 동일한 반투명 검정(.gallery-badge)이고, 구분은
-   호버 시 글자·테두리에 들어오는 포인트 컬러로만 준다. */
+/* 두 분류의 색은 사이트 고유 액센트에서 가져온다: 실무=시안, 개인=핑크.
+   페이지 제목·히어로 문구의 색수차에 쓰인 바로 그 조합이라 겉돌지 않고,
+   색상환에서 정반대라 작은 칩에서도 서로 확실히 구분된다.
+   (이전 #1e8aff / #39ff14 는 팔레트에 없는 외래 색이었다.)
+
+   배경은 두 분류 모두 같은 반투명 검정이고, 글자도 평소에는 화이트로 두어
+   가독성을 지킨다. 대신 테두리에 색을 넣어 호버하지 않아도 어느 분류인지
+   알아볼 수 있게 한다. */
+.badge-professional {
+  border-color: rgba(91, 232, 232, 0.5);
+}
+
+.badge-personal {
+  border-color: rgba(255, 111, 216, 0.5);
+}
+
+/* 호버: 그 카드에 집중할 때만 글자까지 풀채도로 살린다 */
 .gallery-item:hover .badge-professional {
-  color: #1e8aff;
-  border-color: rgba(30, 138, 255, 0.55);
+  color: var(--cyan);
+  border-color: var(--cyan);
 }
 
 .gallery-item:hover .badge-personal {
-  color: #39ff14;
-  border-color: rgba(57, 255, 20, 0.5);
+  color: var(--pink);
+  border-color: var(--pink);
 }
 
 @media (max-width: 760px) {
