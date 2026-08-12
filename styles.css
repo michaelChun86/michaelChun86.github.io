@@ -113,9 +113,8 @@ img {
 }
 
 /* ---------- Header ----------
-   .sticky-head 가 스크롤 고정을 담당하는 바깥 껍데기다. 그 안에 .site-header
-   (로고+메뉴)와, 모바일 전용 언어 전환 바(.lang-switch-mobile)가 세로로
-   쌓여 있어, 두 요소가 "하나의 고정 헤더"처럼 함께 스크롤에 고정된다. */
+   .sticky-head 가 스크롤 고정을 담당하는 바깥 껍데기이고, 그 안의
+   .site-header 가 로고·메뉴·(모바일에서는) 국기 버튼을 모두 담는다. */
 .sticky-head {
   position: sticky;
   top: 0;
@@ -138,8 +137,7 @@ img {
    (.site-nav)의 backdrop-filter 블러가 깨진다. backwards 로 두면 시작 전에는
    from 상태(숨김)를 적용하되, 종료 후에는 요소 본래 스타일(transform 없음)로
    정착해 블러가 정상 동작한다. */
-body[data-page="home"] .site-header,
-body[data-page="home"] .lang-switch-mobile {
+body[data-page="home"] .site-header {
   animation: header-slide-fade 2s ease backwards;
 }
 
@@ -149,8 +147,7 @@ body[data-page="home"] .lang-switch-mobile {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page="home"] .site-header,
-  body[data-page="home"] .lang-switch-mobile {
+  body[data-page="home"] .site-header {
     animation: none;
     opacity: 1;
     transform: none;
@@ -1474,10 +1471,14 @@ body[data-page="home"] .site-footer {
     backdrop-filter: blur(14px);
   }
 
-  /* 모바일: 모든 페이지의 시작 위치를 메뉴바에 더 가깝게 올려준다 */
+  /* 모바일 상단 여백.
+     국기 버튼이 헤더 안으로 들어가면서 고정 헤더가 약 120px → 66px 로
+     낮아졌다. 예전의 -20px 음수 마진은 그 큰 헤더를 전제로 한 보정이라,
+     지금 그대로 두면 콘텐츠가 헤더 밑으로 파고든다(프로필 제목이 실제로
+     7px 가려졌다). 값을 줄여 헤더 바로 아래에 붙되 가리지는 않게 한다. */
   .hero {
     padding-top: 0.65rem;
-    margin-top: -20px;
+    margin-top: -8px;
   }
 
   /* .page-hero-compact 만 페이지 최상단 제목 블록이다. (.page-hero 단독은
@@ -1485,7 +1486,7 @@ body[data-page="home"] .site-footer {
      위로 끌려 올라가 겹친다 — 실제로 6px 겹쳐 있었다.) */
   .page-hero-compact {
     padding-top: 1rem;
-    margin-top: -20px;
+    margin-top: 0;
   }
 
   /* 프로필: 제목과 사진이 붙지 않도록 본문 블록에 여백을 준다 */
@@ -1641,8 +1642,11 @@ body[data-page="home"] .site-footer {
     background: rgba(185, 139, 255, 0.16);
   }
 
+  /* 기본 규칙의 position:absolute 를 푼다. 그래야 flex 흐름에 들어가
+     국기 버튼 다음에(오른쪽 끝에) 자연스럽게 놓인다. */
   .menu-toggle {
     display: block;
+    position: static;
   }
 
   .logo-row {

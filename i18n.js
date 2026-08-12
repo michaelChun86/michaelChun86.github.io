@@ -53,7 +53,7 @@
     "resume.exp1.period": { ko: "2026년 2월 – 현재" },
 
     "resume.exp2.category": { ko: "메타버스 게임" },
-    "resume.exp2.title": { ko: '메타버스 <span>쏘사이어티</span> – Art Director / Technical Artist' },
+    "resume.exp2.title": { ko: '메타버스 <span>쏘사이어티</span> – Art Director' },
     "resume.exp2.company": { ko: "앤더스 인터렉티브" },
     "resume.exp2.period": { ko: "2022년 1월 – 2026년 1월" },
 
