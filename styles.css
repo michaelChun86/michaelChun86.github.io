@@ -1008,11 +1008,13 @@ body[data-page="2d-art"] .gallery-meta {
 }
 
 @media (max-width: 760px) {
-  /* 모바일도 같은 이유로 한 열 줄인다(3열이면 16:9 칸이 61px 높이) */
+  /* 모바일은 한 화면에 더 많이 훑어볼 수 있도록 3열을 유지한다.
+     16:9 칸이라 높이는 낮아지지만, 넘겨보며 고르는 용도에는 밀도가 낫다.
+     (한 장을 크게 보고 싶으면 2열로 낮추면 된다) */
   body[data-page="dear-father"] .gallery-grid,
   body[data-page="3d-art"] .gallery-grid,
   body[data-page="2d-art"] .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
