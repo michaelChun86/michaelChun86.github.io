@@ -742,6 +742,36 @@ body[data-page="home"] .card-grid {
   gap: 1rem;
 }
 
+/* 점진 렌더링의 끝점 표시 겸 "더 보기" 버튼.
+   스크롤이 닿으면 JS 가 자동으로 다음 묶음을 잇기 때문에 평소엔 진행
+   표시("560장 중 120장")로 읽히고, 자동 로딩이 동작하지 않는 환경에서는
+   눌러서 이어볼 수 있는 버튼으로 기능한다. 다 그리면 hidden 으로 사라진다. */
+.gallery-more {
+  display: block;
+  margin: 1.75rem auto 0;
+  padding: 0.6rem 1.5rem;
+  background: rgba(10, 10, 13, 0.55);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.gallery-more:hover,
+.gallery-more:focus-visible {
+  background: rgba(185, 139, 255, 0.15);
+  border-color: var(--purple);
+  color: var(--purple);
+}
+
+.gallery-more[hidden] {
+  display: none;
+}
+
 .gallery-item {
   position: relative;
   border: 1px solid var(--line);

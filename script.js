@@ -713,14 +713,65 @@ const BADGE_LABEL = {
   personal: { ko: '개인 작업', en: 'Personal' }
 };
 
-function buildGallery() {
-  if (!galleryContainer) return;
+/* ---------- 갤러리 점진 렌더링 ----------
+   3D 갤러리는 560장이라 전부 그리면 문서가 19,000px(화면 27개 분량)이 되고
+   썸네일 DOM 도 560개가 한 번에 생긴다. 한 묶음씩만 그리고, 스크롤이 끝에
+   닿으면 다음 묶음을 잇는다(관찰자가 없으면 버튼 클릭으로도 동작).
+   중요한 전제: 항상 "필터된 목록의 앞에서부터" 이어 그리므로 DOM 순서와
+   배열 인덱스가 일치한다. 덕분에 라이트박스는 아직 그리지 않은 항목까지
+   포함한 전체 목록을 그대로 넘길 수 있다. */
+const GALLERY_BATCH = 60;
+let renderedCount = 0;
+let galleryMore = null;
+
+const MORE_LABEL = {
+  ko: (shown, total) => `${total}장 중 ${shown}장 · 더 보기`,
+  en: (shown, total) => `${shown} of ${total} · Load more`
+};
+
+/* 버튼이 화면 가까이(600px 앞) 들어오면 다음 묶음을 잇는다.
+   IntersectionObserver 도 requestAnimationFrame 도 쓰지 않는다: 둘 다
+   렌더링 파이프라인에 묶여 있어 탭이 화면에 없을 때 콜백이 아예 오지
+   않고, rAF 로 만든 throttle 은 그 상태에서 플래그가 잠긴 채 남는다.
+   setTimeout 기반 throttle 은 그런 잠김이 없다. */
+function loadMoreIfNear() {
+  if (!galleryMore || galleryMore.hidden) return;
+  const rect = galleryMore.getBoundingClientRect();
+  if (rect.top - window.innerHeight < 600) renderMore();
+}
+
+let moreTimer = 0;
+function maybeLoadMore() {
+  if (moreTimer) return;
+  moreTimer = setTimeout(() => {
+    moreTimer = 0;
+    loadMoreIfNear();
+  }, 80);
+}
+
+function ensureMoreControl() {
+  if (galleryMore) return galleryMore;
+  galleryMore = document.createElement('button');
+  galleryMore.type = 'button';
+  galleryMore.className = 'gallery-more';
+  galleryContainer.insertAdjacentElement('afterend', galleryMore);
+  galleryMore.addEventListener('click', () => renderMore());
+  window.addEventListener('scroll', maybeLoadMore, { passive: true });
+  window.addEventListener('resize', maybeLoadMore, { passive: true });
+  return galleryMore;
+}
+
+/* count 를 주면 그 개수만큼(언어 전환 후 자리 복원용), 없으면 한 묶음 더 */
+function renderMore(count) {
+  const items = getFilteredItems();
+  if (renderedCount >= items.length) return;
 
   const lang = document.documentElement.lang === 'ko' ? 'ko' : 'en';
-  const items = getFilteredItems();
-  galleryContainer.innerHTML = '';
+  const end = Math.min(renderedCount + (count || GALLERY_BATCH), items.length);
+  const frag = document.createDocumentFragment();
 
-  items.forEach((item, index) => {
+  for (let index = renderedCount; index < end; index++) {
+    const item = items[index];
     const card = document.createElement('article');
     card.className = 'gallery-item';
     const title = item.title || '';
@@ -733,8 +784,32 @@ function buildGallery() {
       <div class="gallery-meta">${title}</div>
     `;
     card.addEventListener('click', () => openLightbox(index));
-    galleryContainer.appendChild(card);
-  });
+    frag.appendChild(card);
+  }
+
+  galleryContainer.appendChild(frag);
+  renderedCount = end;
+
+  const more = ensureMoreControl();
+  const done = renderedCount >= items.length;
+  more.hidden = done;
+  if (!done) {
+    more.textContent = MORE_LABEL[lang](renderedCount, items.length);
+    /* 이미 화면 맨 아래까지 내려온 상태라면 추가 스크롤 이벤트가 없어
+       여기서 멈춘다. 버튼이 아직 화면 근처면 곧바로 한 번 더 이어 붙인다
+       (throttle 을 거치지 않아야 마지막 한 칸이 누락되지 않는다). */
+    loadMoreIfNear();
+  }
+}
+
+/* keepShown: 언어 전환처럼 내용만 다시 그릴 때, 보고 있던 만큼 유지한다
+   (필터 변경 때는 처음부터). */
+function buildGallery(keepShown) {
+  if (!galleryContainer) return;
+  const target = keepShown ? renderedCount : 0;
+  galleryContainer.innerHTML = '';
+  renderedCount = 0;
+  renderMore(Math.max(target, GALLERY_BATCH));
 }
 
 filterButtons.forEach((btn) => {
@@ -747,9 +822,9 @@ filterButtons.forEach((btn) => {
 
 /* 언어 전환(html[lang] 변경) 시 배지 라벨도 다시 그린다 —
    i18n.js 는 data-i18n 요소만 갱신하고, 배지는 JS로 매번 새로 생성되는
-   요소라 그 대상에 포함되지 않기 때문. */
+   요소라 그 대상에 포함되지 않기 때문. 보던 만큼은 그대로 유지한다. */
 if (galleryContainer) {
-  new MutationObserver(buildGallery).observe(document.documentElement, {
+  new MutationObserver(() => buildGallery(true)).observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['lang']
   });
