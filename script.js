@@ -700,13 +700,6 @@ function getFilteredItems() {
   return items.filter((item) => item.type === activeFilter);
 }
 
-/* 썸네일 위 배지는 필터 버튼("실무 작업")보다 짧게 쓴다. 썸네일이 작아
-   긴 라벨은 칩이 카드 폭을 거의 다 차지해 답답해 보이기 때문. */
-const BADGE_LABEL = {
-  professional: { ko: '실무', en: 'Pro' },
-  personal: { ko: '개인', en: 'Personal' }
-};
-
 /* ---------- 갤러리 점진 렌더링 ----------
    3D 갤러리는 560장이라 전부 그리면 문서가 19,000px(화면 27개 분량)이 되고
    썸네일 DOM 도 560개가 한 번에 생긴다. 한 묶음씩만 그리고, 스크롤이 끝에
@@ -767,13 +760,12 @@ function renderMore(count) {
   for (let index = renderedCount; index < end; index++) {
     const item = items[index];
     const card = document.createElement('article');
-    card.className = 'gallery-item';
+    /* 분류는 썸네일 위 라벨 대신 카드 아웃라인 색으로만 표시한다.
+       색의 의미(시안=실무, 핑크=개인)는 위쪽 필터 버튼이 같은 색을 달고
+       있어 거기서 읽힌다. */
+    card.className = 'gallery-item' + (item.type ? ' type-' + item.type : '');
     const title = item.title || '';
-    const badge = (item.type && activeFilter === 'all')
-      ? `<span class="gallery-badge badge-${item.type}">${BADGE_LABEL[item.type][lang]}</span>`
-      : '';
     card.innerHTML = `
-      ${badge}
       <img src="${item.src}" alt="${title}" loading="lazy" />
       <div class="gallery-meta">${title}</div>
     `;
@@ -796,14 +788,11 @@ function renderMore(count) {
   }
 }
 
-/* keepShown: 언어 전환처럼 내용만 다시 그릴 때, 보고 있던 만큼 유지한다
-   (필터 변경 때는 처음부터). */
-function buildGallery(keepShown) {
+function buildGallery() {
   if (!galleryContainer) return;
-  const target = keepShown ? renderedCount : 0;
   galleryContainer.innerHTML = '';
   renderedCount = 0;
-  renderMore(Math.max(target, GALLERY_BATCH));
+  renderMore();
 }
 
 filterButtons.forEach((btn) => {
@@ -814,11 +803,18 @@ filterButtons.forEach((btn) => {
   });
 });
 
-/* 언어 전환(html[lang] 변경) 시 배지 라벨도 다시 그린다 —
-   i18n.js 는 data-i18n 요소만 갱신하고, 배지는 JS로 매번 새로 생성되는
-   요소라 그 대상에 포함되지 않기 때문. 보던 만큼은 그대로 유지한다. */
+/* 언어 전환(html[lang] 변경) 대응.
+   썸네일에는 이제 번역할 텍스트가 없고(분류는 아웃라인 색으로만 표시),
+   남은 건 "더 보기" 버튼 문구뿐이다. 그래서 갤러리를 통째로 다시 그리지
+   않고 그 문구만 바꾼다 — 보던 위치와 이미 불러온 분량이 그대로 유지된다.
+   (i18n.js 는 data-i18n 요소만 갱신하므로 JS 로 만든 이 버튼은 대상 밖) */
 if (galleryContainer) {
-  new MutationObserver(() => buildGallery(true)).observe(document.documentElement, {
+  new MutationObserver(() => {
+    if (!galleryMore || galleryMore.hidden) return;
+    const lang = document.documentElement.lang === 'ko' ? 'ko' : 'en';
+    const total = getFilteredItems().length;
+    galleryMore.textContent = MORE_LABEL[lang](renderedCount, total);
+  }).observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['lang']
   });
