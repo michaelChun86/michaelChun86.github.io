@@ -14,6 +14,15 @@
   font-display: swap;
 }
 
+/* 서명 전용 손글씨체. 프로필·Dear Father 의 "Michael Chun" 한 곳에만 쓴다. */
+@font-face {
+  font-family: "Golden Plains";
+  src: url("Fonts/Golden Plains - Demo.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* "Noto Sans KR" 웹폰트(@font-face)는 제거했다.
    Esamanru 가 한글을 포함하고 있어 이 사이트에 쓰인 문자 407자를 모두
    커버하므로, 렌더링에는 한 번도 쓰이지 않으면서 6MB 파일만 매번
@@ -941,11 +950,29 @@ body[data-page="home"] .card-grid {
   color: var(--muted);
 }
 
+/* 서명 "Michael Chun" — 프로필과 Dear Father 두 곳에서 같은 모습이어야 하므로
+   글꼴과 색수차를 여기 한 곳에 모아 둔다. 위치·크기만 각자 정한다.
+   색수차는 페이지 제목과 같은 방식이다: 마젠타를 왼쪽, 시안을 오른쪽으로
+   어긋나게 겹치고 blur 는 0(번짐이 아니라 "어긋남"이라 획이 굵어지지 않는다).
+   오프셋이 em 이라 두 페이지의 글자 크기가 달라도 프린지 비율은 같다.
+   손글씨 획이 얇아 프린지가 묻히지 않도록 본체는 밝게 둔다. */
+.resume-intro .signature,
+.df-sign {
+  font-family: "Golden Plains", cursive;
+  font-weight: 400;
+  color: var(--text);
+  text-shadow:
+    -0.028em 0 0 rgba(255, 111, 216, 0.9),
+    -0.055em 0 0 rgba(255, 111, 216, 0.45),
+    -0.083em 0 0 rgba(255, 111, 216, 0.18),
+    0.028em 0 0 rgba(91, 232, 232, 0.9),
+    0.055em 0 0 rgba(91, 232, 232, 0.45),
+    0.083em 0 0 rgba(91, 232, 232, 0.18);
+}
+
 .df-sign {
   text-align: right;
-  font-family: "Caveat", cursive;
   font-size: 2.1rem;
-  color: var(--purple);
   margin: 0 !important;
 }
 
@@ -1099,9 +1126,7 @@ body[data-page="2d-art"] .gallery-item.type-personal:hover {
 }
 
 .resume-intro .signature {
-  font-family: "Caveat", cursive;
   font-size: 2rem;
-  color: var(--purple);
   margin-bottom: 0.35rem;
 }
 
