@@ -1,6 +1,16 @@
+/* ---------- 웹폰트 ----------
+   원본 TTF 는 한글 완성형 11,172자를 모두 담아 한 벌에 2MB 가 넘었고,
+   두 굵기를 preload 하느라 첫 방문에만 4.2MB 를 먼저 받았다.
+   실제로 쓰이는 글자만 남긴 woff2 서브셋으로 바꿔 5,149KB -> 375KB(-93%).
+
+   서브셋에는 사이트가 지금 쓰는 512자보다 훨씬 넉넉한 5,929자를 넣었다:
+   ASCII 전체 · 문장부호/기호 · 한글 자모 · 받침이 흔한 한글 음절 약 5,300자.
+   그래서 한글 문구를 새로 넣어도 대부분 그대로 표시된다.
+   ※ 원본 TTF 는 Fonts/ 에 그대로 두었다. 혹시 서브셋에 없는 글자가
+     필요해지면 그 파일로 다시 만들면 된다. */
 @font-face {
   font-family: "Esamanru";
-  src: url("Fonts/esamanru-Light.ttf") format("truetype");
+  src: url("Fonts/esamanru-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -8,16 +18,17 @@
 
 @font-face {
   font-family: "Esamanru";
-  src: url("Fonts/esamanru-Medium.ttf") format("truetype");
+  src: url("Fonts/esamanru-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
-/* 서명 전용 손글씨체. 프로필·Dear Father 의 "Michael Chun" 한 곳에만 쓴다. */
+/* 서명 전용 손글씨체. 프로필·Dear Father 의 "Michael Chun" 한 곳에만 쓴다.
+   쓰는 글자가 정해져 있어 라틴 알파벳만 남겨 967KB -> 49KB. */
 @font-face {
   font-family: "Golden Plains";
-  src: url("Fonts/Golden Plains - Demo.ttf") format("truetype");
+  src: url("Fonts/GoldenPlains-Signature.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;

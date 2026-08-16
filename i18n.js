@@ -40,7 +40,7 @@
     "resume.intro.p1": { ko: "안녕하세요, 저의 웹사이트를 방문해 주셔서 감사합니다." },
     "resume.intro.p2": { ko: '저는 대한민국 서울을 기반으로 활동하고 있는 <strong>Michael Chun</strong>(본명 천준영)입니다.' },
     "resume.intro.p3": {
-      ko: '게임 업계에서 약 <strong>15년</strong> 동안 다양한 실무 경력을 쌓아왔으며, 현재는 로그라이크 디펜스 게임인 <strong>The Aeon Fall</strong>(이온폴)을 개발 중인 <strong><span style="white-space:nowrap">달라게임즈</span>의 대표(CEO)</strong>를 맡고 있습니다.'
+      ko: '게임 업계에서 약 <strong>16년</strong> 동안 다양한 실무 경력을 쌓아왔으며, 현재는 로그라이크 디펜스 게임인 <strong>AeonFall</strong>(이온폴)을 개발 중인 <strong><span style="white-space:nowrap">달라게임즈</span>의 대표(CEO)</strong>를 맡고 있습니다.'
     },
     "resume.intro.p4": { ko: "개발자로서, 아티스트로서, 그리고 이제는 사업가로서 끊임없이 성장하기 위해 노력하고 있습니다.<br />저에 대해 더 궁금한 점이 있으시다면 언제든 편하게 연락해 주세요." },
     "resume.intro.p5": { ko: "방문해 주셔서 다시 한번 감사드립니다 :)" },
