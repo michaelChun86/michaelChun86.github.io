@@ -319,7 +319,8 @@ html.cur-alt .logo-link:hover .logo-hover {
 
 /* ---------- Hero (home) ---------- */
 .hero {
-  padding: 3rem 0 2rem;
+  /* 아래 여백은 바로 뒤 .home-intro 의 위 여백과 더해져 간격이 된다 */
+  padding: 3rem 0 1rem;
 }
 
 .hero-frame {
@@ -409,8 +410,10 @@ html.cur-alt .logo-link:hover .logo-hover {
    가운데 정렬이지만 아래 "작업 컬렉션" 블록과 단조롭게 겹치지 않도록
    글자 크기 대비를 크게 두고(직함이 가장 크다), 인용문은 얇은 구분선
    아래로 내려 성격이 다른 문장임을 드러낸다. */
+/* 타이틀 이미지와의 간격은 .hero 의 아래 여백(2rem)과 여기 위 여백이 합쳐진
+   값이다. 둘 다 줄여 68px -> 34px 로 절반만 띄운다. */
 .home-intro {
-  padding: 2.25rem 0 0.5rem;
+  padding: 1.15rem 0 0.5rem;
   text-align: center;
 }
 
@@ -425,7 +428,7 @@ html.cur-alt .logo-link:hover .logo-hover {
 
 .home-intro-now {
   margin: 0.5rem 0 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 300;
   line-height: 1.6;
   color: var(--muted);
@@ -444,7 +447,7 @@ html.cur-alt .logo-link:hover .logo-hover {
   margin: 1.5rem auto 0;
   padding-top: 1.5rem;
   max-width: 34rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 300;
   line-height: 1.7;
   letter-spacing: 0.01em;
@@ -1646,24 +1649,20 @@ body[data-page="home"] .site-footer {
     gap: 0.35rem;
   }
 
-  /* 홈 소개 블록: 좁은 화면에서 직함이 세 줄로 흩어지지 않게 한 단계 줄이고,
-     위아래 여백도 함께 좁힌다. */
+  /* 홈 소개 블록: 좁은 화면에서 직함이 여러 줄로 흩어지지 않게 한 단계 줄이고,
+     위아래 여백도 좁힌다. 아래 두 줄은 크기를 따로 지정하지 않는다 —
+     1rem 그대로 두면 루트 축소(84%)를 타고 본문과 같은 크기로 내려간다. */
   .home-intro {
-    padding: 1.5rem 0 0.25rem;
+    padding: 0.8rem 0 0.25rem;
   }
 
   .home-intro-role {
     font-size: 1.15rem;
   }
 
-  .home-intro-now {
-    font-size: 0.9rem;
-  }
-
   .home-intro-quote {
     margin-top: 1.15rem;
     padding-top: 1.15rem;
-    font-size: 0.85rem;
   }
 
   /* 모바일에서만 우측 하단 로고를 살짝 키운다(PC는 9.3% 그대로) */
