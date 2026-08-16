@@ -402,49 +402,64 @@ html.cur-alt .logo-link:hover .logo-hover {
   }
 }
 
-/* 타이틀 이미지 좌측 하단 문구. hero-logo-mark 와 같은 고정 레이어(글리치 영향 없음).
-   요소가 프레임 전체(inset:0)를 덮고, flex 로 좌측 하단에 문구를 앉힌다.
-   가독성이 최우선이라 글자 본체는 불투명한 화이트로 채우고, 페이지 제목과
-   같은 색수차 프린지는 글자 가장자리(text-shadow)로만 남긴다. */
-.hero-quote {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+/* ---------- 홈 소개 블록 ----------
+   타이틀 이미지 바로 아래. "누구인지 → 지금 무엇을 하는지 → 어떻게 일하는지"
+   순서로 읽히게 세 줄을 한 덩어리로 묶는다.
+
+   가운데 정렬이지만 아래 "작업 컬렉션" 블록과 단조롭게 겹치지 않도록
+   글자 크기 대비를 크게 두고(직함이 가장 크다), 인용문은 얇은 구분선
+   아래로 내려 성격이 다른 문장임을 드러낸다. */
+.home-intro {
+  padding: 2.25rem 0 0.5rem;
+  text-align: center;
+}
+
+.home-intro-role {
   margin: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  /* bottom 4%(높이 기준) ≈ 2.25%(폭 기준, 이미지 비율 2400x1340),
-     우측 패딩으로 기존 max-width 60% 와 같은 줄폭을 유지 */
-  padding: 0 37% 2.25% 3%;
-  font-family: "Esamanru", "Noto Sans KR", sans-serif;
-  font-weight: 300;
-  font-size: clamp(0.68rem, 1.45vw, 1.15rem);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-  /* 글자 본체는 불투명한 화이트.
-     이전에는 background-clip:text 로 흐린 타이틀 이미지를 글자 안에
-     비치게 하고 흰색을 55% 만 얹었는데, 글자 절반이 어둡고 흐린 배경이라
-     시인성이 나빴다. 색수차(아래 text-shadow)는 글자 "가장자리"에서
-     생기는 효과라 본체를 불투명하게 채워도 그대로 남는다.
-     background-image 도 함께 제거해야 한다. clip 만 풀면 그 이미지가
-     inset:0 인 이 요소 전체(히어로 프레임)를 덮어버린다. */
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
   color: var(--text);
-  /* text-shadow 가 두 역할을 겸한다.
-     1) 색수차: 페이지 제목과 같은 마젠타(좌)/시안(우) 분리.
-        본문이 제목보다 훨씬 작으므로 단계를 3→2 로 줄이고 em 오프셋은
-        조금 크게 잡아야 프린지가 뭉치지 않고 눈에 보인다.
-     2) 어두운 드롭 쉐도우: 복잡한 배경 이미지 위에서 글자를 떼어놓는다.
-        색수차만으로는 밝은 배경 구간에서 글자가 묻히므로 그대로 유지한다.
-     앞에 쓴 그림자가 위에 그려지므로 프린지를 먼저, 분리용 그림자를 뒤에. */
-  text-shadow:
-    -0.045em 0 0 rgba(255, 111, 216, 0.85),
-    -0.085em 0 0 rgba(255, 111, 216, 0.4),
-    0.045em 0 0 rgba(91, 232, 232, 0.85),
-    0.085em 0 0 rgba(91, 232, 232, 0.4),
-    0 1px 1px rgba(0, 0, 0, 0.8),
-    0 2px 3px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
+}
+
+.home-intro-now {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.home-intro-now strong {
+  font-weight: 500;
+  color: var(--purple);
+}
+
+/* 인용문은 직함/근황과 성격이 다른 문장이라 구분선으로 한 칸 떼어 놓는다.
+   예전에는 타이틀 이미지 위에 얹혀 있었는데, 모바일에서 8px 까지 작아져
+   읽히지 않았다. 여기서는 본문 크기로 두어 실제로 읽히게 한다. */
+.home-intro-quote {
+  position: relative;
+  margin: 1.5rem auto 0;
+  padding-top: 1.5rem;
+  max-width: 34rem;
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+.home-intro-quote::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2.5rem;
+  height: 1px;
+  background: var(--line);
 }
 
 /* 버스트 동안 강도별 지터 + 밝기/채도 명멸.
@@ -1631,12 +1646,24 @@ body[data-page="home"] .site-footer {
     gap: 0.35rem;
   }
 
-  /* 히어로 인용문은 전체 축소에서 예외로 오히려 키운다(5.7px → 약 7px).
-     inset 오버레이라 줄폭은 우측 패딩으로 조절하며, 키운 만큼 패딩을
-     줄여 두 줄을 유지한다. */
-  .hero-quote {
-    font-size: clamp(0.6rem, 1vw, 0.78rem);
-    padding-right: 9%;
+  /* 홈 소개 블록: 좁은 화면에서 직함이 세 줄로 흩어지지 않게 한 단계 줄이고,
+     위아래 여백도 함께 좁힌다. */
+  .home-intro {
+    padding: 1.5rem 0 0.25rem;
+  }
+
+  .home-intro-role {
+    font-size: 1.15rem;
+  }
+
+  .home-intro-now {
+    font-size: 0.9rem;
+  }
+
+  .home-intro-quote {
+    margin-top: 1.15rem;
+    padding-top: 1.15rem;
+    font-size: 0.85rem;
   }
 
   /* 모바일에서만 우측 하단 로고를 살짝 키운다(PC는 9.3% 그대로) */

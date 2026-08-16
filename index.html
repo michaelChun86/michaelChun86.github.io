@@ -84,10 +84,19 @@
             <!-- 타이틀 이미지 안에 그려진 우측 하단 로고와 같은 위치의 고정 레이어.
                  hero-glitch 바깥에 있어 글리치 흔들림의 영향을 받지 않는다. -->
             <img class="hero-logo-mark" src="/Image/Hero/Logo.webp" alt="" aria-hidden="true" />
-            <!-- 타이틀 이미지 좌측 하단 문구. hero-logo-mark 와 마찬가지로
-                 hero-glitch 바깥의 고정 레이어라 글리치 흔들림의 영향을 받지 않는다. -->
-            <p class="hero-quote" data-i18n-html="hero.quote">Quality is never an accident.<br />It is always the result of intelligent effort.</p>
           </div>
+        </div>
+      </section>
+
+      <!-- 타이틀 이미지 바로 아래: 처음 온 사람이 3초 안에 "누구인지" 알 수 있게
+           직함 → 현재 하는 일 → 작업 철학(인용문) 순으로 읽히는 한 덩어리.
+           인용문은 원래 타이틀 이미지 위에 얹혀 있었지만 모바일에서 8px 까지
+           작아져 사실상 장식이었다. 여기로 내려 실제로 읽히는 문장으로 만든다. -->
+      <section class="home-intro">
+        <div class="container">
+          <p class="home-intro-role" data-i18n="home.intro.role">Game Art Director &amp; Technical Artist — 16 years</p>
+          <p class="home-intro-now" data-i18n-html="home.intro.now">Currently leading <strong>Dalla Games</strong>, building the roguelike defense game <strong>AeonFall</strong>.</p>
+          <p class="home-intro-quote" data-i18n-html="hero.quote">Quality is never an accident.<br />It is always the result of intelligent effort.</p>
         </div>
       </section>
 
