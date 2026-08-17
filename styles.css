@@ -435,20 +435,7 @@ html.cur-alt .logo-link:hover .logo-hover {
   line-height: 1.15;
 }
 
-.home-intro-now {
-  margin: 0.6rem 0 0;
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 1.6;
-  color: var(--muted);
-}
-
-.home-intro-now strong {
-  font-weight: 500;
-  color: var(--purple);
-}
-
-/* 인용문은 직함/근황과 성격이 다른 문장이라 구분선으로 한 칸 떼어 놓는다.
+/* 인용문은 이름/직함과 성격이 다른 문장이라 구분선으로 한 칸 떼어 놓는다.
    예전에는 타이틀 이미지 위에 얹혀 있었는데, 모바일에서 8px 까지 작아져
    읽히지 않았다. 여기서는 본문 크기로 두어 실제로 읽히게 한다. */
 .home-intro-quote {
@@ -487,23 +474,20 @@ html.cur-alt .logo-link:hover .logo-hover {
 
    fill 은 backwards — forwards 로 두면 끝난 뒤에도 최종 키프레임의 transform 이
    남아 불필요한 쌓임 맥락을 만든다(헤더에서 같은 문제를 겪었다). */
-.home-intro-role,
 .home-intro-name,
-.home-intro-now,
+.home-intro-role,
 .home-intro-quote {
   animation: section-fade-up 1.4s ease backwards;
 }
 
-/* 읽는 순서(이름 → 직함 → 현재 일 → 인용문)대로 어긋나게 등장한다 */
+/* 읽는 순서(이름 → 직함 → 인용문)대로 어긋나게 등장한다 */
 .home-intro-name  { animation-delay: 3s; }
 .home-intro-role  { animation-delay: 3.12s; }
-.home-intro-now   { animation-delay: 3.27s; }
-.home-intro-quote { animation-delay: 3.42s; }
+.home-intro-quote { animation-delay: 3.27s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-intro-role,
   .home-intro-name,
-  .home-intro-now,
+  .home-intro-role,
   .home-intro-quote {
     animation: none;
   }
@@ -1715,15 +1699,11 @@ body[data-page="home"] .site-footer {
     font-size: 2.05rem;
   }
 
-  /* 제목과 아래 두 줄의 크기 차이가 PC 에서는 1.45배인데 모바일에서는
-     둘 다 루트 축소를 함께 타면서 1.15배까지 좁아져 위계가 흐려졌다.
-     아래 두 줄만 한 단계 더 줄여 대비를 되살린다. */
-  .home-intro-now,
+  /* 직함과 인용문의 크기 차이가 PC 에서는 1.45배인데 모바일에서는 둘 다
+     루트 축소를 함께 타면서 1.15배까지 좁아져 위계가 흐려졌다.
+     인용문만 한 단계 더 줄여 대비를 되살린다. */
   .home-intro-quote {
     font-size: 0.85rem;
-  }
-
-  .home-intro-quote {
     margin-top: 1.15rem;
     padding-top: 1.15rem;
   }

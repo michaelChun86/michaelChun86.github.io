@@ -25,7 +25,6 @@
     "home.section.subtitle": { ko: "갤러리 둘러보기" },
     "hero.quote": { ko: "퀄리티는 결코 우연히 만들어지지 않는다.<br />성실한 고민과 노력 끝에 얻어지는 결과물이다." },
     "home.intro.role": { ko: "16년 차 게임 아트 디렉터 & 테크니컬 아티스트" },
-    "home.intro.now": { ko: '<strong>달라게임즈</strong>의 CEO로, 로그라이크 디펜스 <strong>AeonFall</strong>을 개발하고 있습니다.' },
     "card.resume.desc": { en: "Bio and career information" },
     "card.father.desc": { en: "A page dedicated to my beloved father" },
     "card.3d.desc": { en: "Modeling, rendering, and other 3D work" },
