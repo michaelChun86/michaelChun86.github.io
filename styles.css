@@ -417,13 +417,15 @@ html.cur-alt .logo-link:hover .logo-hover {
   text-align: center;
 }
 
+/* 직함은 아래 "작업 컬렉션" eyebrow 와 같은 보라를 써서, 서명체 이름
+   아래에 붙는 라벨 성격임을 색으로도 드러낸다. */
 .home-intro-role {
   margin: 0.35rem 0 0;
-  font-size: 1.45rem;
+  font-size: 1.25rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.35;
-  color: var(--text);
+  color: var(--purple);
 }
 
 /* 블록의 첫 줄. 이름을 서명체로 먼저 보여 주고 그 아래로 직함·현재 일이
@@ -431,7 +433,7 @@ html.cur-alt .logo-link:hover .logo-hover {
    (23.2px)보다 크게 잡아야 무게가 맞는다. */
 .home-intro-name {
   margin: 0;
-  font-size: 2.6rem;
+  font-size: 3.125rem;
   line-height: 1.15;
 }
 
@@ -443,7 +445,7 @@ html.cur-alt .logo-link:hover .logo-hover {
   margin: 1.5rem auto 0;
   padding-top: 1.5rem;
   max-width: 34rem;
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 300;
   line-height: 1.7;
   letter-spacing: 0.01em;
@@ -1683,27 +1685,18 @@ body[data-page="home"] .site-footer {
     padding: 0.8rem 0 0.25rem;
   }
 
-  .home-intro-role {
-    font-size: 1.15rem;
-  }
-
-  /* 영문 직함은 46자라 1.15rem(15.5px)에서는 391px 이 되어 가용폭 348px 을
-     넘고 두 줄로 접힌다. 영문일 때만 한 단계 줄이고 자간도 없애 328px 로
-     맞춘다(한글 직함은 짧아 1.15rem 그대로 한 줄에 들어간다). */
-  html[lang="en"] .home-intro-role {
-    font-size: 1rem;
-    letter-spacing: 0;
-  }
-
+  /* PC(50/20/18px)의 비율을 유지하며 좁은 화면에 맞춰 줄인다.
+     직함과 인용문은 크기 차이가 크지 않고 색(보라 vs 회색)이 둘을 갈라준다. */
   .home-intro-name {
-    font-size: 2.05rem;
+    font-size: 2.4rem;
   }
 
-  /* 직함과 인용문의 크기 차이가 PC 에서는 1.45배인데 모바일에서는 둘 다
-     루트 축소를 함께 타면서 1.15배까지 좁아져 위계가 흐려졌다.
-     인용문만 한 단계 더 줄여 대비를 되살린다. */
+  .home-intro-role {
+    font-size: 1.05rem;
+  }
+
   .home-intro-quote {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     margin-top: 1.15rem;
     padding-top: 1.15rem;
   }
