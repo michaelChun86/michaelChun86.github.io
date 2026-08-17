@@ -418,7 +418,7 @@ html.cur-alt .logo-link:hover .logo-hover {
 }
 
 .home-intro-role {
-  margin: 0;
+  margin: 0.35rem 0 0;
   font-size: 1.45rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -426,11 +426,11 @@ html.cur-alt .logo-link:hover .logo-hover {
   color: var(--text);
 }
 
-/* 직함 바로 아래 서명체로 이름을 넣어 "누구"인지를 못 박는다.
-   손글씨는 같은 px 에서도 산세리프보다 작아 보여, 위 직함(23.2px)과
-   나란히 두려면 조금 크게 잡아야 균형이 맞는다. */
+/* 블록의 첫 줄. 이름을 서명체로 먼저 보여 주고 그 아래로 직함·현재 일이
+   이어진다. 손글씨는 같은 px 에서도 산세리프보다 작아 보여, 아래 직함
+   (23.2px)보다 크게 잡아야 무게가 맞는다. */
 .home-intro-name {
-  margin: 0.35rem 0 0;
+  margin: 0;
   font-size: 1.85rem;
   line-height: 1.2;
 }
@@ -494,8 +494,9 @@ html.cur-alt .logo-link:hover .logo-hover {
   animation: section-fade-up 1.4s ease backwards;
 }
 
-.home-intro-role  { animation-delay: 3s; }
-.home-intro-name  { animation-delay: 3.12s; }
+/* 읽는 순서(이름 → 직함 → 현재 일 → 인용문)대로 어긋나게 등장한다 */
+.home-intro-name  { animation-delay: 3s; }
+.home-intro-role  { animation-delay: 3.12s; }
 .home-intro-now   { animation-delay: 3.27s; }
 .home-intro-quote { animation-delay: 3.42s; }
 
