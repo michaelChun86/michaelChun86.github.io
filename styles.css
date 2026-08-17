@@ -431,8 +431,8 @@ html.cur-alt .logo-link:hover .logo-hover {
    (23.2px)보다 크게 잡아야 무게가 맞는다. */
 .home-intro-name {
   margin: 0;
-  font-size: 1.85rem;
-  line-height: 1.2;
+  font-size: 2.6rem;
+  line-height: 1.15;
 }
 
 .home-intro-now {
@@ -1712,7 +1712,7 @@ body[data-page="home"] .site-footer {
   }
 
   .home-intro-name {
-    font-size: 1.5rem;
+    font-size: 2.05rem;
   }
 
   /* 제목과 아래 두 줄의 크기 차이가 PC 에서는 1.45배인데 모바일에서는
