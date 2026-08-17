@@ -410,10 +410,11 @@ html.cur-alt .logo-link:hover .logo-hover {
    가운데 정렬이지만 아래 "작업 컬렉션" 블록과 단조롭게 겹치지 않도록
    글자 크기 대비를 크게 두고(직함이 가장 크다), 인용문은 얇은 구분선
    아래로 내려 성격이 다른 문장임을 드러낸다. */
-/* 타이틀 이미지와의 간격은 .hero 의 아래 여백(2rem)과 여기 위 여백이 합쳐진
-   값이다. 둘 다 줄여 68px -> 34px 로 절반만 띄운다. */
+/* 위 간격은 .hero 의 아래 여백과 여기 위 여백이 합쳐진 값이다(34px).
+   아래 여백은 크게 둔다 — 구분선을 없앤 대신 이 여백이 소개 블록과
+   "작업 컬렉션" 섹션을 갈라 주는 역할을 한다. */
 .home-intro {
-  padding: 1.15rem 0 0.5rem;
+  padding: 1.15rem 0 3.25rem;
   text-align: center;
 }
 
@@ -437,30 +438,17 @@ html.cur-alt .logo-link:hover .logo-hover {
   line-height: 1.15;
 }
 
-/* 인용문은 이름/직함과 성격이 다른 문장이라 구분선으로 한 칸 떼어 놓는다.
-   예전에는 타이틀 이미지 위에 얹혀 있었는데, 모바일에서 8px 까지 작아져
-   읽히지 않았다. 여기서는 본문 크기로 두어 실제로 읽히게 한다. */
+/* 인용문. 이름·직함과 한 덩어리로 붙여 읽히게 두고, 구분은 아래
+   "작업 컬렉션"과의 넉넉한 간격이 대신한다(예전엔 여기에 얇은 구분선을
+   뒀지만 블록을 불필요하게 갈라 놓았다). */
 .home-intro-quote {
-  position: relative;
-  margin: 1.5rem auto 0;
-  padding-top: 1.5rem;
+  margin: 0.6rem auto 0;
   max-width: 34rem;
   font-size: 1.125rem;
   font-weight: 300;
   line-height: 1.7;
   letter-spacing: 0.01em;
   color: var(--muted);
-}
-
-.home-intro-quote::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2.5rem;
-  height: 1px;
-  background: var(--line);
 }
 
 /* ---------- 소개 문구 등장 ----------
@@ -1680,9 +1668,10 @@ body[data-page="home"] .site-footer {
     gap: 0.35rem;
   }
 
-  /* 홈 소개 블록: 좁은 화면에 맞춰 직함을 한 단계 줄이고 위아래 여백도 좁힌다. */
+  /* 홈 소개 블록: 위 여백은 좁히되, 아래는 "작업 컬렉션"과 구분되도록
+     PC 와 마찬가지로 넉넉히 남긴다. */
   .home-intro {
-    padding: 0.8rem 0 0.25rem;
+    padding: 0.8rem 0 2.25rem;
   }
 
   /* PC(50/20/18px)의 비율을 유지하며 좁은 화면에 맞춰 줄인다.
@@ -1697,8 +1686,7 @@ body[data-page="home"] .site-footer {
 
   .home-intro-quote {
     font-size: 0.95rem;
-    margin-top: 1.15rem;
-    padding-top: 1.15rem;
+    margin-top: 0.5rem;
   }
 
   /* 모바일에서만 우측 하단 로고를 살짝 키운다(PC는 9.3% 그대로) */
