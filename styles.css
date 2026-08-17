@@ -418,8 +418,8 @@ html.cur-alt .logo-link:hover .logo-hover {
   text-align: center;
 }
 
-/* 직함은 아래 "작업 컬렉션" eyebrow 와 같은 보라를 써서, 서명체 이름
-   아래에 붙는 라벨 성격임을 색으로도 드러낸다. */
+/* 직함은 보라로 두어, 서명체 이름 아래에 붙는 라벨 성격임을 색으로도
+   드러낸다(이름은 화이트, 직함은 보라, 인용문은 회색). */
 .home-intro-role {
   margin: 0.35rem 0 0;
   font-size: 1.25rem;
@@ -560,11 +560,10 @@ body[data-page="home"] .section-title {
   }
 }
 
-/* eyebrow(예: ARTWORK COLLECTION)가 섹션의 이름이고, 아래 h2 는 그것을
-   받는 부제다. 그래서 eyebrow 를 크게, h2 를 작게 둔다.
-   (자간이 넓어 같은 크기여도 아래 h2 보다 훨씬 넓은 폭을 차지한다) */
+/* 갤러리 섹션의 이름(Explore / 둘러보기). 아래에 부제를 두지 않고 이 한 줄만
+   쓰므로, 넓은 자간과 화이트로 섹션의 시작임을 알린다. */
 .eyebrow {
-  color: var(--purple);
+  color: var(--text);
   letter-spacing: 0.3em;
   font-size: 1.3rem;
   font-weight: 500;
@@ -584,26 +583,11 @@ h1 {
   font-size: clamp(2rem, 3vw, 3rem);
 }
 
-/* 부제(예: Browse the Gallery). 위 eyebrow 를 보조하는 한 줄이라
-   작고 가볍게(Light 300) 두어 eyebrow 가 먼저 읽히게 한다. */
-.section-title h2 {
-  font-size: 0.95rem;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  line-height: 1.4;
-  margin-top: 0;
-}
-
 /* 한글도 영문과 같은 Esamanru 로 렌더링되지만, 한글 글자는 네모틀을 꽉 채워
-   같은 font-size 에서도 영문보다 크고 무겁게 보인다. 그래서 영문
-   (1.3rem ↔ 0.95rem)보다 한 단계씩 낮춰 두 줄의 크기 관계만 그대로 지킨다. */
+   같은 font-size 에서도 영문보다 크고 무겁게 보인다. 한 단계 낮춰 맞춘다. */
 html[lang="ko"] .eyebrow {
   font-size: 1.15rem;
   letter-spacing: 0.32em;
-}
-
-html[lang="ko"] .section-title h2 {
-  font-size: 0.9rem;
 }
 
 .page-hero p,

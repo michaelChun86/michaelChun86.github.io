@@ -21,8 +21,7 @@
   var STORE_KEY = "chun-lang-v2";
 
   var T = {
-    "home.eyebrow": { ko: "작업 컬렉션" },
-    "home.section.subtitle": { ko: "갤러리 둘러보기" },
+    "home.eyebrow": { ko: "둘러보기" },
     "hero.quote": { ko: "퀄리티는 결코 우연히 만들어지지 않는다.<br />성실한 고민과 노력 끝에 얻어지는 결과물이다." },
     "home.intro.role": { ko: "16년 차 아트 디렉터 & 테크니컬 아티스트" },
     "card.resume.desc": { en: "Bio and career information" },
