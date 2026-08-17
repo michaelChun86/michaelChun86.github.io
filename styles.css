@@ -1680,15 +1680,29 @@ body[data-page="home"] .site-footer {
     gap: 0.35rem;
   }
 
-  /* 홈 소개 블록: 좁은 화면에서 직함이 여러 줄로 흩어지지 않게 한 단계 줄이고,
-     위아래 여백도 좁힌다. 아래 두 줄은 크기를 따로 지정하지 않는다 —
-     1rem 그대로 두면 루트 축소(84%)를 타고 본문과 같은 크기로 내려간다. */
+  /* 홈 소개 블록: 좁은 화면에 맞춰 직함을 한 단계 줄이고 위아래 여백도 좁힌다. */
   .home-intro {
     padding: 0.8rem 0 0.25rem;
   }
 
   .home-intro-role {
     font-size: 1.15rem;
+  }
+
+  /* 영문 직함은 46자라 1.15rem(15.5px)에서는 391px 이 되어 가용폭 348px 을
+     넘고 두 줄로 접힌다. 영문일 때만 한 단계 줄이고 자간도 없애 328px 로
+     맞춘다(한글 직함은 짧아 1.15rem 그대로 한 줄에 들어간다). */
+  html[lang="en"] .home-intro-role {
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+
+  /* 제목과 아래 두 줄의 크기 차이가 PC 에서는 1.45배인데 모바일에서는
+     둘 다 루트 축소를 함께 타면서 1.15배까지 좁아져 위계가 흐려졌다.
+     아래 두 줄만 한 단계 더 줄여 대비를 되살린다. */
+  .home-intro-now,
+  .home-intro-quote {
+    font-size: 0.85rem;
   }
 
   .home-intro-quote {
