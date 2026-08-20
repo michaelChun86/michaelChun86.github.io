@@ -40,6 +40,14 @@
 
 * { box-sizing: border-box; }
 
+/* hidden 속성이 항상 이기게 한다. ★ 이 한 줄이 없으면 로그인이 깨진다.
+   브라우저 기본값은 [hidden] { display: none } 이지만, 그건 UA 스타일이라
+   작성자가 쓴 .lock { display: grid } 에 무조건 진다. 그래서 JS 가
+   lock.hidden = true 로 잠금 화면을 감춰도 display:grid 가 그대로 남아,
+   비밀번호를 맞게 쳤는데도 잠금 화면이 화면을 계속 덮고 있게 된다.
+   (대시보드는 그 뒤에 정상적으로 그려져 있는데 보이지가 않는다) */
+[hidden] { display: none !important; }
+
 html { overflow-y: scroll; }
 
 body {
@@ -233,6 +241,14 @@ button, input { font-family: inherit; }
   border-radius: 0.5rem;
 }
 .notice strong { color: #ff9d9d; font-weight: 500; }
+
+/* 고장이 아니라 "기다리면 됩니다" 인 경우. 빨강이면 불필요하게 놀란다. */
+.notice-info {
+  color: var(--muted);
+  background: rgba(185, 139, 255, 0.07);
+  border-color: var(--line);
+}
+.notice-info strong { color: var(--purple); }
 
 .card {
   background: var(--panel);

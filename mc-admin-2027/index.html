@@ -15,7 +15,7 @@
   <link rel="icon" type="image/jpeg" href="/Image/Hero/favicon.jpg" />
   <!-- ?v= 는 캐시 무효화용. 이 폴더의 파일을 고칠 때마다 숫자를 올려야
        브라우저가 옛 파일과 새 파일을 섞어 쓰는 사고를 막을 수 있다. -->
-  <link rel="stylesheet" href="admin.css?v=1" />
+  <link rel="stylesheet" href="admin.css?v=2" />
 </head>
 <body>
 
@@ -59,9 +59,10 @@
       </div>
     </header>
 
-    <!-- 데이터 출처 안내 배너 (실데이터 연결 전까지만 보인다) -->
+    <!-- 안내 배너. 두 경우에만 보인다:
+         ① 샘플 데이터일 때(빨강)  ② 실데이터인데 아직 0 일 때(회색) -->
     <div class="notice" id="notice" hidden>
-      <strong>샘플 데이터입니다.</strong>
+      <strong id="noticeHead"></strong>
       <span id="noticeText"></span>
     </div>
 
@@ -129,6 +130,6 @@
     </footer>
   </div>
 
-  <script src="admin.js?v=1"></script>
+  <script src="admin.js?v=2"></script>
 </body>
 </html>

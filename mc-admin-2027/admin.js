@@ -1,17 +1,14 @@
 /* =========================================================================
    Michael Chun — 관리자 대시보드 (방문자 수 / 유입 경로)
 
-   ┌──────────────────────────────────────────────────────────────────────┐
-   │ ★ 지금은 "샘플 데이터"로 돌아갑니다                                  │
-   │                                                                      │
-   │ GA4 수치는 브라우저에서 직접 읽어올 수 없습니다.                     │
-   │ GA4 Data API 는 구글 인증(서비스 계정 키)을 요구하는데, 그 키를      │
-   │ 이 파일에 넣으면 사이트 소스를 여는 누구나 볼 수 있습니다.           │
-   │ GitHub Pages 는 정적 호스팅이라 키를 숨겨 둘 서버가 없습니다.        │
-   │                                                                      │
-   │ 그래서 화면(레이아웃·인증)은 전부 완성해 두고 숫자만 아래 SAMPLE     │
-   │ 값으로 그립니다. 실데이터 연결은 _cloudflare-worker/README.md 참고.  │
-   └──────────────────────────────────────────────────────────────────────┘
+   숫자는 Cloudflare Worker(API_ENDPOINT)를 거쳐 GA4 에서 받아옵니다.
+   브라우저가 GA4 를 직접 못 읽는 이유는 구글이 서비스 계정 키를 요구하는데
+   그 키를 이 파일에 넣으면 소스를 여는 누구나 볼 수 있기 때문입니다.
+   그래서 키는 Cloudflare 에 두고, 이 페이지는 완성된 숫자만 받습니다.
+   (설정 절차는 _cloudflare-worker/README.md)
+
+   Worker 가 응답하지 않거나 주소를 비워 두면 아래 SAMPLE 로 그리고
+   화면 위에 빨간 배너로 "샘플입니다" 라고 알려줍니다.
 
    [비밀번호 바꾸는 법]
      1) 이 페이지를 https 로 열고 브라우저 콘솔(F12)에서:
@@ -34,17 +31,15 @@
      설정
      --------------------------------------------------------------------- */
 
-  /* 초기 비밀번호는 chun2027 입니다. 위 [비밀번호 바꾸는 법] 대로 꼭 바꾸세요. */
-  var PIN_SHA256 = "f92043a24c808d78ec431a0f6e6dc4c83f50565443aa25af70180479203f1927";
+  /* 현재 비밀번호는 0406 입니다. 바꾸려면 위 [비밀번호 바꾸는 법] 참고. */
+  var PIN_SHA256 = "a90ef855d6ad7ff0a716e37f45f300fe95613959d426b7e593793cec7a4caeec";
 
-  /* 실데이터 프록시(Cloudflare Worker) 주소.
-     비워 두면 아래 SAMPLE 로 그린다.
-     (예: "https://mc-ga4.your-name.workers.dev") */
-  var API_ENDPOINT = "";
+  /* 실데이터 프록시(Cloudflare Worker) 주소. 비워 두면 아래 SAMPLE 로 그린다. */
+  var API_ENDPOINT = "https://michael-chun-ga4.chun4422.workers.dev/";
 
   /* 푸터에 표시할 GA4 측정 ID. analytics.js 에 넣은 값과 같게 적어두면
      어느 속성을 보고 있는지 헷갈리지 않는다. (표시용일 뿐 동작과 무관) */
-  var MEASUREMENT_ID = "";
+  var MEASUREMENT_ID = "G-5Y2SYP49PL";
 
   var SESSION_KEY = "mc-admin-ok";
 
@@ -254,13 +249,16 @@
   /* 유입 경로: 도넛 + 표 */
   function drawSources(rows) {
     rows = rows || [];
-    var total = rows.reduce(function (a, r) { return a + r.sessions; }, 0) || 1;
+    var total = rows.reduce(function (a, r) { return a + r.sessions; }, 0);
     $("donutTotal").textContent = num(total);
+    /* 나눗셈에만 쓰는 값. 위 표시용 total 과 분리해야 데이터가 없을 때
+       가운데 숫자가 0 이 아니라 1 로 보이는 일이 없다. */
+    var denom = total || 1;
 
     var C = 2 * Math.PI * 52;        // r=52 원둘레
     var offset = 0;
     $("donutSegs").innerHTML = rows.map(function (r, i) {
-      var frac = r.sessions / total;
+      var frac = r.sessions / denom;
       /* 처음엔 길이 0 으로 그려 두고, 다음 프레임에 실제 길이를 넣어
          호가 자라나는 것처럼 보이게 한다. */
       var seg = '<circle class="donut-seg" cx="60" cy="60" r="52" ' +
@@ -283,7 +281,7 @@
         '<td><span class="c-name"><span class="swatch" style="background:' +
           PALETTE[i % PALETTE.length] + '"></span>' + esc(r.name) + '</span></td>' +
         '<td class="c-num">' + num(r.sessions) + '</td>' +
-        '<td class="c-pct">' + Math.round(r.sessions / total * 100) + '%</td>' +
+        '<td class="c-pct">' + Math.round(r.sessions / denom * 100) + '%</td>' +
         '</tr>';
     }).join("");
   }
@@ -292,13 +290,27 @@
     var out = await loadMetrics();
     var d = out.data;
 
-    // 샘플일 때만 배너
+    /* 안내 배너 — 샘플일 때(빨강)와, 실데이터인데 아직 0 일 때(회색).
+       후자를 따로 두는 이유: GA4 는 수집을 시작해도 누적 보고서에
+       숫자가 들어오기까지 하루 이틀 걸린다. 그동안 0 만 보이면
+       고장난 것으로 오해하기 쉽다. */
     var notice = $("notice");
-    notice.hidden = out.live;
+    var empty = out.live && !d.todayUsers && !d.weekUsers && !d.monthUsers;
+
+    notice.hidden = out.live && !empty;
+    notice.classList.toggle("notice-info", empty);
+
     if (!out.live) {
+      $("noticeHead").textContent = "샘플 데이터입니다.";
       $("noticeText").textContent = out.error
         ? "실데이터 서버에 연결하지 못해 샘플로 표시합니다 (" + out.error + ")."
         : "아직 실데이터 연결 전이라 화면 확인용 예시 숫자입니다. admin.js 의 API_ENDPOINT 를 채우면 실제 수치로 바뀝니다.";
+    } else if (empty) {
+      $("noticeHead").textContent = "연결은 정상입니다.";
+      $("noticeText").textContent =
+        "아직 집계된 방문자가 없습니다. GA4 는 수집을 시작한 뒤 누적 보고서에 " +
+        "숫자가 반영되기까지 최대 24~48시간이 걸립니다. 지금 바로 확인하려면 " +
+        "GA4 의 [보고서 > 실시간] 을 보세요.";
     }
 
     $("kpiToday").textContent = num(d.todayUsers);

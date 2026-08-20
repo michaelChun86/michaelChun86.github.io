@@ -32,7 +32,7 @@
   "use strict";
 
   /* ▼ 여기에 측정 ID 를 넣으세요 (예: "G-ABC123XYZ4") */
-  var MEASUREMENT_ID = "";
+  var MEASUREMENT_ID = "G-5Y2SYP49PL";
 
   /* ---------- 전송할지 말지 판단 ---------- */
   var host = location.hostname;

@@ -1,16 +1,19 @@
 # 방문자 통계 설정 안내
 
-관리자 대시보드는 `https://michaelchun86.github.io/mc-admin-2027/` 입니다.
-**초기 비밀번호는 `chun2027`** — 4단계에서 꼭 바꾸세요.
+## ✅ 설정 완료
 
-전체 흐름은 두 덩어리입니다.
+| 항목 | 값 |
+|---|---|
+| 관리자 대시보드 | `https://michaelchun86.github.io/mc-admin-2027/` |
+| 비밀번호 | `0406` |
+| GA4 측정 ID | `G-5Y2SYP49PL` |
+| Worker 주소 | `https://michael-chun-ga4.chun4422.workers.dev/` |
 
-```
-1) GA4 로 방문자를 수집한다        ← 이것만 해도 GA4 앱/웹에서 통계를 볼 수 있음
-2) 그 숫자를 내 대시보드로 끌어온다 ← 선택. 안 하면 대시보드는 샘플 숫자를 보여줌
-```
+아래 문서는 **나중에 다시 손볼 때를 위한 기록**입니다. 지금 할 일은 없습니다.
 
-급하지 않다면 **1단계만 해도 충분합니다.** 2단계는 나중에 해도 됩니다.
+> 대시보드 숫자가 한동안 전부 0 으로 보이는 것은 정상입니다.
+> GA4 는 수집을 시작한 뒤 누적 보고서에 반영되기까지 최대 24~48시간 걸립니다.
+> 지금 당장 확인하려면 GA4 의 **보고서 → 실시간** 을 보세요.
 
 ---
 
@@ -32,17 +35,15 @@
 `analytics.js` 맨 위의 이 줄을 채웁니다.
 
 ```js
-var MEASUREMENT_ID = "";     ←  "G-XXXXXXXXXX" 를 넣으세요
+var MEASUREMENT_ID = "G-5Y2SYP49PL";
 ```
 
 같은 값을 `mc-admin-2027/admin.js` 의 아래 줄에도 적어두면
 대시보드 하단에 어떤 속성을 보고 있는지 표시됩니다. (표시용, 동작과 무관)
 
 ```js
-var MEASUREMENT_ID = "";
+var MEASUREMENT_ID = "G-5Y2SYP49PL";
 ```
-
-측정 ID 를 알려주시면 제가 넣어서 배포해 드리겠습니다.
 
 ## 3단계 — 확인
 
@@ -50,6 +51,8 @@ var MEASUREMENT_ID = "";
 누적 보고서에 숫자가 나타나기까지는 최대 24~48시간 걸립니다. (정상입니다)
 
 ## 4단계 — 관리자 비밀번호 바꾸기
+
+현재 비밀번호는 `0406` 입니다. 바꾸려면:
 
 1. `https://michaelchun86.github.io/mc-admin-2027/` 접속 (https 여야 합니다)
 2. F12 → 콘솔에 입력: `await AdminPIN.hash("새비밀번호")`
@@ -151,11 +154,10 @@ Worker 화면 → **Settings** → **Variables and Secrets**
 `mc-admin-2027/admin.js` 의 이 한 줄만 채우면 끝입니다.
 
 ```js
-var API_ENDPOINT = "https://mc-ga4.your-name.workers.dev";
+var API_ENDPOINT = "https://michael-chun-ga4.chun4422.workers.dev/";
 ```
 
 연결되면 화면 위의 **"샘플 데이터입니다"** 빨간 배너가 자동으로 사라집니다.
-주소를 알려주시면 제가 넣어서 배포해 드리겠습니다.
 
 ---
 
@@ -179,3 +181,14 @@ var API_ENDPOINT = "https://mc-ga4.your-name.workers.dev";
 - GA4 Data API 무료: 하루 25,000 토큰 (한 번 열 때 10건 조회)
 
 Worker 가 결과를 **5분간 캐시**하므로 새로고침을 연타해도 GA4 를 계속 부르지 않습니다.
+
+## 개발 메모
+
+- **로컬(localhost)에서는 대시보드가 항상 샘플로 뜹니다.** 정상입니다.
+  Worker 의 `ALLOWED_ORIGIN` 이 `https://michaelchun86.github.io` 로 잠겨 있어
+  다른 출처의 브라우저 호출은 CORS 에서 막힙니다. 실제 화면은 배포본에서 확인하세요.
+- **잠금 화면이 안 사라지면 `[hidden] { display: none !important }` 를 의심하세요.**
+  `.lock { display: grid }` 같은 작성자 스타일은 브라우저 기본값인
+  `[hidden] { display: none }` 을 항상 이깁니다. 그래서 JS 가 `lock.hidden = true`
+  로 감춰도 잠금 화면이 그대로 남아, 비밀번호를 맞게 쳤는데도 로그인이
+  안 되는 것처럼 보입니다. `admin.css` 위쪽에 그 한 줄이 있어야 합니다.
