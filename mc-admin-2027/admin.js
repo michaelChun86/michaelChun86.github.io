@@ -43,12 +43,18 @@
 
   var SESSION_KEY = "mc-admin-ok";
 
+  /* 아래 패널들이 보고 있는 기간. 버튼으로 바뀌며 Worker 에 ?range= 로 넘어간다.
+     상단 KPI(오늘/7일/30일/누적)는 뜻이 고정된 숫자라 여기에 영향받지 않는다. */
+  var range = "all";
+  var RANGE_NOTE = { all: "전체 기간", "7d": "최근 7일", "30d": "최근 30일" };
+
   /* ---------------------------------------------------------------------
      샘플 데이터 — 실데이터가 붙으면 쓰이지 않습니다.
      구조는 Worker 가 돌려줘야 할 JSON 모양과 정확히 같습니다.
      --------------------------------------------------------------------- */
   var SAMPLE = {
     totalUsers: 3184,           // 전체 기간 순 방문자
+    profileViews: 531,
     todayUsers: 34,
     todayDeltaPct: 21,          // 어제 대비 %
     weekUsers: 186,
@@ -73,12 +79,11 @@
     contactClicks: 9,
     devices: [
       { name: "모바일", key: "mobile",  users: 118 },
-      { name: "PC",     key: "desktop", users: 61 },
-      { name: "태블릿", key: "tablet",  users: 7 }
+      { name: "PC",     key: "desktop", users: 61 }
     ],
     visitors: [
-      { name: "처음 방문", key: "new",       users: 131 },
-      { name: "다시 방문", key: "returning", users: 55 }
+      { name: "신규",   key: "new",       users: 131 },
+      { name: "재방문", key: "returning", users: 55 }
     ],
     languages: [
       { name: "English", key: "en", views: 402 },
@@ -197,13 +202,31 @@
   document.getElementById("logout").addEventListener("click", lockUp);
   document.getElementById("refresh").addEventListener("click", render);
 
+  /* ---------- 기간 필터 ---------- */
+  var rangeBtns = document.querySelector(".range-btns");
+  rangeBtns.addEventListener("click", function (ev) {
+    var b = ev.target.closest(".range-btn");
+    if (!b || b.classList.contains("active")) return;
+
+    range = b.getAttribute("data-range");
+    rangeBtns.querySelectorAll(".range-btn").forEach(function (x) {
+      var on = x === b;
+      x.classList.toggle("active", on);
+      x.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    render();
+  });
+
   /* ---------------------------------------------------------------------
      데이터 가져오기 — 실데이터/샘플의 유일한 분기점
      --------------------------------------------------------------------- */
   async function loadMetrics() {
     if (!API_ENDPOINT) return { data: SAMPLE, live: false };
     try {
-      var res = await fetch(API_ENDPOINT, { credentials: "omit" });
+      /* 주소에 이미 ?가 있을 수도 있으니 붙이는 기호를 골라 쓴다 */
+      var url = API_ENDPOINT + (API_ENDPOINT.indexOf("?") === -1 ? "?" : "&") +
+                "range=" + encodeURIComponent(range);
+      var res = await fetch(url, { credentials: "omit" });
       if (!res.ok) throw new Error("HTTP " + res.status);
       var body = await res.json();
       if (body.error) throw new Error(body.error);
@@ -268,6 +291,29 @@
     });
   }
 
+  /* 신규 / 재방문: 가로 비율 띠.
+     칸이 너무 좁으면 글자가 잘리므로, 좁은 쪽은 숫자를 감춘다. */
+  function drawSegments(el, rows) {
+    rows = rows || [];
+    var total = rows.reduce(function (a, r) { return a + r.users; }, 0);
+    if (!total) {
+      el.innerHTML = '<i class="seg-part seg-ret" style="width:100%">데이터가 아직 없습니다.</i>';
+      return;
+    }
+    var cls = { "new": "seg-new", returning: "seg-ret" };
+    el.innerHTML = rows.map(function (r) {
+      var pct = Math.round(r.users / total * 100);
+      return '<i class="seg-part ' + (cls[r.key] || "seg-ret") + '" data-w="' + pct + '">' +
+             (pct >= 12 ? esc(r.name) + " " + pct + "%" : "") + '</i>';
+    }).join("");
+
+    /* 막대와 같은 이유로 rAF 를 쓰지 않는다 (drawBars 주석 참고) */
+    void el.offsetWidth;
+    el.querySelectorAll(".seg-part").forEach(function (s) {
+      s.style.width = s.dataset.w + "%";
+    });
+  }
+
   /* 유입 경로: 도넛 + 표 */
   function drawSources(rows) {
     rows = rows || [];
@@ -309,7 +355,15 @@
   }
 
   async function render() {
-    var out = await loadMetrics();
+    /* 불러오는 동안 버튼을 잠근다. 연타하면 응답이 뒤섞여 늦게 온 쪽이
+       나중에 그려지면서, 눌러 둔 버튼과 화면의 숫자가 어긋날 수 있다. */
+    rangeBtns.classList.add("loading");
+    var out;
+    try {
+      out = await loadMetrics();
+    } finally {
+      rangeBtns.classList.remove("loading");
+    }
     var d = out.data;
 
     /* 안내 배너 — 샘플일 때(빨강)와, 실데이터인데 아직 0 일 때(회색).
@@ -344,14 +398,22 @@
     $("kpiMonthDelta").innerHTML = delta(d.monthDeltaPct, "지난 30일 대비");
     $("kpiTime").textContent = mmss(d.avgEngagementSec);
     $("kpiContact").textContent = num(d.contactClicks);
+    $("kpiProfile").textContent = num(d.profileViews);
+
+    /* 패널 제목의 기간 표기를 지금 고른 기간으로 맞춘다.
+       원래 쓰여 있던 뒷말("· 조회수")은 그대로 두고 앞에만 끼워 넣는다. */
+    document.querySelectorAll("[data-range-note]").forEach(function (el) {
+      if (el.dataset.tail == null) el.dataset.tail = el.textContent;
+      el.textContent = (RANGE_NOTE[range] || "") + " " + el.dataset.tail;
+    });
 
     drawSources(d.sources);
     drawBars($("countryBars"), d.countries, "명");
     drawBars($("pageBars"), d.pages, "회");
     drawBars($("artworkBars"), d.artworks, "회", "아직 크게 본 작품이 없습니다.");
     drawBars($("deviceBars"), d.devices, "명");
-    drawBars($("visitorBars"), d.visitors, "명");
     drawBars($("langBars"), d.languages, "회");
+    drawSegments($("visitorSeg"), d.visitors);
 
     $("footId").textContent = MEASUREMENT_ID || "측정 ID 미설정";
     $("updated").textContent = new Date().toLocaleString("ko-KR", {

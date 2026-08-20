@@ -259,13 +259,15 @@ button, input { font-family: inherit; }
 /* =========================================================================
    KPI 카드
    ========================================================================= */
-/* 6칸으로 두면 3 / 2 로 깔끔하게 접힌다 (5칸은 어디서 접어도 한 칸이 남았다) */
+/* KPI 는 두 줄로 나뉜다: 방문자(4칸) / 행동(3칸).
+   한 그리드에 7개를 넣으면 어떤 칸 수로도 마지막 줄이 어정쩡하게 남는다. */
 .kpis {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
   gap: 0.85rem;
-  margin-top: 1.4rem;
+  margin-top: 0.85rem;
 }
+.kpis-4 { grid-template-columns: repeat(4, 1fr); margin-top: 1.4rem; }
+.kpis-3 { grid-template-columns: repeat(3, 1fr); }
 
 .kpi { padding: 1.1rem 1.15rem 1rem; }
 
@@ -295,6 +297,52 @@ button, input { font-family: inherit; }
 }
 .kpi-foot .up { color: var(--up); }
 .kpi-foot .down { color: var(--down); }
+
+/* =========================================================================
+   기간 필터
+   ========================================================================= */
+.range-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-top: 1.6rem;
+}
+
+.range-cap {
+  font-size: 0.73rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.range-btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.range-btn {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.76rem;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+.range-btn:hover { color: var(--text); border-color: var(--purple); }
+
+.range-btn.active {
+  color: var(--purple);
+  border-color: var(--purple);
+  background: rgba(185, 139, 255, 0.14);
+}
+
+/* 새로 불러오는 동안에는 눌러도 소용없다는 걸 보이게 */
+.range-btns.loading .range-btn {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
 /* =========================================================================
    패널
@@ -413,20 +461,42 @@ button, input { font-family: inherit; }
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- 한 패널 안의 3열 (방문자 구성) ---------- */
-.trio {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.6rem;
+/* ---------- 가로 비율 띠 (신규 / 재방문) ----------
+   두 값의 비율 하나뿐이라 막대 두 줄보다 띠 하나가 더 빨리 읽힌다. */
+.seg {
+  display: flex;
+  height: 2.5rem;
+  border-radius: 0.45rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.sub-label {
-  margin: 0 0 0.75rem;
-  font-size: 0.76rem;
-  color: var(--muted);
-  letter-spacing: 0.04em;
+.seg-part {
+  display: grid;
+  place-items: center;
+  min-width: 0;                /* 0% 일 때 글자가 칸을 밀어내지 않게 */
+  font-size: 0.8rem;
+  font-style: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;                    /* JS 가 실제 비율로 채운다 */
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.sub-label .panel-note { margin-left: 0.3rem; }
+
+/* 신규 = 채도 높은 보라, 재방문 = 가라앉은 배경.
+   둘 다 밝게 칠하면 어느 쪽이 주인공인지 알 수 없다. */
+.seg-new {
+  background: var(--purple);
+  color: #17111f;
+}
+.seg-ret {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seg-part { transition: none; }
+}
 
 /* ---------- 막대 목록 ---------- */
 .bars {
@@ -499,15 +569,11 @@ button, input { font-family: inherit; }
 /* =========================================================================
    모바일
    ========================================================================= */
-@media (max-width: 1080px) {
-  /* 6칸을 좁은 화면에 밀어넣으면 라벨이 줄바꿈된다. 3+3 으로 접는다. */
-  .kpis { grid-template-columns: repeat(3, 1fr); }
-}
-
 @media (max-width: 780px) {
-  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .kpis-4, .kpis-3 { grid-template-columns: repeat(2, 1fr); }
+  /* 3칸짜리 줄은 2칸으로 접으면 마지막 하나가 남는다. 한 줄을 다 쓰게 한다. */
+  .kpis-3 .kpi:last-child { grid-column: 1 / -1; }
   .grid { grid-template-columns: 1fr; }
-  .trio { grid-template-columns: 1fr; gap: 1.4rem; }
   .kpi-value { font-size: 1.55rem; }
 }
 

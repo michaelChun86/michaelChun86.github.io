@@ -15,7 +15,7 @@
   <link rel="icon" type="image/jpeg" href="/Image/Hero/favicon.jpg" />
   <!-- ?v= 는 캐시 무효화용. 이 폴더의 파일을 고칠 때마다 숫자를 올려야
        브라우저가 옛 파일과 새 파일을 섞어 쓰는 사고를 막을 수 있다. -->
-  <link rel="stylesheet" href="admin.css?v=4" />
+  <link rel="stylesheet" href="admin.css?v=5" />
 </head>
 <body>
 
@@ -66,8 +66,10 @@
       <span id="noticeText"></span>
     </div>
 
-    <!-- ---------- 상단 KPI ---------- -->
-    <section class="kpis" aria-label="핵심 지표">
+    <!-- ---------- 상단 KPI ----------
+         윗줄은 "몇 명이 왔나"(기간별 방문자), 아랫줄은 "무엇을 했나"(행동).
+         뜻이 다른 지표라 한 줄에 섞지 않고 줄을 나눈다. -->
+    <section class="kpis kpis-4" aria-label="방문자 지표">
       <article class="card kpi kpi-hero">
         <p class="kpi-label">총 누적 방문자</p>
         <p class="kpi-value" id="kpiTotal">—</p>
@@ -88,22 +90,41 @@
         <p class="kpi-value" id="kpiMonth">—</p>
         <p class="kpi-foot" id="kpiMonthDelta">&nbsp;</p>
       </article>
+    </section>
+
+    <section class="kpis kpis-3" aria-label="행동 지표">
       <article class="card kpi">
-        <p class="kpi-label">평균 체류 시간</p>
-        <p class="kpi-value" id="kpiTime">—</p>
-        <p class="kpi-foot">최근 7일 · 방문자 1명 기준</p>
+        <p class="kpi-label">프로필 페이지 조회수</p>
+        <p class="kpi-value" id="kpiProfile">—</p>
+        <p class="kpi-foot">전체 기간 · 누적</p>
       </article>
       <article class="card kpi">
         <p class="kpi-label">연락처 클릭</p>
         <p class="kpi-value" id="kpiContact">—</p>
-        <p class="kpi-foot">최근 30일 · 이메일</p>
+        <p class="kpi-foot">전체 기간 · 이메일</p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">평균 체류 시간</p>
+        <p class="kpi-value" id="kpiTime">—</p>
+        <p class="kpi-foot">전체 기간 · 방문자 1명 기준</p>
       </article>
     </section>
+
+    <!-- ---------- 기간 필터 ----------
+         아래 패널 전체에 함께 걸린다. 위 KPI 는 뜻이 고정된 숫자라 안 바뀐다. -->
+    <div class="range-bar">
+      <span class="range-cap">아래 항목 기간</span>
+      <div class="range-btns" role="group" aria-label="기간 선택">
+        <button type="button" class="range-btn active" data-range="all">전체 기간</button>
+        <button type="button" class="range-btn" data-range="7d">최근 7일</button>
+        <button type="button" class="range-btn" data-range="30d">최근 30일</button>
+      </div>
+    </div>
 
     <div class="grid">
       <!-- ---------- 유입 경로 ---------- -->
       <section class="card panel" aria-label="유입 경로">
-        <h2 class="panel-title">유입 경로 <span class="panel-note">최근 7일</span></h2>
+        <h2 class="panel-title">유입 경로 <span class="panel-note" data-range-note></span></h2>
         <div class="donut-row">
           <div class="donut-wrap">
             <svg class="donut" viewBox="0 0 120 120" id="donut" aria-hidden="true">
@@ -123,41 +144,39 @@
 
       <!-- ---------- 국가 Top 5 ---------- -->
       <section class="card panel" aria-label="국가 순위">
-        <h2 class="panel-title">국가 TOP 5 <span class="panel-note">최근 7일</span></h2>
+        <h2 class="panel-title">국가 TOP 5 <span class="panel-note" data-range-note></span></h2>
         <ul class="bars" id="countryBars"></ul>
-      </section>
-
-      <!-- ---------- 인기 작품 ---------- -->
-      <section class="card panel" aria-label="인기 작품">
-        <h2 class="panel-title">인기 작품 TOP 5 <span class="panel-note">전체 기간 · 크게 본 횟수</span></h2>
-        <ul class="bars" id="artworkBars"></ul>
       </section>
 
       <!-- ---------- 페이지별 조회수 ---------- -->
       <section class="card panel" aria-label="페이지별 조회수">
-        <h2 class="panel-title">많이 본 페이지 <span class="panel-note">전체 기간 · 누적 조회수</span></h2>
+        <h2 class="panel-title">많이 본 페이지 <span class="panel-note" data-range-note>· 조회수</span></h2>
         <ul class="bars" id="pageBars"></ul>
       </section>
 
-      <!-- ---------- 방문자 구성 ----------
-           기기·재방문·언어는 각각 두세 줄뿐이라 패널을 따로 두면
-           빈 공간만 늘어난다. 한 패널 안에 3열로 나란히 둔다. -->
-      <section class="card panel panel-wide" aria-label="방문자 구성">
-        <h2 class="panel-title">방문자 구성 <span class="panel-note">최근 30일</span></h2>
-        <div class="trio">
-          <div>
-            <p class="sub-label">접속 기기</p>
-            <ul class="bars" id="deviceBars"></ul>
-          </div>
-          <div>
-            <p class="sub-label">신규 · 재방문</p>
-            <ul class="bars" id="visitorBars"></ul>
-          </div>
-          <div>
-            <p class="sub-label">보고 있는 언어 <span class="panel-note">페이지 조회 기준</span></p>
-            <ul class="bars" id="langBars"></ul>
-          </div>
-        </div>
+      <!-- ---------- 인기 작품 ---------- -->
+      <section class="card panel" aria-label="인기 작품">
+        <h2 class="panel-title">인기 작품 TOP 5 <span class="panel-note" data-range-note>· 크게 본 횟수</span></h2>
+        <ul class="bars" id="artworkBars"></ul>
+      </section>
+
+      <!-- ---------- 접속 기기 ---------- -->
+      <section class="card panel" aria-label="접속 기기">
+        <h2 class="panel-title">접속 기기 <span class="panel-note" data-range-note></span></h2>
+        <ul class="bars" id="deviceBars"></ul>
+      </section>
+
+      <!-- ---------- 보고 있는 언어 ---------- -->
+      <section class="card panel" aria-label="보고 있는 언어">
+        <h2 class="panel-title">보고 있는 언어 <span class="panel-note" data-range-note>· 페이지 조회 기준</span></h2>
+        <ul class="bars" id="langBars"></ul>
+      </section>
+
+      <!-- ---------- 신규 / 재방문 ----------
+           두 값의 비율 하나뿐이라 막대 두 줄보다 가로 띠 하나가 더 잘 읽힌다. -->
+      <section class="card panel panel-wide" aria-label="신규 / 재방문">
+        <h2 class="panel-title">신규 / 재방문 <span class="panel-note" data-range-note></span></h2>
+        <div class="seg" id="visitorSeg"></div>
       </section>
     </div>
 
@@ -167,6 +186,6 @@
     </footer>
   </div>
 
-  <script src="admin.js?v=4"></script>
+  <script src="admin.js?v=5"></script>
 </body>
 </html>

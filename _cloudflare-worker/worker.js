@@ -34,8 +34,18 @@ const SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
    (매 요청마다 재발급하면 느리고 낭비다) */
 let tokenCache = { value: null, expiresAt: 0 };
 
-/* 결과도 5분간 재사용한다. 새로고침을 연타해도 GA4 를 계속 때리지 않게. */
-let dataCache = { value: null, expiresAt: 0 };
+/* 결과도 5분간 재사용한다. 새로고침을 연타해도 GA4 를 계속 때리지 않게.
+   기간 필터(전체/7일/30일)마다 답이 다르므로 기간별로 따로 담아 둔다. */
+const dataCache = new Map();   // range -> { value, expiresAt }
+
+/* 관리자 페이지의 기간 필터가 보내는 값 → GA4 의 시작 날짜.
+   "all" 은 GA4 Data API 가 받아주는 가장 이른 날짜를 쓴다. 속성이 생기기
+   전 구간은 어차피 0 이라, 속성 생성일을 코드에 박아둘 필요가 없다. */
+const RANGES = {
+  all: "2015-08-14",
+  "7d": "7daysAgo",
+  "30d": "30daysAgo"
+};
 
 export default {
   async fetch(request, env) {
@@ -64,15 +74,18 @@ export default {
     }
 
     try {
+      /* 모르는 값이 오면 전체 기간으로 떨어뜨린다 (기본값과 같다) */
+      let range = new URL(request.url).searchParams.get("range") || "all";
+      if (!RANGES[range]) range = "all";
+
       const now = Date.now();
-      if (dataCache.value && now < dataCache.expiresAt) {
-        return json(dataCache.value, origin, "hit");
-      }
+      const hit = dataCache.get(range);
+      if (hit && now < hit.expiresAt) return json(hit.value, origin, "hit");
 
       const token = await getAccessToken(env);
-      const data = await buildMetrics(env, token);
+      const data = await buildMetrics(env, token, range);
 
-      dataCache = { value: data, expiresAt: now + 5 * 60 * 1000 };
+      dataCache.set(range, { value: data, expiresAt: now + 5 * 60 * 1000 });
       return json(data, origin, "miss");
     } catch (err) {
       // 실패해도 관리자 페이지가 이유를 알 수 있게 메시지를 담아 보낸다
@@ -405,17 +418,18 @@ function mergeByName(rows, valueKey, top) {
     .slice(0, top);
 }
 
-/* GA4 의 deviceCategory 는 이 셋만 온다 */
+/* GA4 의 deviceCategory 는 mobile / desktop / tablet 이 온다.
+   태블릿은 이 사이트에서 거의 0 이라 줄만 차지해서 뺐다.
+   (필요해지면 tablet: "태블릿" 한 줄만 추가하면 된다) */
 const DEVICE_NAMES = {
   mobile: "모바일",
-  desktop: "PC",
-  tablet: "태블릿"
+  desktop: "PC"
 };
 
 /* newVsReturning 은 GA4 기본 측정기준. 값을 못 정한 세션은 빈 문자열로 온다. */
 const VISITOR_NAMES = {
-  new: "처음 방문",
-  returning: "다시 방문"
+  new: "신규",
+  returning: "재방문"
 };
 
 /* analytics.js 가 보내는 site_language 값 */
@@ -445,115 +459,124 @@ function pageName(path) {
 /* ---------------------------------------------------------------------------
    관리자 페이지가 쓰는 모양으로 조립
    --------------------------------------------------------------------------- */
-async function buildMetrics(env, token) {
+async function buildMetrics(env, token, range) {
   readPropertyId(env);   // 설정이 잘못됐으면 여기서 바로 알려준다
 
   const R = body => runReport(env, token, body);
   const users = { metrics: [{ name: "activeUsers" }] };
 
+  /* 관리자 페이지의 기간 필터가 고른 구간. 아래 "패널" 쿼리들만 이걸 쓰고,
+     상단 KPI(오늘/7일/30일/누적)는 뜻이 고정된 숫자라 영향을 받지 않는다. */
+  const picked = [{ startDate: RANGES[range] || RANGES.all, endDate: "today" }];
+  const ALL = [{ startDate: RANGES.all, endDate: "today" }];
+
   /* 맞춤 측정기준(site_language, artwork)은 GA4 에 등록해야 나온다.
      등록 전이면 이 쿼리만 실패하므로, 실패해도 나머지 화면은 그대로
      보이도록 빈 결과로 바꿔 삼킨다. */
-  const soft = p => p.catch(() => ({ rows: [] }));
+  const soft = fn => () => fn().catch(() => ({ rows: [] }));
+
+  /* 이벤트 이름 하나로 거르는 필터 (여러 곳에서 같은 모양을 쓴다) */
+  const isEvent = name => ({
+    filter: { fieldName: "eventName", stringFilter: { matchType: "EXACT", value: name } }
+  });
+
+  const tasks = [
+    /* ---------- 상단 KPI (기간 고정) ---------- */
+
+    /* 총 누적 방문자 — 합계가 아니라 중복 제거된 순 방문자다.
+       같은 사람이 여러 날 와도 1 로 센다. 그래서 같은 지표에 더 넓은 기간인
+       이 값이 "최근 30일" 보다 작아지는 일은 없다. */
+    () => R({ dateRanges: ALL, ...users }),
+
+    // 오늘 / 어제
+    () => R({ dateRanges: [{ startDate: "today", endDate: "today" }], ...users }),
+    () => R({ dateRanges: [{ startDate: "yesterday", endDate: "yesterday" }], ...users }),
+
+    // 최근 7일 / 그 이전 7일
+    () => R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }], ...users }),
+    () => R({ dateRanges: [{ startDate: "14daysAgo", endDate: "8daysAgo" }], ...users }),
+
+    // 최근 30일 / 그 이전 30일
+    () => R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }], ...users }),
+    () => R({ dateRanges: [{ startDate: "60daysAgo", endDate: "31daysAgo" }], ...users }),
+
+    // 평균 참여 시간 = 총 참여 시간 ÷ 순 방문자 (전체 기간)
+    () => R({ dateRanges: ALL,
+        metrics: [{ name: "userEngagementDuration" }, { name: "activeUsers" }] }),
+
+    // 연락처(이메일) 클릭 — 이 사이트의 유일한 전환 지표
+    () => R({ dateRanges: ALL,
+        metrics: [{ name: "eventCount" }],
+        dimensionFilter: isEvent("contact_click") }),
+
+    /* 프로필 페이지 조회수. pagePath 는 /resume 과 /resume/ 로 갈라져 들어오므로
+       "시작이 /resume" 으로 잡은 뒤 합산한다. */
+    () => R({ dateRanges: ALL,
+        dimensions: [{ name: "pagePath" }],
+        metrics: [{ name: "screenPageViews" }],
+        dimensionFilter: {
+          filter: {
+            fieldName: "pagePath",
+            stringFilter: { matchType: "BEGINS_WITH", value: "/resume" }
+          }
+        } }),
+
+    /* ---------- 아래 패널 (기간 필터 적용) ---------- */
+
+    // 유입 경로 — 한글 이름으로 합친 뒤 상위 5개를 고르므로 넉넉히 받는다
+    () => R({ dateRanges: picked,
+        dimensions: [{ name: "sessionSource" }],
+        metrics: [{ name: "sessions" }],
+        orderBys: [{ desc: true, metric: { metricName: "sessions" } }],
+        limit: 20 }),
+
+    // 국가 — 국가코드(KR)와 영문 이름을 함께 받는다.
+    // 코드로 한글 이름을 찾고, 목록에 없으면 영문 이름으로 넘어간다.
+    () => R({ dateRanges: picked,
+        dimensions: [{ name: "countryId" }, { name: "country" }],
+        metrics: [{ name: "activeUsers" }],
+        orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }],
+        limit: 20 }),
+
+    // 접속 기기 (모바일 / PC)
+    () => R({ dateRanges: picked,
+        dimensions: [{ name: "deviceCategory" }],
+        metrics: [{ name: "activeUsers" }],
+        orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }] }),
+
+    // 신규 vs 재방문 — GA4 기본 제공 측정기준이라 등록이 필요 없다
+    () => R({ dateRanges: picked,
+        dimensions: [{ name: "newVsReturning" }],
+        metrics: [{ name: "activeUsers" }] }),
+
+    /* 언어 비율 — 우리가 심은 site_language 로 "실제로 어느 언어로 봤는가"를 센다.
+       GA4 기본 language 는 브라우저 언어라, 기본값이 영어인 이 사이트에서는
+       실제로 읽은 언어와 다르다. */
+    soft(() => R({ dateRanges: picked,
+        dimensions: [{ name: "customEvent:site_language" }],
+        metrics: [{ name: "screenPageViews" }],
+        dimensionFilter: isEvent("page_view") })),
+
+    // 많이 본 페이지
+    () => R({ dateRanges: picked,
+        dimensions: [{ name: "pagePath" }],
+        metrics: [{ name: "screenPageViews" }],
+        orderBys: [{ desc: true, metric: { metricName: "screenPageViews" } }],
+        limit: 20 }),
+
+    // 인기 작품 — 썸네일을 눌러 크게 본 횟수
+    soft(() => R({ dateRanges: picked,
+        dimensions: [{ name: "customEvent:artwork" }],
+        metrics: [{ name: "eventCount" }],
+        dimensionFilter: isEvent("artwork_view"),
+        orderBys: [{ desc: true, metric: { metricName: "eventCount" } }],
+        limit: 5 }))
+  ];
 
   const [total, today, yesterday, week, prevWeek, month, prevMonth,
-         engage, sources, countries, devices, visitorType,
-         languages, contact, artworks, pages] =
-    await Promise.all([
-      /* 총 누적 방문자.
-         GA4 Data API 가 받아주는 가장 이른 날짜가 2015-08-14 라 그걸 시작으로 둔다.
-         속성이 만들어지기 전 구간은 그냥 0 이므로 결과에 영향이 없고,
-         "속성 생성일"을 코드에 박아둘 필요도 없다.
-         합계가 아니라 중복 제거된 순 방문자다 — 같은 사람이 여러 날 와도 1 로 센다.
-         그래서 "최근 30일" 보다 작아지는 일은 없다(같은 지표, 더 넓은 기간). */
-      R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }], ...users }),
-
-      // 오늘 / 어제
-      R({ dateRanges: [{ startDate: "today", endDate: "today" }], ...users }),
-      R({ dateRanges: [{ startDate: "yesterday", endDate: "yesterday" }], ...users }),
-
-      // 최근 7일 / 그 이전 7일
-      R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }], ...users }),
-      R({ dateRanges: [{ startDate: "14daysAgo", endDate: "8daysAgo" }], ...users }),
-
-      // 최근 30일 / 그 이전 30일
-      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }], ...users }),
-      R({ dateRanges: [{ startDate: "60daysAgo", endDate: "31daysAgo" }], ...users }),
-
-      // 평균 참여 시간 = 총 참여 시간 ÷ 순 방문자
-      R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
-          metrics: [{ name: "userEngagementDuration" }, { name: "activeUsers" }] }),
-
-      // 유입 경로 상위 5
-      R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
-          dimensions: [{ name: "sessionSource" }],
-          metrics: [{ name: "sessions" }],
-          orderBys: [{ desc: true, metric: { metricName: "sessions" } }],
-          limit: 20 }),   // 한글 이름으로 합친 뒤 상위 5개를 고르므로 넉넉히 받는다
-
-      // 국가 상위 5 — 국가코드(KR)와 영문 이름을 함께 받는다.
-      // 코드로 한글 이름을 찾고, 목록에 없으면 영문 이름으로 넘어간다.
-      R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
-          dimensions: [{ name: "countryId" }, { name: "country" }],
-          metrics: [{ name: "activeUsers" }],
-          orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }],
-          limit: 20 }),
-
-      // 기기 종류 — 모바일 / 데스크톱 / 태블릿
-      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-          dimensions: [{ name: "deviceCategory" }],
-          metrics: [{ name: "activeUsers" }],
-          orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }] }),
-
-      // 신규 vs 재방문 — GA4 기본 제공 측정기준이라 등록이 필요 없다
-      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-          dimensions: [{ name: "newVsReturning" }],
-          metrics: [{ name: "activeUsers" }] }),
-
-      // 언어 비율 — 우리가 심은 site_language 로 "실제로 어느 언어로 봤는가"를 센다.
-      // GA4 기본 language 는 브라우저 언어라, 기본값이 영어인 이 사이트에서는
-      // 실제로 읽은 언어와 다르다.
-      soft(R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-          dimensions: [{ name: "customEvent:site_language" }],
-          metrics: [{ name: "screenPageViews" }],
-          dimensionFilter: {
-            filter: {
-              fieldName: "eventName",
-              stringFilter: { matchType: "EXACT", value: "page_view" }
-            }
-          } })),
-
-      // 연락처(이메일) 클릭 — 이 사이트의 유일한 전환 지표
-      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-          metrics: [{ name: "eventCount" }],
-          dimensionFilter: {
-            filter: {
-              fieldName: "eventName",
-              stringFilter: { matchType: "EXACT", value: "contact_click" }
-            }
-          } }),
-
-      // 인기 작품 — 썸네일을 눌러 크게 본 횟수. 전체 기간 누적.
-      soft(R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }],
-          dimensions: [{ name: "customEvent:artwork" }],
-          metrics: [{ name: "eventCount" }],
-          dimensionFilter: {
-            filter: {
-              fieldName: "eventName",
-              stringFilter: { matchType: "EXACT", value: "artwork_view" }
-            }
-          },
-          orderBys: [{ desc: true, metric: { metricName: "eventCount" } }],
-          limit: 5 })),
-
-      // 많이 본 페이지 — 최근이 아니라 전체 기간 누적.
-      // (정규화 후 합쳐질 수 있으니 5개보다 넉넉히 받아 우리 쪽에서 자른다)
-      R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }],
-          dimensions: [{ name: "pagePath" }],
-          metrics: [{ name: "screenPageViews" }],
-          orderBys: [{ desc: true, metric: { metricName: "screenPageViews" } }],
-          limit: 20 })
-    ]);
+         engage, contact, profile,
+         sources, countries, devices, visitorType, languages, pages, artworks] =
+    await runInChunks(tasks, 8);
 
   const todayUsers = firstMetric(today);
   const weekUsers = firstMetric(week);
@@ -566,6 +589,9 @@ async function buildMetrics(env, token) {
     : 0;
 
   return {
+    range,
+
+    /* ---------- 상단 KPI ---------- */
     totalUsers: firstMetric(total),
     todayUsers,
     todayDeltaPct: pctChange(todayUsers, firstMetric(yesterday)),
@@ -574,8 +600,13 @@ async function buildMetrics(env, token) {
     monthUsers,
     monthDeltaPct: pctChange(monthUsers, firstMetric(prevMonth)),
     avgEngagementSec,
+    contactClicks: firstMetric(contact),
+    /* /resume 과 /resume/ 가 따로 잡히므로 다 더한다 */
+    profileViews: toRows(profile).reduce((a, r) => a + r.value, 0),
 
-    /* 아래 셋 모두 "한글 이름으로 바꾼 뒤 합치고 상위 5개" 순서다.
+    /* ---------- 아래 패널 ---------- */
+
+    /* 유입 경로·국가·페이지는 "한글 이름으로 바꾼 뒤 합치고 상위 5개" 순서다.
        바꾸기 전에 자르면 합쳐질 줄을 미리 버리게 되어 합계가 틀어진다. */
     sources: mergeByName(
       toRows(sources).map(r => ({ name: sourceName(r.key), sessions: r.value })),
@@ -590,21 +621,31 @@ async function buildMetrics(env, token) {
       "users", 5
     ),
 
-    contactClicks: firstMetric(contact),
+    /* /3d-art 와 /3d-art/ 처럼 같은 페이지가 갈라져 들어온다 */
+    pages: mergeByName(
+      toRows(pages).map(r => ({ name: pageName(r.key), views: r.value })),
+      "views", 5
+    ),
+
+    /* 썸네일을 눌러 크게 본 작품. 맞춤 측정기준 미등록이면 빈 배열이 온다. */
+    artworks: toRows(artworks).map(r => ({ name: r.key, views: r.value })),
 
     /* 아래 셋은 항목이 정해져 있으므로, 값이 없어도 줄을 지우지 않고 0 으로
        채운다. "모바일이 0" / "한국어가 0" 같은 것도 그 자체로 정보다. */
     devices: fixedRows(DEVICE_NAMES, toRows(devices), "users"),
     visitors: fixedRows(VISITOR_NAMES, toRows(visitorType), "users"),
-    languages: fixedRows(LANG_NAMES, toRows(languages), "views"),
-
-    /* 썸네일을 눌러 크게 본 작품. 맞춤 측정기준 미등록이면 빈 배열이 온다. */
-    artworks: toRows(artworks).map(r => ({ name: r.key, views: r.value })),
-
-    /* /3d-art 와 /3d-art/ 처럼 같은 페이지가 갈라져 들어온다 */
-    pages: mergeByName(
-      toRows(pages).map(r => ({ name: pageName(r.key), views: r.value })),
-      "views", 5
-    )
+    languages: fixedRows(LANG_NAMES, toRows(languages), "views")
   };
+}
+
+/* GA4 는 한 속성에 동시 요청 수 제한이 있다. 17개를 한꺼번에 던지면
+   일부가 "동시 요청 할당량 초과"로 떨어질 수 있으므로 몇 개씩 나눠 보낸다.
+   결과는 넘긴 순서 그대로 돌려준다. */
+async function runInChunks(tasks, size) {
+  const out = [];
+  for (let i = 0; i < tasks.length; i += size) {
+    const part = await Promise.all(tasks.slice(i, i + size).map(fn => fn()));
+    out.push(...part);
+  }
+  return out;
 }
