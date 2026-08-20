@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 검색 엔진 완전 차단: 색인도, 링크 추적도 하지 않는다 -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+  <meta name="googlebot" content="noindex, nofollow" />
+  <!-- 링크 미리보기(카카오톡·디스코드 등)에도 아무것도 노출하지 않는다 -->
+  <meta property="og:title" content="" />
+  <meta name="referrer" content="no-referrer" />
+
+  <title>Admin</title>
+  <link rel="icon" type="image/jpeg" href="/Image/Hero/favicon.jpg" />
+  <!-- ?v= 는 캐시 무효화용. 이 폴더의 파일을 고칠 때마다 숫자를 올려야
+       브라우저가 옛 파일과 새 파일을 섞어 쓰는 사고를 막을 수 있다. -->
+  <link rel="stylesheet" href="admin.css?v=1" />
+</head>
+<body>
+
+  <!-- ===================== 잠금 화면 =====================
+       비밀번호를 맞게 넣기 전까지 대시보드는 화면에 그려지지 않는다. -->
+  <div class="lock" id="lock">
+    <div class="lock-box">
+      <h1 class="lock-title">MICHAEL<span class="accent">CHUN</span></h1>
+      <p class="lock-sub">관리자 인증</p>
+
+      <form class="lock-form" id="pinForm" autocomplete="off">
+        <!-- 숫자 PIN 이 아니라 문자·기호가 섞인 비밀번호를 쓴다.
+             inputmode="numeric" / pattern="[0-9]*" 를 두면 모바일에서 숫자 자판만 떠
+             문자를 입력할 수 없으므로 반드시 빼야 한다.
+             autocapitalize=off 도 필수 — 모바일이 첫 글자를 대문자로 바꿔 버린다. -->
+        <input class="pin-input" id="pinInput" type="password"
+               maxlength="64" placeholder="••••••••••"
+               aria-label="관리자 비밀번호" autocomplete="off"
+               autocapitalize="off" autocorrect="off" spellcheck="false" />
+        <button class="pin-go" type="submit">ENTER</button>
+      </form>
+
+      <!-- 비밀번호 오류에는 아무 문구도 띄우지 않는다. 이 칸은 고장(https 아님 등)일 때만 쓴다. -->
+      <p class="lock-err" id="pinErr" role="alert" hidden></p>
+    </div>
+  </div>
+
+  <!-- ===================== 대시보드 ===================== -->
+  <div class="wrap" id="dash" hidden>
+
+    <header class="top">
+      <div class="top-left">
+        <span class="dot" aria-hidden="true"></span>
+        <h1>ANALYTICS</h1>
+        <span class="top-sub">michaelchun86.github.io</span>
+      </div>
+      <div class="top-right">
+        <span class="updated" id="updated">—</span>
+        <button class="btn-ghost" id="refresh" type="button">새로고침</button>
+        <button class="btn-ghost" id="logout" type="button">잠금</button>
+      </div>
+    </header>
+
+    <!-- 데이터 출처 안내 배너 (실데이터 연결 전까지만 보인다) -->
+    <div class="notice" id="notice" hidden>
+      <strong>샘플 데이터입니다.</strong>
+      <span id="noticeText"></span>
+    </div>
+
+    <!-- ---------- 상단 KPI ---------- -->
+    <section class="kpis" aria-label="핵심 지표">
+      <article class="card kpi kpi-hero">
+        <p class="kpi-label">오늘 방문자</p>
+        <p class="kpi-value" id="kpiToday">—</p>
+        <p class="kpi-foot" id="kpiTodayDelta">&nbsp;</p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">최근 7일</p>
+        <p class="kpi-value" id="kpiWeek">—</p>
+        <p class="kpi-foot" id="kpiWeekDelta">&nbsp;</p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">최근 30일</p>
+        <p class="kpi-value" id="kpiMonth">—</p>
+        <p class="kpi-foot" id="kpiMonthDelta">&nbsp;</p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">평균 체류 시간</p>
+        <p class="kpi-value" id="kpiTime">—</p>
+        <p class="kpi-foot">최근 7일 · 방문자 1명 기준</p>
+      </article>
+    </section>
+
+    <div class="grid">
+      <!-- ---------- 유입 경로 ---------- -->
+      <section class="card panel" aria-label="유입 경로">
+        <h2 class="panel-title">유입 경로 <span class="panel-note">최근 7일</span></h2>
+        <div class="donut-row">
+          <div class="donut-wrap">
+            <svg class="donut" viewBox="0 0 120 120" id="donut" aria-hidden="true">
+              <circle class="donut-track" cx="60" cy="60" r="52" />
+              <g id="donutSegs"></g>
+            </svg>
+            <div class="donut-center">
+              <span class="donut-num" id="donutTotal">—</span>
+              <span class="donut-cap">세션</span>
+            </div>
+          </div>
+          <table class="tbl" id="srcTable">
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ---------- 국가 Top 5 ---------- -->
+      <section class="card panel" aria-label="국가 순위">
+        <h2 class="panel-title">국가 TOP 5 <span class="panel-note">최근 7일</span></h2>
+        <ul class="bars" id="countryBars"></ul>
+      </section>
+
+      <!-- ---------- 페이지별 조회수 ---------- -->
+      <section class="card panel panel-wide" aria-label="페이지별 조회수">
+        <h2 class="panel-title">많이 본 페이지 <span class="panel-note">최근 7일 · 조회수</span></h2>
+        <ul class="bars bars-lg" id="pageBars"></ul>
+      </section>
+    </div>
+
+    <footer class="foot">
+      <a href="https://analytics.google.com/" target="_blank" rel="noopener">GA4 원본 보고서 열기 →</a>
+      <span id="footId">—</span>
+    </footer>
+  </div>
+
+  <script src="admin.js?v=1"></script>
+</body>
+</html>

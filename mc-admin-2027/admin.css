@@ -1,0 +1,487 @@
+/* =========================================================================
+   관리자 대시보드 스타일
+
+   본 사이트(styles.css)와 같은 색·폰트를 쓰되, 이 폴더만 독립적으로
+   동작해야 하므로 필요한 것만 여기에 다시 정의한다.
+   (styles.css 를 통째로 불러오면 헤더·커서·갤러리 등 쓰지도 않는 규칙까지
+    따라와서, 본 사이트를 고칠 때마다 이 화면이 같이 깨질 수 있다.)
+
+   폰트는 본 사이트가 이미 쓰는 서브셋 woff2 를 그대로 재사용한다.
+   ========================================================================= */
+
+@font-face {
+  font-family: "Esamanru";
+  src: url("/Fonts/esamanru-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Esamanru";
+  src: url("/Fonts/esamanru-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #060608;
+  --panel: #131318;
+  --panel-2: #17171d;
+  --text: #f5f5f7;
+  --muted: #9d9da8;
+  --line: rgba(180, 140, 255, 0.22);
+  --purple: #b98bff;
+  --cyan: #5be8e8;
+  --pink: #ff6fd8;
+  --up: #4ade80;
+  --down: #ff7676;
+}
+
+* { box-sizing: border-box; }
+
+html { overflow-y: scroll; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Esamanru", "Noto Sans KR", system-ui, sans-serif;
+  font-weight: 300;
+  /* 한글이 음절 중간에서 잘리지 않게 — 본 사이트와 같은 규칙 */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 폼 요소는 font-family 를 상속하지 않아 Arial 로 떨어진다.
+   그러면 한글이 시스템 폰트로 대체되면서 세로 정렬까지 어긋난다. */
+button, input { font-family: inherit; }
+
+/* =========================================================================
+   잠금 화면
+   ========================================================================= */
+.lock {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(60rem 40rem at 50% -10%, rgba(185, 139, 255, 0.14), transparent 70%),
+    var(--bg);
+  z-index: 10;
+}
+
+.lock-box {
+  width: min(24rem, 100%);
+  padding: 2.6rem 2rem 2.2rem;
+  text-align: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+}
+
+.lock-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+.lock-title .accent { color: var(--purple); }
+
+.lock-sub {
+  margin: 0.5rem 0 1.8rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+.lock-form { display: grid; gap: 0.7rem; }
+
+.pin-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  text-align: center;
+  letter-spacing: 0.3em;
+  font-size: 1rem;
+  color: var(--text);
+  background: #0c0c10;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.pin-input:focus { border-color: var(--purple); }
+
+.pin-go {
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--bg);
+  background: var(--purple);
+  border: 0;
+  border-radius: 0.55rem;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+.pin-go:hover { filter: brightness(1.12); }
+
+.lock-err {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--down);
+}
+
+/* 비밀번호가 틀리면 문구 없이 상자만 짧게 흔든다 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
+}
+.lock-box.shake { animation: shake 0.4s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lock-box.shake { animation: none; }
+}
+
+/* =========================================================================
+   레이아웃
+   ========================================================================= */
+.wrap {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.top-left {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.top-left h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+
+.top-sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* 살아 있다는 표시. 데이터가 실시간이라는 뜻은 아니고 화면이 켜져 있다는 뜻. */
+.dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0.6rem var(--cyan);
+  align-self: center;
+}
+
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.updated {
+  margin-right: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.btn-ghost {
+  padding: 0.42rem 0.8rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--purple);
+}
+
+.notice {
+  margin-top: 1.1rem;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: #ffd9d9;
+  background: rgba(255, 118, 118, 0.09);
+  border: 1px solid rgba(255, 118, 118, 0.35);
+  border-radius: 0.5rem;
+}
+.notice strong { color: #ff9d9d; font-weight: 500; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+}
+
+/* =========================================================================
+   KPI 카드
+   ========================================================================= */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  margin-top: 1.4rem;
+}
+
+.kpi { padding: 1.1rem 1.15rem 1rem; }
+
+.kpi-label {
+  margin: 0;
+  font-size: 0.73rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.kpi-value {
+  margin: 0.5rem 0 0.35rem;
+  font-size: 1.85rem;
+  font-weight: 500;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 가장 먼저 보게 될 숫자 하나만 색을 준다. 전부 칠하면 위계가 사라진다. */
+.kpi-hero { border-color: rgba(185, 139, 255, 0.5); }
+.kpi-hero .kpi-value { color: var(--purple); }
+
+.kpi-foot {
+  margin: 0;
+  font-size: 0.71rem;
+  color: var(--muted);
+}
+.kpi-foot .up { color: var(--up); }
+.kpi-foot .down { color: var(--down); }
+
+/* =========================================================================
+   패널
+   ========================================================================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.panel { padding: 1.15rem 1.2rem 1.3rem; }
+.panel-wide { grid-column: 1 / -1; }
+
+.panel-title {
+  margin: 0 0 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.panel-note {
+  margin-left: 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* ---------- 유입 경로: 도넛 + 표 ---------- */
+.donut-row {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.donut-wrap {
+  position: relative;
+  flex: 0 0 8.5rem;
+  width: 8.5rem;
+}
+
+.donut {
+  width: 100%;
+  display: block;
+  transform: rotate(-90deg);   /* 12시 방향에서 시작 */
+}
+
+.donut-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 13;
+}
+
+.donut-seg {
+  fill: none;
+  stroke-width: 13;
+  stroke-linecap: butt;
+  transition: stroke-dasharray 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.donut-num {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.donut-cap {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+.tbl {
+  flex: 1;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.tbl td {
+  padding: 0.42rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tbl tr:last-child td { border-bottom: 0; }
+
+.c-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.swatch {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0.12rem;
+  flex: 0 0 auto;
+}
+
+.c-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.c-pct {
+  width: 3rem;
+  text-align: right;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 막대 목록 ---------- */
+.bars {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.8rem;
+}
+.bars-lg { gap: 0.95rem; }
+
+.bar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.8rem;
+}
+
+.bar-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-num {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-track {
+  height: 0.4rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 0.2rem;
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  width: 0;                    /* JS 가 다음 프레임에 채워 넣어야 전환이 보인다 */
+  border-radius: 0.2rem;
+  background: linear-gradient(90deg, var(--purple), var(--cyan));
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .donut-seg, .bar-fill { transition: none; }
+}
+
+/* =========================================================================
+   푸터
+   ========================================================================= */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: space-between;
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.foot a { color: var(--purple); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+/* =========================================================================
+   모바일
+   ========================================================================= */
+@media (max-width: 780px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .grid { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 1.55rem; }
+}
+
+@media (max-width: 520px) {
+  .wrap { padding: 1.4rem 0.9rem 3rem; }
+  .top-right { width: 100%; justify-content: flex-start; }
+
+  /* 도넛과 표를 나란히 두면 표가 너무 좁아져 숫자가 줄바꿈된다 */
+  .donut-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+  }
+  .donut-wrap { align-self: center; }
+}
