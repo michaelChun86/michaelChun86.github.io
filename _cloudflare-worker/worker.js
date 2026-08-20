@@ -252,50 +252,147 @@ function pctChange(current, previous) {
 /* ---------------------------------------------------------------------------
    보기 좋은 이름으로 바꾸기
    --------------------------------------------------------------------------- */
+/* 유입 경로 이름 → 한글.
+   GA4 의 sessionSource 는 도메인이나 짧은 코드로 온다(예: ig = 인스타그램 앱).
+   목록에 없으면 원래 값을 그대로 보여준다 — 숨기는 것보다 낫다.
+
+   "(not set)" 은 고장이 아니라, GA4 가 그 세션의 출처를 판별하지 못했을 때
+   붙이는 기본 라벨이다. 집계 초기, 앱 내부 브라우저, 광고 차단/개인정보
+   설정으로 리퍼러가 잘린 방문에서 생긴다. 소수 섞이는 것은 정상이다. */
 const SOURCE_NAMES = {
-  "(direct)": "Direct",
-  "google": "Search",
-  "bing": "Search",
-  "duckduckgo": "Search",
+  "(direct)": "직접 방문",
+  "(not set)": "미확인",
+  "(none)": "직접 방문",
+
+  // 검색
+  "google": "구글 검색",
+  "bing": "Bing 검색",
+  "yahoo": "야후 검색",
+  "duckduckgo": "덕덕고",
+  "naver": "네이버",
   "naver.com": "네이버",
   "search.naver.com": "네이버",
+  "daum": "다음",
   "daum.net": "다음",
-  "artstation.com": "ArtStation",
-  "www.artstation.com": "ArtStation",
-  "linkedin.com": "LinkedIn",
-  "www.linkedin.com": "LinkedIn",
-  "lnkd.in": "LinkedIn",
-  "instagram.com": "Instagram",
-  "l.instagram.com": "Instagram",
-  "youtube.com": "YouTube",
-  "m.youtube.com": "YouTube",
-  "t.co": "X/Twitter",
-  "x.com": "X/Twitter",
-  "twitter.com": "X/Twitter",
-  "facebook.com": "Facebook",
-  "l.facebook.com": "Facebook",
-  "reddit.com": "Reddit",
-  "behance.net": "Behance",
-  "github.com": "GitHub",
-  "dallagames.com": "달라게임즈"
+  "search.daum.net": "다음",
+  "baidu": "바이두",
+  "yandex": "얀덱스",
+
+  // 포트폴리오·업계
+  "artstation.com": "아트스테이션",
+  "behance.net": "비핸스",
+  "linkedin.com": "링크드인",
+  "lnkd.in": "링크드인",
+  "github.com": "깃허브",
+  "dribbble.com": "드리블",
+  "cgsociety.org": "CGSociety",
+  "polycount.com": "폴리카운트",
+  "80.lv": "80 Level",
+  "notion.so": "노션",
+
+  // 영상·커뮤니티
+  "youtube.com": "유튜브",
+  "twitch.tv": "트위치",
+  "vimeo.com": "비메오",
+  "reddit.com": "레딧",
+  "out.reddit.com": "레딧",
+  "discord.com": "디스코드",
+  "discord.gg": "디스코드",
+
+  // SNS
+  "t.co": "X (트위터)",
+  "x.com": "X (트위터)",
+  "twitter.com": "X (트위터)",
+  "ig": "인스타그램",
+  "instagram.com": "인스타그램",
+  "facebook.com": "페이스북",
+  "threads.net": "스레드",
+  "tiktok.com": "틱톡",
+  "pinterest.com": "핀터레스트",
+
+  // 게임
+  "store.steampowered.com": "스팀",
+  "steamcommunity.com": "스팀",
+  "itch.io": "itch.io",
+  "dallagames.com": "달라게임즈",
+
+  // 국내
+  "kakao.com": "카카오톡",
+  "plus.kakao.com": "카카오톡",
+  "band.us": "네이버 밴드",
+  "blog.naver.com": "네이버 블로그",
+  "cafe.naver.com": "네이버 카페",
+  "dcinside.com": "디시인사이드",
+  "ruliweb.com": "루리웹",
+  "inven.co.kr": "인벤",
+  "tistory.com": "티스토리",
+  "brunch.co.kr": "브런치",
+  "velog.io": "벨로그",
+  "linkareer.com": "링커리어",
+  "saramin.co.kr": "사람인",
+  "jobkorea.co.kr": "잡코리아",
+  "wanted.co.kr": "원티드"
 };
 
+/* www. / m. / l. 같은 접두어를 떼고 한 번 더 찾아본다.
+   (GA4 는 m.youtube.com, l.instagram.com, lm.facebook.com 등을 따로 센다)
+   점은 반드시 이스케이프한다 — \. 가 아니면 "mail.google.com" 이
+   "m" + 임의의 한 글자로 잘려 엉뚱한 값이 된다. */
+function sourceName(raw) {
+  if (SOURCE_NAMES[raw]) return SOURCE_NAMES[raw];
+  const bare = String(raw).toLowerCase().replace(/^(www|m|l|lm|out|ptb)\./, "");
+  return SOURCE_NAMES[bare] || raw;
+}
+
+/* 국가는 영문 이름 대신 ISO 국가코드로 맞춘다.
+   영문 표기는 흔들릴 수 있지만("United States" / "U.S.") 코드는 고정이다. */
 const COUNTRY_NAMES = {
-  "South Korea": "대한민국",
-  "United States": "미국",
-  "China": "중국",
-  "Japan": "일본",
-  "Germany": "독일",
-  "United Kingdom": "영국",
-  "France": "프랑스",
-  "Canada": "캐나다",
-  "Taiwan": "대만",
-  "Brazil": "브라질",
-  "Russia": "러시아",
-  "India": "인도",
-  "Singapore": "싱가포르",
-  "(not set)": "미확인"
+  KR: "대한민국", US: "미국", JP: "일본", CN: "중국", TW: "대만",
+  HK: "홍콩", MO: "마카오", SG: "싱가포르", MY: "말레이시아", TH: "태국",
+  VN: "베트남", ID: "인도네시아", PH: "필리핀", IN: "인도", PK: "파키스탄",
+  BD: "방글라데시", NP: "네팔", MM: "미얀마", KH: "캄보디아", LA: "라오스",
+  MN: "몽골", KZ: "카자흐스탄", UZ: "우즈베키스탄",
+
+  GB: "영국", IE: "아일랜드", DE: "독일", FR: "프랑스", IT: "이탈리아",
+  ES: "스페인", PT: "포르투갈", NL: "네덜란드", BE: "벨기에", LU: "룩셈부르크",
+  CH: "스위스", AT: "오스트리아", SE: "스웨덴", NO: "노르웨이", DK: "덴마크",
+  FI: "핀란드", IS: "아이슬란드", PL: "폴란드", CZ: "체코", SK: "슬로바키아",
+  HU: "헝가리", RO: "루마니아", BG: "불가리아", GR: "그리스", HR: "크로아티아",
+  RS: "세르비아", SI: "슬로베니아", UA: "우크라이나", RU: "러시아", BY: "벨라루스",
+  LT: "리투아니아", LV: "라트비아", EE: "에스토니아", TR: "튀르키예", CY: "키프로스",
+
+  CA: "캐나다", MX: "멕시코", BR: "브라질", AR: "아르헨티나", CL: "칠레",
+  CO: "콜롬비아", PE: "페루", UY: "우루과이", VE: "베네수엘라", EC: "에콰도르",
+
+  AU: "호주", NZ: "뉴질랜드",
+
+  IL: "이스라엘", SA: "사우디아라비아", AE: "아랍에미리트", QA: "카타르",
+  KW: "쿠웨이트", IR: "이란", IQ: "이라크", JO: "요르단", LB: "레바논",
+
+  EG: "이집트", ZA: "남아프리카공화국", NG: "나이지리아", KE: "케냐",
+  MA: "모로코", DZ: "알제리", TN: "튀니지", GH: "가나", ET: "에티오피아"
 };
+
+/* 코드가 목록에 없으면 GA4 가 준 영문 이름을 그대로 쓴다 */
+function countryName(code, englishName) {
+  if (COUNTRY_NAMES[code]) return COUNTRY_NAMES[code];
+  if (!englishName || englishName === "(not set)") return "미확인";
+  return englishName;
+}
+
+/* 이름이 같아진 줄을 하나로 합친다.
+   m.youtube.com 과 youtube.com 이 둘 다 "유튜브"가 되므로, 합치지 않으면
+   같은 이름이 두 줄로 나온다. 합친 뒤 큰 순서로 다시 정렬해 상위 N 개만 남긴다.
+   ※ 그래서 GA4 에는 5개가 아니라 20개를 요청한다. 5개만 받아 오면 합치는
+     과정에서 줄이 사라져 합계가 실제보다 작게 나온다. */
+function mergeByName(rows, valueKey, top) {
+  const sum = new Map();
+  for (const r of rows) sum.set(r.name, (sum.get(r.name) || 0) + r[valueKey]);
+  return [...sum.entries()]
+    .map(([name, v]) => ({ name, [valueKey]: v }))
+    .sort((a, b) => b[valueKey] - a[valueKey])
+    .slice(0, top);
+}
 
 /* 페이지 경로 → 사람이 읽는 이름.
    GitHub Pages 의 클린 URL 이라 폴더 경로로 들어온다.
@@ -347,14 +444,15 @@ async function buildMetrics(env, token) {
           dimensions: [{ name: "sessionSource" }],
           metrics: [{ name: "sessions" }],
           orderBys: [{ desc: true, metric: { metricName: "sessions" } }],
-          limit: 5 }),
+          limit: 20 }),   // 한글 이름으로 합친 뒤 상위 5개를 고르므로 넉넉히 받는다
 
-      // 국가 상위 5
+      // 국가 상위 5 — 국가코드(KR)와 영문 이름을 함께 받는다.
+      // 코드로 한글 이름을 찾고, 목록에 없으면 영문 이름으로 넘어간다.
       R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
-          dimensions: [{ name: "country" }],
+          dimensions: [{ name: "countryId" }, { name: "country" }],
           metrics: [{ name: "activeUsers" }],
           orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }],
-          limit: 5 }),
+          limit: 20 }),
 
       // 많이 본 페이지 상위 6
       // (정규화 후 합쳐질 수 있으니 5개보다 넉넉히 받아 우리 쪽에서 자른다)
@@ -375,18 +473,6 @@ async function buildMetrics(env, token) {
     ? Math.round(engagementTotal / engagementUsers)
     : 0;
 
-  /* /3d-art 와 /3d-art/ 처럼 같은 페이지가 갈라져 들어오므로
-     정규화한 이름으로 합산한 뒤 상위 5개만 남긴다. */
-  const pageTotals = new Map();
-  for (const r of toRows(pages)) {
-    const name = pageName(r.key);
-    pageTotals.set(name, (pageTotals.get(name) || 0) + r.value);
-  }
-  const topPages = [...pageTotals.entries()]
-    .map(([name, views]) => ({ name, views }))
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 5);
-
   return {
     todayUsers,
     todayDeltaPct: pctChange(todayUsers, firstMetric(yesterday)),
@@ -396,16 +482,25 @@ async function buildMetrics(env, token) {
     monthDeltaPct: pctChange(monthUsers, firstMetric(prevMonth)),
     avgEngagementSec,
 
-    sources: toRows(sources).map(r => ({
-      name: SOURCE_NAMES[r.key] || r.key,
-      sessions: r.value
-    })),
+    /* 아래 셋 모두 "한글 이름으로 바꾼 뒤 합치고 상위 5개" 순서다.
+       바꾸기 전에 자르면 합쳐질 줄을 미리 버리게 되어 합계가 틀어진다. */
+    sources: mergeByName(
+      toRows(sources).map(r => ({ name: sourceName(r.key), sessions: r.value })),
+      "sessions", 5
+    ),
 
-    countries: toRows(countries).map(r => ({
-      name: COUNTRY_NAMES[r.key] || r.key,
-      users: r.value
-    })),
+    countries: mergeByName(
+      (countries.rows || []).map(r => ({
+        name: countryName(r.dimensionValues[0].value, r.dimensionValues[1].value),
+        users: Number(r.metricValues[0].value) || 0
+      })),
+      "users", 5
+    ),
 
-    pages: topPages
+    /* /3d-art 와 /3d-art/ 처럼 같은 페이지가 갈라져 들어온다 */
+    pages: mergeByName(
+      toRows(pages).map(r => ({ name: pageName(r.key), views: r.value })),
+      "views", 5
+    )
   };
 }

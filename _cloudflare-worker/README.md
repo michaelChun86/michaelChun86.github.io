@@ -172,6 +172,8 @@ var API_ENDPOINT = "https://michael-chun-ga4.chun4422.workers.dev/";
 | 숫자가 전부 0 | 정상입니다. GA4 는 누적 데이터 반영에 최대 24~48시간 걸립니다 |
 | 대시보드에 여전히 샘플 | 2부 5단계 주소를 안 넣었거나 오타. Worker 주소를 직접 열어 JSON 이 나오는지 먼저 확인 |
 | 내 방문이 통계에 안 잡힘 | 정상입니다. `analytics.js` 는 localhost 에서 전송하지 않습니다 |
+| 유입 경로에 `(not set)` / 영문 이름 | 고장이 아닙니다. GA4 가 출처를 판별 못 한 세션입니다(앱 내부 브라우저, 리퍼러 차단, 집계 초기). `worker.js` 가 **미확인** 으로 한글화합니다 |
+| 유입 경로 목록을 고치고 싶다 | `worker.js` 의 `SOURCE_NAMES` 에 `"도메인": "표시할 이름"` 한 줄 추가 후 Cloudflare 에 다시 붙여넣고 Deploy |
 
 ## 비용과 한도
 
@@ -181,6 +183,18 @@ var API_ENDPOINT = "https://michael-chun-ga4.chun4422.workers.dev/";
 - GA4 Data API 무료: 하루 25,000 토큰 (한 번 열 때 10건 조회)
 
 Worker 가 결과를 **5분간 캐시**하므로 새로고침을 연타해도 GA4 를 계속 부르지 않습니다.
+
+## worker.js 를 고쳤을 때
+
+이 저장소의 `worker.js` 는 **소스 보관용**입니다. 파일을 고쳐 git 에 올려도
+Cloudflare 에는 반영되지 않습니다. 반드시 이 절차를 거쳐야 합니다.
+
+1. Cloudflare → **Workers & Pages** → `michael-chun-ga4` → **Edit code**
+2. 편집기 내용을 **전부 지우고** 새 `worker.js` 를 통째로 붙여넣기
+3. 우측 상단 **Deploy**
+4. Worker 주소를 브라우저로 열어 JSON 이 나오는지 확인
+
+> 결과가 **5분간 캐시**되므로, 배포 직후에는 이전 숫자가 잠깐 더 보일 수 있습니다.
 
 ## 개발 메모
 

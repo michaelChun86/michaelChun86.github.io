@@ -56,11 +56,11 @@
     monthDeltaPct: 14,          // 지난 30일 대비 %
     avgEngagementSec: 96,       // 초
     sources: [
-      { name: "Direct",     sessions: 88 },
-      { name: "Search",     sessions: 61 },
-      { name: "ArtStation", sessions: 37 },
-      { name: "LinkedIn",   sessions: 24 },
-      { name: "Instagram",  sessions: 15 }
+      { name: "직접 방문",   sessions: 88 },
+      { name: "구글 검색",   sessions: 61 },
+      { name: "아트스테이션", sessions: 37 },
+      { name: "링크드인",    sessions: 24 },
+      { name: "인스타그램",  sessions: 15 }
     ],
     countries: [
       { name: "대한민국", users: 96 },
