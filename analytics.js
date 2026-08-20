@@ -20,9 +20,17 @@
      · UTM 파라미터 (?utm_source=... 를 붙인 링크로 들어왔을 때)
      · 스크롤, 체류 시간 (향상된 측정)
 
-   [이 파일이 추가로 보내는 것 — 둘 다 아주 가볍습니다]
+   [이 파일이 추가로 보내는 것]
+     · site_language   — 지금 보고 있는 언어(ko/en). 모든 이벤트에 함께 붙는다.
+     · artwork_view    — 갤러리 썸네일을 눌러 작품을 크게 봤을 때 (파일명)
      · language_change — 국기 버튼으로 언어를 바꿨을 때 (from → to)
      · contact_click   — 푸터의 이메일 주소를 눌렀을 때
+
+   [★ GA4 에서 한 번만 등록해야 하는 것 — 안 하면 두 항목이 비어 보입니다]
+     관리 → 맞춤 정의 → 맞춤 측정기준 만들기 (범위는 둘 다 "이벤트")
+       이름 site_language / 이벤트 매개변수 site_language
+       이름 artwork       / 이벤트 매개변수 artwork
+     등록한 시점부터 쌓입니다. 과거 데이터는 소급되지 않습니다.
 
    [로컬 테스트는 집계에서 제외]
      localhost / 127.0.0.1 / file:// 에서는 전송하지 않습니다.
@@ -45,21 +53,67 @@
 
   if (!MEASUREMENT_ID || isLocal) return;   // ID 미설정이거나 로컬이면 통째로 비활성
 
+  /* ---------- 지금 보고 있는 언어 ----------
+     이 파일은 i18n.js 보다 먼저 실행이 끝난다. i18n 은 DOMContentLoaded 에서
+     <html lang> 을 고치는데, 그때는 이미 첫 page_view 가 나간 뒤다.
+     그래서 첫 전송에 한해 i18n 과 같은 저장소를 직접 읽는다.
+     ※ 아래 키와 기본값("en")은 i18n.js 의 STORE_KEY / initialLang 과 같아야
+       한다. i18n.js 를 고치면 여기도 같이 고칠 것. */
+  function storedLang() {
+    try {
+      var v = localStorage.getItem("chun-lang-v2");
+      if (v === "ko" || v === "en") return v;
+    } catch (e) {}
+    return "en";
+  }
+
+  /* 첫 전송 이후에는 i18n 이 갱신해 둔 <html lang> 이 정답이다 */
+  function lang() { return document.documentElement.lang || storedLang(); }
+
   /* ---------- GA4 기본 스니펫 ---------- */
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = gtag;
 
   gtag("js", new Date());
-  gtag("config", MEASUREMENT_ID);
+
+  /* config 에 넘긴 값은 이후 모든 이벤트에 함께 실려 나간다.
+     그래서 page_view 마다 어느 언어로 보고 있었는지가 남는다. */
+  gtag("config", MEASUREMENT_ID, { site_language: storedLang() });
 
   var s = document.createElement("script");
   s.async = true;                  // 렌더링을 막지 않는다
   s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(MEASUREMENT_ID);
   document.head.appendChild(s);
 
-  /* 현재 언어: i18n.js 가 언어를 바꿀 때 <html lang> 도 함께 갱신한다 */
-  function lang() { return document.documentElement.lang || "en"; }
+  /* ---------- 갤러리 작품 조회 ----------
+     썸네일을 눌러 라이트박스를 연 것만 센다. 좌우 화살표로 넘긴 것은
+     세지 않는다 — 500장을 훑고 지나가면 모든 작품이 1회씩 찍혀,
+     "무엇이 눈길을 끄는가" 라는 정보가 오히려 묻히기 때문이다.
+     썸네일 클릭은 "이걸 크게 보고 싶다"는 분명한 의사표시다.
+
+     script.js 를 건드리지 않으려고 문서 전체에서 클릭을 한 번만 듣고,
+     카드 안의 <img> 주소에서 파일명을 꺼낸다. 갤러리 코드가 바뀌어도
+     .gallery-item 과 <img> 만 유지되면 계속 동작한다. */
+  document.addEventListener("click", function (ev) {
+    var card = ev.target.closest && ev.target.closest(".gallery-item");
+    if (!card) return;
+    var img = card.querySelector("img");
+    if (!img) return;
+
+    /* "/Image/3D ART/3D Gallery/3D__New_001.webp" → "3D__New_001"
+       %20 같은 인코딩이 섞여 들어오므로 디코딩해서 보낸다. */
+    var file = img.getAttribute("src") || "";
+    var name = file.split("/").pop().replace(/\.[a-z0-9]+$/i, "");
+    try { name = decodeURIComponent(name); } catch (e) {}
+    if (!name) return;
+
+    gtag("event", "artwork_view", {
+      artwork: name,
+      gallery: document.body.getAttribute("data-page") || "",
+      language: lang()
+    });
+  });
 
   /* ---------- 언어 변경 ----------
      capture 단계로 듣는다. i18n.js 의 핸들러는 버튼 자신에 달려 있어

@@ -70,10 +70,26 @@
       { name: "독일",     users: 12 },
       { name: "캐나다",   users: 9 }
     ],
+    contactClicks: 9,
     devices: [
       { name: "모바일", key: "mobile",  users: 118 },
       { name: "PC",     key: "desktop", users: 61 },
       { name: "태블릿", key: "tablet",  users: 7 }
+    ],
+    visitors: [
+      { name: "처음 방문", key: "new",       users: 131 },
+      { name: "다시 방문", key: "returning", users: 55 }
+    ],
+    languages: [
+      { name: "English", key: "en", views: 402 },
+      { name: "한국어",  key: "ko", views: 288 }
+    ],
+    artworks: [
+      { name: "3D__New_001", views: 74 },
+      { name: "2D_001 (7)",  views: 61 },
+      { name: "3D_014",      views: 48 },
+      { name: "2D_029",      views: 33 },
+      { name: "3D__New_002", views: 27 }
     ],
     pages: [
       { name: "홈",          views: 1312 },
@@ -224,10 +240,10 @@
   }
 
   /* 막대 목록 하나를 그린다. rows 의 값 필드 이름은 셋 중 아무거나 가능. */
-  function drawBars(el, rows, unit) {
+  function drawBars(el, rows, unit, emptyText) {
     var val = function (r) { return r.count != null ? r.count : (r.users != null ? r.users : r.views); };
     if (!rows || !rows.length) {
-      el.innerHTML = '<li class="bar-num">데이터가 아직 없습니다.</li>';
+      el.innerHTML = '<li class="bar-num">' + esc(emptyText || "데이터가 아직 없습니다.") + '</li>';
       return;
     }
     var max = Math.max.apply(null, rows.map(val)) || 1;
@@ -327,11 +343,15 @@
     $("kpiMonth").textContent = num(d.monthUsers);
     $("kpiMonthDelta").innerHTML = delta(d.monthDeltaPct, "지난 30일 대비");
     $("kpiTime").textContent = mmss(d.avgEngagementSec);
+    $("kpiContact").textContent = num(d.contactClicks);
 
     drawSources(d.sources);
     drawBars($("countryBars"), d.countries, "명");
     drawBars($("pageBars"), d.pages, "회");
+    drawBars($("artworkBars"), d.artworks, "회", "아직 크게 본 작품이 없습니다.");
     drawBars($("deviceBars"), d.devices, "명");
+    drawBars($("visitorBars"), d.visitors, "명");
+    drawBars($("langBars"), d.languages, "회");
 
     $("footId").textContent = MEASUREMENT_ID || "측정 ID 미설정";
     $("updated").textContent = new Date().toLocaleString("ko-KR", {

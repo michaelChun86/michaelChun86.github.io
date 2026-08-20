@@ -180,7 +180,7 @@ var API_ENDPOINT = "https://michael-chun-ga4.chun4422.workers.dev/";
 전부 **무료 범위 안**입니다.
 
 - Cloudflare Workers 무료: 하루 10만 요청 (이 대시보드는 하루 몇십 건 수준)
-- GA4 Data API 무료: 하루 25,000 토큰 (한 번 열 때 12건 조회)
+- GA4 Data API 무료: 하루 25,000 토큰 (한 번 열 때 16건 조회)
 
 Worker 가 결과를 **5분간 캐시**하므로 새로고침을 연타해도 GA4 를 계속 부르지 않습니다.
 

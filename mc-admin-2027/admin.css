@@ -259,9 +259,10 @@ button, input { font-family: inherit; }
 /* =========================================================================
    KPI 카드
    ========================================================================= */
+/* 6칸으로 두면 3 / 2 로 깔끔하게 접힌다 (5칸은 어디서 접어도 한 칸이 남았다) */
 .kpis {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 0.85rem;
   margin-top: 1.4rem;
 }
@@ -412,6 +413,21 @@ button, input { font-family: inherit; }
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------- 한 패널 안의 3열 (방문자 구성) ---------- */
+.trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+}
+
+.sub-label {
+  margin: 0 0 0.75rem;
+  font-size: 0.76rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.sub-label .panel-note { margin-left: 0.3rem; }
+
 /* ---------- 막대 목록 ---------- */
 .bars {
   margin: 0;
@@ -484,16 +500,14 @@ button, input { font-family: inherit; }
    모바일
    ========================================================================= */
 @media (max-width: 1080px) {
-  /* 5칸을 좁은 화면에 밀어넣으면 숫자가 줄바꿈된다. 3+2 로 접는다. */
+  /* 6칸을 좁은 화면에 밀어넣으면 라벨이 줄바꿈된다. 3+3 으로 접는다. */
   .kpis { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 780px) {
-  /* 2칸이면 5개가 2+2+1 이라 마지막 한 칸이 어색하게 남는다.
-     대표 숫자인 "총 누적"을 한 줄 전체로 깔면 1+2+2 로 떨어진다. */
   .kpis { grid-template-columns: repeat(2, 1fr); }
-  .kpi-hero { grid-column: 1 / -1; }
   .grid { grid-template-columns: 1fr; }
+  .trio { grid-template-columns: 1fr; gap: 1.4rem; }
   .kpi-value { font-size: 1.55rem; }
 }
 

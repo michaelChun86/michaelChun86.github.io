@@ -15,7 +15,7 @@
   <link rel="icon" type="image/jpeg" href="/Image/Hero/favicon.jpg" />
   <!-- ?v= 는 캐시 무효화용. 이 폴더의 파일을 고칠 때마다 숫자를 올려야
        브라우저가 옛 파일과 새 파일을 섞어 쓰는 사고를 막을 수 있다. -->
-  <link rel="stylesheet" href="admin.css?v=3" />
+  <link rel="stylesheet" href="admin.css?v=4" />
 </head>
 <body>
 
@@ -93,6 +93,11 @@
         <p class="kpi-value" id="kpiTime">—</p>
         <p class="kpi-foot">최근 7일 · 방문자 1명 기준</p>
       </article>
+      <article class="card kpi">
+        <p class="kpi-label">연락처 클릭</p>
+        <p class="kpi-value" id="kpiContact">—</p>
+        <p class="kpi-foot">최근 30일 · 이메일</p>
+      </article>
     </section>
 
     <div class="grid">
@@ -122,16 +127,37 @@
         <ul class="bars" id="countryBars"></ul>
       </section>
 
-      <!-- ---------- 페이지별 조회수 ---------- -->
-      <section class="card panel panel-wide" aria-label="페이지별 조회수">
-        <h2 class="panel-title">많이 본 페이지 <span class="panel-note">전체 기간 · 누적 조회수</span></h2>
-        <ul class="bars bars-lg" id="pageBars"></ul>
+      <!-- ---------- 인기 작품 ---------- -->
+      <section class="card panel" aria-label="인기 작품">
+        <h2 class="panel-title">인기 작품 TOP 5 <span class="panel-note">전체 기간 · 크게 본 횟수</span></h2>
+        <ul class="bars" id="artworkBars"></ul>
       </section>
 
-      <!-- ---------- 기기 ---------- -->
-      <section class="card panel panel-wide" aria-label="접속 기기">
-        <h2 class="panel-title">접속 기기 <span class="panel-note">최근 30일</span></h2>
-        <ul class="bars" id="deviceBars"></ul>
+      <!-- ---------- 페이지별 조회수 ---------- -->
+      <section class="card panel" aria-label="페이지별 조회수">
+        <h2 class="panel-title">많이 본 페이지 <span class="panel-note">전체 기간 · 누적 조회수</span></h2>
+        <ul class="bars" id="pageBars"></ul>
+      </section>
+
+      <!-- ---------- 방문자 구성 ----------
+           기기·재방문·언어는 각각 두세 줄뿐이라 패널을 따로 두면
+           빈 공간만 늘어난다. 한 패널 안에 3열로 나란히 둔다. -->
+      <section class="card panel panel-wide" aria-label="방문자 구성">
+        <h2 class="panel-title">방문자 구성 <span class="panel-note">최근 30일</span></h2>
+        <div class="trio">
+          <div>
+            <p class="sub-label">접속 기기</p>
+            <ul class="bars" id="deviceBars"></ul>
+          </div>
+          <div>
+            <p class="sub-label">신규 · 재방문</p>
+            <ul class="bars" id="visitorBars"></ul>
+          </div>
+          <div>
+            <p class="sub-label">보고 있는 언어 <span class="panel-note">페이지 조회 기준</span></p>
+            <ul class="bars" id="langBars"></ul>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -141,6 +167,6 @@
     </footer>
   </div>
 
-  <script src="admin.js?v=3"></script>
+  <script src="admin.js?v=4"></script>
 </body>
 </html>

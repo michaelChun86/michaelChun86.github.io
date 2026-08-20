@@ -373,6 +373,17 @@ const COUNTRY_NAMES = {
   MA: "모로코", DZ: "알제리", TN: "튀니지", GH: "가나", ET: "에티오피아"
 };
 
+/* 항목이 정해진 목록(기기·신규/재방문·언어)을 항상 같은 줄 수로 만든다.
+   GA4 가 안 돌려준 항목은 0 으로 채운다 — 줄이 사라지면 "0 이라서 없는 것"과
+   "집계가 안 되는 것"을 구분할 수 없다. */
+function fixedRows(nameMap, rows, valueKey) {
+  return Object.keys(nameMap).map(key => ({
+    name: nameMap[key],
+    key,
+    [valueKey]: (rows.find(r => r.key === key) || {}).value || 0
+  }));
+}
+
 /* 코드가 목록에 없으면 GA4 가 준 영문 이름을 그대로 쓴다 */
 function countryName(code, englishName) {
   if (COUNTRY_NAMES[code]) return COUNTRY_NAMES[code];
@@ -399,6 +410,18 @@ const DEVICE_NAMES = {
   mobile: "모바일",
   desktop: "PC",
   tablet: "태블릿"
+};
+
+/* newVsReturning 은 GA4 기본 측정기준. 값을 못 정한 세션은 빈 문자열로 온다. */
+const VISITOR_NAMES = {
+  new: "처음 방문",
+  returning: "다시 방문"
+};
+
+/* analytics.js 가 보내는 site_language 값 */
+const LANG_NAMES = {
+  ko: "한국어",
+  en: "English"
 };
 
 /* 페이지 경로 → 사람이 읽는 이름.
@@ -428,8 +451,14 @@ async function buildMetrics(env, token) {
   const R = body => runReport(env, token, body);
   const users = { metrics: [{ name: "activeUsers" }] };
 
+  /* 맞춤 측정기준(site_language, artwork)은 GA4 에 등록해야 나온다.
+     등록 전이면 이 쿼리만 실패하므로, 실패해도 나머지 화면은 그대로
+     보이도록 빈 결과로 바꿔 삼킨다. */
+  const soft = p => p.catch(() => ({ rows: [] }));
+
   const [total, today, yesterday, week, prevWeek, month, prevMonth,
-         engage, sources, countries, devices, pages] =
+         engage, sources, countries, devices, visitorType,
+         languages, contact, artworks, pages] =
     await Promise.all([
       /* 총 누적 방문자.
          GA4 Data API 가 받아주는 가장 이른 날짜가 2015-08-14 라 그걸 시작으로 둔다.
@@ -476,6 +505,47 @@ async function buildMetrics(env, token) {
           metrics: [{ name: "activeUsers" }],
           orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }] }),
 
+      // 신규 vs 재방문 — GA4 기본 제공 측정기준이라 등록이 필요 없다
+      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+          dimensions: [{ name: "newVsReturning" }],
+          metrics: [{ name: "activeUsers" }] }),
+
+      // 언어 비율 — 우리가 심은 site_language 로 "실제로 어느 언어로 봤는가"를 센다.
+      // GA4 기본 language 는 브라우저 언어라, 기본값이 영어인 이 사이트에서는
+      // 실제로 읽은 언어와 다르다.
+      soft(R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+          dimensions: [{ name: "customEvent:site_language" }],
+          metrics: [{ name: "screenPageViews" }],
+          dimensionFilter: {
+            filter: {
+              fieldName: "eventName",
+              stringFilter: { matchType: "EXACT", value: "page_view" }
+            }
+          } })),
+
+      // 연락처(이메일) 클릭 — 이 사이트의 유일한 전환 지표
+      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+          metrics: [{ name: "eventCount" }],
+          dimensionFilter: {
+            filter: {
+              fieldName: "eventName",
+              stringFilter: { matchType: "EXACT", value: "contact_click" }
+            }
+          } }),
+
+      // 인기 작품 — 썸네일을 눌러 크게 본 횟수. 전체 기간 누적.
+      soft(R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }],
+          dimensions: [{ name: "customEvent:artwork" }],
+          metrics: [{ name: "eventCount" }],
+          dimensionFilter: {
+            filter: {
+              fieldName: "eventName",
+              stringFilter: { matchType: "EXACT", value: "artwork_view" }
+            }
+          },
+          orderBys: [{ desc: true, metric: { metricName: "eventCount" } }],
+          limit: 5 })),
+
       // 많이 본 페이지 — 최근이 아니라 전체 기간 누적.
       // (정규화 후 합쳐질 수 있으니 5개보다 넉넉히 받아 우리 쪽에서 자른다)
       R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }],
@@ -520,13 +590,16 @@ async function buildMetrics(env, token) {
       "users", 5
     ),
 
-    /* 기기는 항상 3줄이 보이도록 없는 건 0 으로 채운다.
-       "모바일만 0" 같은 것도 정보이므로 줄을 지우지 않는다. */
-    devices: Object.keys(DEVICE_NAMES).map(key => ({
-      name: DEVICE_NAMES[key],
-      key,
-      users: (toRows(devices).find(r => r.key === key) || {}).value || 0
-    })),
+    contactClicks: firstMetric(contact),
+
+    /* 아래 셋은 항목이 정해져 있으므로, 값이 없어도 줄을 지우지 않고 0 으로
+       채운다. "모바일이 0" / "한국어가 0" 같은 것도 그 자체로 정보다. */
+    devices: fixedRows(DEVICE_NAMES, toRows(devices), "users"),
+    visitors: fixedRows(VISITOR_NAMES, toRows(visitorType), "users"),
+    languages: fixedRows(LANG_NAMES, toRows(languages), "views"),
+
+    /* 썸네일을 눌러 크게 본 작품. 맞춤 측정기준 미등록이면 빈 배열이 온다. */
+    artworks: toRows(artworks).map(r => ({ name: r.key, views: r.value })),
 
     /* /3d-art 와 /3d-art/ 처럼 같은 페이지가 갈라져 들어온다 */
     pages: mergeByName(
