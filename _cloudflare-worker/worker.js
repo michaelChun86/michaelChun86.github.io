@@ -627,8 +627,14 @@ async function buildMetrics(env, token, range) {
       "views", 5
     ),
 
-    /* 썸네일을 눌러 크게 본 작품. 맞춤 측정기준 미등록이면 빈 배열이 온다. */
-    artworks: toRows(artworks).map(r => ({ name: r.key, views: r.value })),
+    /* 썸네일을 눌러 크게 본 작품. 맞춤 측정기준 미등록이면 빈 배열이 온다.
+       "(not set)" 은 맞춤 측정기준을 등록하기 전에 수집된 이벤트다.
+       이벤트는 GA4 에 남아 있지만 매개변수 값을 읽을 수 없어 이 이름이 붙는다.
+       작품 순위에서는 알려주는 바가 없으므로 뺀다(유입 경로의 "미확인" 과 달리
+       "어느 작품인지 모른다" 는 사실이 순위에 끼어들 이유가 없다). */
+    artworks: toRows(artworks)
+      .filter(r => r.key && r.key !== "(not set)")
+      .map(r => ({ name: r.key, views: r.value })),
 
     /* 아래 셋은 항목이 정해져 있으므로, 값이 없어도 줄을 지우지 않고 0 으로
        채운다. "모바일이 0" / "한국어가 0" 같은 것도 그 자체로 정보다. */
