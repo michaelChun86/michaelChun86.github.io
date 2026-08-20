@@ -48,6 +48,7 @@
      구조는 Worker 가 돌려줘야 할 JSON 모양과 정확히 같습니다.
      --------------------------------------------------------------------- */
   var SAMPLE = {
+    totalUsers: 3184,           // 전체 기간 순 방문자
     todayUsers: 34,
     todayDeltaPct: 21,          // 어제 대비 %
     weekUsers: 186,
@@ -69,12 +70,17 @@
       { name: "독일",     users: 12 },
       { name: "캐나다",   users: 9 }
     ],
+    devices: [
+      { name: "모바일", key: "mobile",  users: 118 },
+      { name: "PC",     key: "desktop", users: 61 },
+      { name: "태블릿", key: "tablet",  users: 7 }
+    ],
     pages: [
-      { name: "홈",          views: 312 },
-      { name: "3D WORK",     views: 208 },
-      { name: "2D WORK",     views: 174 },
-      { name: "PROFILE",     views: 131 },
-      { name: "DEAR FATHER", views: 66 }
+      { name: "홈",          views: 1312 },
+      { name: "3D WORK",     views: 908 },
+      { name: "2D WORK",     views: 774 },
+      { name: "PROFILE",     views: 531 },
+      { name: "DEAR FATHER", views: 266 }
     ]
   };
 
@@ -313,6 +319,7 @@
         "GA4 의 [보고서 > 실시간] 을 보세요.";
     }
 
+    $("kpiTotal").textContent = num(d.totalUsers);
     $("kpiToday").textContent = num(d.todayUsers);
     $("kpiTodayDelta").innerHTML = delta(d.todayDeltaPct, "어제 대비");
     $("kpiWeek").textContent = num(d.weekUsers);
@@ -324,6 +331,7 @@
     drawSources(d.sources);
     drawBars($("countryBars"), d.countries, "명");
     drawBars($("pageBars"), d.pages, "회");
+    drawBars($("deviceBars"), d.devices, "명");
 
     $("footId").textContent = MEASUREMENT_ID || "측정 ID 미설정";
     $("updated").textContent = new Date().toLocaleString("ko-KR", {

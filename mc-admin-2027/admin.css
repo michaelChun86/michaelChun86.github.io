@@ -261,7 +261,7 @@ button, input { font-family: inherit; }
    ========================================================================= */
 .kpis {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.85rem;
   margin-top: 1.4rem;
 }
@@ -483,8 +483,16 @@ button, input { font-family: inherit; }
 /* =========================================================================
    모바일
    ========================================================================= */
+@media (max-width: 1080px) {
+  /* 5칸을 좁은 화면에 밀어넣으면 숫자가 줄바꿈된다. 3+2 로 접는다. */
+  .kpis { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 780px) {
+  /* 2칸이면 5개가 2+2+1 이라 마지막 한 칸이 어색하게 남는다.
+     대표 숫자인 "총 누적"을 한 줄 전체로 깔면 1+2+2 로 떨어진다. */
   .kpis { grid-template-columns: repeat(2, 1fr); }
+  .kpi-hero { grid-column: 1 / -1; }
   .grid { grid-template-columns: 1fr; }
   .kpi-value { font-size: 1.55rem; }
 }

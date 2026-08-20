@@ -15,7 +15,7 @@
   <link rel="icon" type="image/jpeg" href="/Image/Hero/favicon.jpg" />
   <!-- ?v= 는 캐시 무효화용. 이 폴더의 파일을 고칠 때마다 숫자를 올려야
        브라우저가 옛 파일과 새 파일을 섞어 쓰는 사고를 막을 수 있다. -->
-  <link rel="stylesheet" href="admin.css?v=2" />
+  <link rel="stylesheet" href="admin.css?v=3" />
 </head>
 <body>
 
@@ -69,17 +69,22 @@
     <!-- ---------- 상단 KPI ---------- -->
     <section class="kpis" aria-label="핵심 지표">
       <article class="card kpi kpi-hero">
+        <p class="kpi-label">총 누적 방문자</p>
+        <p class="kpi-value" id="kpiTotal">—</p>
+        <p class="kpi-foot">전체 기간 · 중복 제외</p>
+      </article>
+      <article class="card kpi">
         <p class="kpi-label">오늘 방문자</p>
         <p class="kpi-value" id="kpiToday">—</p>
         <p class="kpi-foot" id="kpiTodayDelta">&nbsp;</p>
       </article>
       <article class="card kpi">
-        <p class="kpi-label">최근 7일</p>
+        <p class="kpi-label">최근 7일 방문자</p>
         <p class="kpi-value" id="kpiWeek">—</p>
         <p class="kpi-foot" id="kpiWeekDelta">&nbsp;</p>
       </article>
       <article class="card kpi">
-        <p class="kpi-label">최근 30일</p>
+        <p class="kpi-label">최근 30일 방문자</p>
         <p class="kpi-value" id="kpiMonth">—</p>
         <p class="kpi-foot" id="kpiMonthDelta">&nbsp;</p>
       </article>
@@ -119,8 +124,14 @@
 
       <!-- ---------- 페이지별 조회수 ---------- -->
       <section class="card panel panel-wide" aria-label="페이지별 조회수">
-        <h2 class="panel-title">많이 본 페이지 <span class="panel-note">최근 7일 · 조회수</span></h2>
+        <h2 class="panel-title">많이 본 페이지 <span class="panel-note">전체 기간 · 누적 조회수</span></h2>
         <ul class="bars bars-lg" id="pageBars"></ul>
+      </section>
+
+      <!-- ---------- 기기 ---------- -->
+      <section class="card panel panel-wide" aria-label="접속 기기">
+        <h2 class="panel-title">접속 기기 <span class="panel-note">최근 30일</span></h2>
+        <ul class="bars" id="deviceBars"></ul>
       </section>
     </div>
 
@@ -130,6 +141,6 @@
     </footer>
   </div>
 
-  <script src="admin.js?v=2"></script>
+  <script src="admin.js?v=3"></script>
 </body>
 </html>

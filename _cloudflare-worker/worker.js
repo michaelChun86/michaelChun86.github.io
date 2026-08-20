@@ -394,6 +394,13 @@ function mergeByName(rows, valueKey, top) {
     .slice(0, top);
 }
 
+/* GA4 의 deviceCategory 는 이 셋만 온다 */
+const DEVICE_NAMES = {
+  mobile: "모바일",
+  desktop: "PC",
+  tablet: "태블릿"
+};
+
 /* 페이지 경로 → 사람이 읽는 이름.
    GitHub Pages 의 클린 URL 이라 폴더 경로로 들어온다.
    끝의 index.html 이나 쿼리스트링이 붙어 들어오는 경우도 있어 정규화한다. */
@@ -421,8 +428,17 @@ async function buildMetrics(env, token) {
   const R = body => runReport(env, token, body);
   const users = { metrics: [{ name: "activeUsers" }] };
 
-  const [today, yesterday, week, prevWeek, month, prevMonth, engage, sources, countries, pages] =
+  const [total, today, yesterday, week, prevWeek, month, prevMonth,
+         engage, sources, countries, devices, pages] =
     await Promise.all([
+      /* 총 누적 방문자.
+         GA4 Data API 가 받아주는 가장 이른 날짜가 2015-08-14 라 그걸 시작으로 둔다.
+         속성이 만들어지기 전 구간은 그냥 0 이므로 결과에 영향이 없고,
+         "속성 생성일"을 코드에 박아둘 필요도 없다.
+         합계가 아니라 중복 제거된 순 방문자다 — 같은 사람이 여러 날 와도 1 로 센다.
+         그래서 "최근 30일" 보다 작아지는 일은 없다(같은 지표, 더 넓은 기간). */
+      R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }], ...users }),
+
       // 오늘 / 어제
       R({ dateRanges: [{ startDate: "today", endDate: "today" }], ...users }),
       R({ dateRanges: [{ startDate: "yesterday", endDate: "yesterday" }], ...users }),
@@ -454,9 +470,15 @@ async function buildMetrics(env, token) {
           orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }],
           limit: 20 }),
 
-      // 많이 본 페이지 상위 6
+      // 기기 종류 — 모바일 / 데스크톱 / 태블릿
+      R({ dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+          dimensions: [{ name: "deviceCategory" }],
+          metrics: [{ name: "activeUsers" }],
+          orderBys: [{ desc: true, metric: { metricName: "activeUsers" } }] }),
+
+      // 많이 본 페이지 — 최근이 아니라 전체 기간 누적.
       // (정규화 후 합쳐질 수 있으니 5개보다 넉넉히 받아 우리 쪽에서 자른다)
-      R({ dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
+      R({ dateRanges: [{ startDate: "2015-08-14", endDate: "today" }],
           dimensions: [{ name: "pagePath" }],
           metrics: [{ name: "screenPageViews" }],
           orderBys: [{ desc: true, metric: { metricName: "screenPageViews" } }],
@@ -474,6 +496,7 @@ async function buildMetrics(env, token) {
     : 0;
 
   return {
+    totalUsers: firstMetric(total),
     todayUsers,
     todayDeltaPct: pctChange(todayUsers, firstMetric(yesterday)),
     weekUsers,
@@ -496,6 +519,14 @@ async function buildMetrics(env, token) {
       })),
       "users", 5
     ),
+
+    /* 기기는 항상 3줄이 보이도록 없는 건 0 으로 채운다.
+       "모바일만 0" 같은 것도 정보이므로 줄을 지우지 않는다. */
+    devices: Object.keys(DEVICE_NAMES).map(key => ({
+      name: DEVICE_NAMES[key],
+      key,
+      users: (toRows(devices).find(r => r.key === key) || {}).value || 0
+    })),
 
     /* /3d-art 와 /3d-art/ 처럼 같은 페이지가 갈라져 들어온다 */
     pages: mergeByName(
