@@ -366,12 +366,22 @@
     }
     var d = out.data;
 
-    /* 안내 배너 — 샘플일 때(빨강)와, 실데이터인데 아직 0 일 때(회색).
-       후자를 따로 두는 이유: GA4 는 수집을 시작해도 누적 보고서에
-       숫자가 들어오기까지 하루 이틀 걸린다. 그동안 0 만 보이면
-       고장난 것으로 오해하기 쉽다. */
+    /* 안내 배너 — 세 경우.
+         ① 샘플 데이터 (빨강)
+         ② 방문자 수만 비어 있음 (회색) — 아래 설명 참고
+         ③ 아무 데이터도 없음 (회색)
+
+       ②를 따로 두는 이유: GA4 지표는 집계 주기가 두 갈래다.
+         · 세션 / 조회수 / 이벤트  → 몇 시간 안에 반영
+         · 방문자 수 / 국가 / 기기 / 신규·재방문 → 사용자 단위라
+           하루치 배치 처리가 끝나야 나온다 (최대 24~48시간)
+       그래서 "유입 경로엔 세션이 1건 있는데 방문자는 0" 인 구간이
+       반드시 생긴다. 이걸 설명해 주지 않으면 연결이 끊긴 줄 알게 된다.
+       (실제로 정상 동작 중인 다른 속성에서도 "오늘 방문자"는 0 으로 나온다) */
     var notice = $("notice");
-    var empty = out.live && !d.todayUsers && !d.weekUsers && !d.monthUsers;
+    var noUsers = !d.totalUsers && !d.todayUsers && !d.weekUsers && !d.monthUsers;
+    var hasTraffic = (d.sources && d.sources.length) || (d.pages && d.pages.length);
+    var empty = out.live && noUsers;
 
     notice.hidden = out.live && !empty;
     notice.classList.toggle("notice-info", empty);
@@ -381,11 +391,17 @@
       $("noticeText").textContent = out.error
         ? "실데이터 서버에 연결하지 못해 샘플로 표시합니다 (" + out.error + ")."
         : "아직 실데이터 연결 전이라 화면 확인용 예시 숫자입니다. admin.js 의 API_ENDPOINT 를 채우면 실제 수치로 바뀝니다.";
+    } else if (empty && hasTraffic) {
+      $("noticeHead").textContent = "집계 중입니다.";
+      $("noticeText").textContent =
+        "방문 기록은 들어오고 있습니다(아래 유입 경로·조회수 참고). 다만 방문자 수·국가·" +
+        "기기·신규/재방문은 GA4 가 하루 단위로 묶어 처리하는 값이라, 그날치 집계가 끝난 " +
+        "뒤에야 채워집니다(최대 24~48시간). 고장이 아니라 정상적인 시차입니다.";
     } else if (empty) {
       $("noticeHead").textContent = "연결은 정상입니다.";
       $("noticeText").textContent =
-        "아직 집계된 방문자가 없습니다. GA4 는 수집을 시작한 뒤 누적 보고서에 " +
-        "숫자가 반영되기까지 최대 24~48시간이 걸립니다. 지금 바로 확인하려면 " +
+        "아직 집계된 방문 기록이 없습니다. GA4 는 수집을 시작한 뒤 보고서에 숫자가 " +
+        "반영되기까지 최대 24~48시간이 걸립니다. 지금 바로 확인하려면 " +
         "GA4 의 [보고서 > 실시간] 을 보세요.";
     }
 
