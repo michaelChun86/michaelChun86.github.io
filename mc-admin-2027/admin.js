@@ -215,6 +215,29 @@
   document.getElementById("logout").addEventListener("click", lockUp);
   document.getElementById("refresh").addEventListener("click", render);
 
+  /* ---------- 내 방문 제외 토글 ----------
+     이 페이지와 본 사이트는 도메인이 같아 localStorage 를 공유한다.
+     그래서 여기서 켜 두면 사이트 쪽 analytics.js 가 같은 키를 읽고 전송을 멈춘다.
+     ※ 키 이름은 analytics.js 의 OPTOUT_KEY 와 반드시 같아야 한다. */
+  var OPTOUT_KEY = "mc-no-track";
+  var optOut = document.getElementById("optOut");
+
+  function syncOptOut() {
+    var on = false;
+    try { on = localStorage.getItem(OPTOUT_KEY) === "1"; } catch (e) {}
+    optOut.checked = on;
+    document.getElementById("optOutLabel").classList.toggle("on", on);
+  }
+
+  optOut.addEventListener("change", function () {
+    try {
+      if (optOut.checked) localStorage.setItem(OPTOUT_KEY, "1");
+      else localStorage.removeItem(OPTOUT_KEY);
+    } catch (e) {}
+    syncOptOut();
+  });
+  syncOptOut();
+
   /* ---------- 기간 필터 ---------- */
   var rangeBtns = document.querySelector(".range-btns");
   rangeBtns.addEventListener("click", function (ev) {

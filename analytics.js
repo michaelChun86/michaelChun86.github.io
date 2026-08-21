@@ -32,7 +32,31 @@
        이름 artwork       / 이벤트 매개변수 artwork
      등록한 시점부터 쌓입니다. 과거 데이터는 소급되지 않습니다.
 
-   [로컬 테스트는 집계에서 제외]
+   [내 방문을 집계에서 빼는 법 — 두 가지]
+
+     ① 이 브라우저만 빼기 (기기·브라우저 단위)
+        주소 뒤에 ?notrack=1 을 붙여 한 번만 접속하면 그 브라우저는
+        이후 영구히 전송하지 않습니다. 해제는 ?notrack=0.
+          https://michaelchun86.github.io/?notrack=1
+        관리자 대시보드(mc-admin-2027) 맨 아래 체크박스로도 켜고 끌 수 있습니다.
+        (같은 도메인이라 저장소를 공유합니다)
+
+        · 검수용 PC·휴대폰마다 한 번씩 해 두면 됩니다.
+        · 브라우저 저장소를 지우거나 시크릿창을 쓰면 다시 잡힙니다.
+
+     ② 집·사무실 전체 빼기 (IP 단위, GA4 설정)
+        GA4 → 관리 → 데이터 스트림 → 스트림 선택 → 태그 설정 구성
+        → 내부 트래픽 정의 → 규칙 만들기 (내 IP 입력)
+        그 다음 관리 → 데이터 설정 → 데이터 필터 → "내부 트래픽" 을
+        [테스트] 에서 [사용] 으로 바꿔야 실제로 제외됩니다.
+        · 공유기에 붙은 모든 기기가 한 번에 빠집니다.
+        · 유동 IP 면 주소가 바뀔 때마다 규칙을 고쳐야 하고,
+          휴대폰 LTE/5G 는 IP 가 달라 빠지지 않습니다.
+
+     ①과 ②는 같이 써도 됩니다. ①이 기기 단위로 확실하고,
+     ②는 새 브라우저를 깔아도 자동으로 걸러 줍니다.
+
+   [로컬 테스트도 집계에서 제외]
      localhost / 127.0.0.1 / file:// 에서는 전송하지 않습니다.
      개발 중 새로고침이 실제 방문 통계에 섞이지 않게 하기 위함입니다.
    ========================================================================= */
@@ -42,6 +66,11 @@
   /* ▼ 여기에 측정 ID 를 넣으세요 (예: "G-ABC123XYZ4") */
   var MEASUREMENT_ID = "G-5Y2SYP49PL";
 
+  /* 이 브라우저를 집계에서 뺄지 기억해 두는 자리.
+     ※ 관리자 대시보드(mc-admin-2027/admin.js)가 같은 키를 읽고 쓴다.
+       한쪽만 고치면 체크박스와 실제 동작이 어긋나므로 같이 고칠 것. */
+  var OPTOUT_KEY = "mc-no-track";
+
   /* ---------- 전송할지 말지 판단 ---------- */
   var host = location.hostname;
   var isLocal =
@@ -50,6 +79,23 @@
     host === "127.0.0.1" ||
     host === "[::1]" ||
     /^192\.168\./.test(host);      // 같은 공유기 안의 다른 기기로 테스트할 때
+
+  /* ?notrack=1 로 한 번 들어오면 이 브라우저를 계속 제외한다(해제는 ?notrack=0).
+     휴대폰처럼 콘솔을 열기 어려운 기기에서도 주소만으로 켜고 끌 수 있게 한 것. */
+  try {
+    var q = new URLSearchParams(location.search).get("notrack");
+    if (q === "1" || q === "on") localStorage.setItem(OPTOUT_KEY, "1");
+    else if (q === "0" || q === "off") localStorage.removeItem(OPTOUT_KEY);
+  } catch (e) {}
+
+  var optedOut = false;
+  try { optedOut = localStorage.getItem(OPTOUT_KEY) === "1"; } catch (e) {}
+
+  if (optedOut) {
+    /* 제외된 본인만 보는 확인 문구. 일반 방문자에게는 찍히지 않는다. */
+    if (window.console) console.info("[analytics] 이 브라우저는 집계에서 제외 중입니다 (해제: ?notrack=0)");
+    return;
+  }
 
   if (!MEASUREMENT_ID || isLocal) return;   // ID 미설정이거나 로컬이면 통째로 비활성
 

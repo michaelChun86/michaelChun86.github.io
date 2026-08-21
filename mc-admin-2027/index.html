@@ -15,7 +15,7 @@
   <link rel="icon" type="image/jpeg" href="/Image/Hero/favicon.jpg" />
   <!-- ?v= 는 캐시 무효화용. 이 폴더의 파일을 고칠 때마다 숫자를 올려야
        브라우저가 옛 파일과 새 파일을 섞어 쓰는 사고를 막을 수 있다. -->
-  <link rel="stylesheet" href="admin.css?v=6" />
+  <link rel="stylesheet" href="admin.css?v=7" />
 </head>
 <body>
 
@@ -181,11 +181,19 @@
     </div>
 
     <footer class="foot">
-      <a href="https://analytics.google.com/" target="_blank" rel="noopener">GA4 원본 보고서 열기 →</a>
+      <div class="foot-left">
+        <a href="https://analytics.google.com/" target="_blank" rel="noopener">GA4 원본 보고서 열기 →</a>
+        <!-- 이 페이지와 본 사이트는 도메인이 같아 저장소를 공유한다.
+             그래서 여기서 켜면 사이트 쪽 analytics.js 가 바로 알아본다. -->
+        <label class="optout" id="optOutLabel">
+          <input type="checkbox" id="optOut" />
+          <span>이 브라우저의 방문은 집계에서 제외</span>
+        </label>
+      </div>
       <span id="footId">—</span>
     </footer>
   </div>
 
-  <script src="admin.js?v=7"></script>
+  <script src="admin.js?v=8"></script>
 </body>
 </html>
